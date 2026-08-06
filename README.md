@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Akradhii — Internship & Digital Services Platform
 
-## Getting Started
+A full-stack SaaS platform for Akradhii: a digital marketing agency that offers **internships**, **certificates with QR verification**, and **client services** (websites, Meta Ads, CRMs, AI automation, SEO, branding).
 
-First, run the development server:
+Built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Supabase** (optional), and **Framer Motion**.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without Supabase credentials the app runs in **demo mode**: authentication and all data are simulated in localStorage, seeded with rich sample data — no backend required.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Demo accounts (password: `Akradhii@123`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Role     | Email                  | Redirects to |
+| -------- | ---------------------- | ------------ |
+| Student  | `student@akradhii.com` | `/student`   |
+| Mentor   | `mentor@akradhii.com`  | `/mentor`    |
+| Client   | `client@akradhii.com`  | `/client`    |
+| Employee | `employee@akradhii.com`| `/employee`  |
+| Admin    | `admin@akradhii.com`   | `/admin`     |
 
-## Learn More
+You can also register a new account — it starts as an intern/applicant.
 
-To learn more about Next.js, take a look at the following resources:
+## Production mode (Supabase)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a project at [supabase.com](https://supabase.com).
+2. Run [`supabase/schema.sql`](./supabase/schema.sql) in the SQL editor (tables, RLS policies, triggers, `handle_new_user` profile sync).
+3. Set env vars (see `.env.example`):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   ```
 
-## Deploy on Vercel
+4. Configure auth redirect URLs to include `http://localhost:3000/auth/callback`.
+5. (Optional) Add `RESEND_API_KEY` for transactional email.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev       # development (Turbopack)
+npm run build     # production build
+npm run start     # serve the build
+npm run lint      # ESLint
+```
+
+## Project structure
+
+```
+src/
+├─ app/
+│  ├─ (marketing)/      # Home, services, about, portfolio, blog, internships (+ apply), contact, privacy, terms
+│  ├─ (auth)/           # Login, register, forgot/reset password, verify email
+│  ├─ (dashboard)/      # Role dashboards: student, mentor, client, employee, admin
+│  ├─ api/verify/       # Certificate verification API
+│  ├─ auth/             # Supabase callback & confirm routes
+│  ├─ verify/           # Public certificate verification page (QR lookup)
+│  ├─ dashboard/        # Role-aware redirect
+│  ├─ globals.css       # Tailwind v4 theme, dark mode, print CSS
+│  ├─ layout.tsx        # Root layout (fonts, providers, dark-mode script)
+│  └─ not-found.tsx
+├─ components/
+│  ├─ ui/               # Button, Input, Card, Badge, Avatar, Dialog, Toast, Tabs, Progress…
+│  ├─ marketing/        # Navbar, Footer, Reveal (scroll animations)
+│  ├─ dashboard/        # Shell (sidebar + topbar), DataTable, PageHeader, StatCard…
+│  └─ certificate/      # Certificate with QR + print styles
+├─ config/site.ts       # Site-wide content & services
+└─ lib/
+   ├─ auth/             # demo-store (localStorage auth) + Supabase client/server
+   ├─ data/             # sample-data (seed) + repository (demo DB layer)
+   ├─ rbac.ts           # Permissions, roles, role-aware nav
+   ├─ constants.ts      # Internship programs & categories
+   ├─ validators.ts     # Zod schemas + file validation
+   └─ utils.ts          # cn, formatters, ids, helpers
+```
+
+## Role & permissions model
+
+Seven roles (`guest`, `user`, `applicant`, `intern`, `client`, `mentor`, `employee`, `admin`, `super_admin`) with a permission map in `src/lib/rbac.ts`; `src/middleware.ts` guards each role area by path prefix.
+
+## Certificates
+
+- Issue from Admin → Certificates (or automatically after completion).
+- Each certificate carries a **QR code** linking to `/verify?certificateId=…`.
+- Public verification at `/verify` and machine-readable API at `/api/verify?certificateId=…`.
+
+## Internship programs
+
+| Program         | Duration | Fee      |
+| --------------- | -------- | -------- |
+| Foundation      | 4 weeks  | ₹1,999   |
+| Professional    | 6 weeks  | ₹3,499   |
+| Industry        | 8 weeks  | ₹5,499   |
+
+10 categories (Web Development, Digital Marketing, AI & Data, UI/UX Design, etc.). Apply via the guided wizard at `/internships/apply` (account → profile → documents → review).
+
+## Feedback
+
+For issues or feature requests, open an issue in this repository or email support@akradhii.com.
