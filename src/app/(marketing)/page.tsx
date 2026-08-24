@@ -96,7 +96,7 @@ export default function HomePage() {
             const Icon = icons[s.icon as keyof typeof icons] ?? Code2;
             return (
               <Reveal key={s.id} delay={i * 0.05}>
-                <Link href={`/services#${s.id}`}>
+                <Link href={`/services/${s.id}`}>
                   <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl hover:shadow-brand-600/10">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/25">
                       <Icon className="h-5 w-5" />
@@ -109,7 +109,7 @@ export default function HomePage() {
                       ))}
                     </div>
                     <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-500 opacity-0 transition-opacity group-hover:opacity-100">
-                      Learn more <ArrowRight className="h-3.5 w-3.5" />
+                      Explore service <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </Card>
                 </Link>

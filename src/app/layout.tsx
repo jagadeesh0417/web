@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { ToastProvider } from "@/components/ui/toast";
 import { DialogProvider } from "@/components/ui/dialog";
 import { siteConfig } from "@/config/site";
@@ -43,30 +42,19 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1020" },
-  ],
+  themeColor: "#0b1020",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ak_theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`,
-          }}
-        />
-      </head>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider>
-          <ToastProvider>
-            <DialogProvider>{children}</DialogProvider>
-          </ToastProvider>
-        </ThemeProvider>
+        <ToastProvider>
+          <DialogProvider>{children}</DialogProvider>
+        </ToastProvider>
       </body>
     </html>
   );

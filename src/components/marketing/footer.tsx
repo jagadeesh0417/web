@@ -32,7 +32,7 @@ export function Footer() {
           <ul className="space-y-2.5">
             {services.slice(0, 7).map((s) => (
               <li key={s.id}>
-                <Link href={`/services#${s.id}`} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={`/services/${s.id}`} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {s.title}
                 </Link>
               </li>

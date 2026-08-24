@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Moon, Sun, X, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getSession, signOut } from "@/lib/auth";
 import type { AppUser } from "@/lib/types";
 import { homeForRole } from "@/lib/rbac";
-import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/components/ui/toast";
 
 const links = [
@@ -28,7 +27,6 @@ export function Navbar() {
   const [ready, setReady] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -66,13 +64,6 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <button
-            onClick={toggleTheme}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border hover:bg-muted"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
           {ready && user ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => router.push(homeForRole(user.role))}>
