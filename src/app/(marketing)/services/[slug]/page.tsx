@@ -282,7 +282,7 @@ export default async function ServiceDetailPage({ params }: Props) {
               Selected projects related to {service.title.toLowerCase()}.
             </p>
           </div>
-          <Link href="/portfolio" className="text-sm font-medium text-brand-400 hover:underline">
+          <Link href="/our-work" className="text-sm font-medium text-brand-400 hover:underline">
             View all work →
           </Link>
         </Reveal>

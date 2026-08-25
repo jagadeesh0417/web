@@ -52,9 +52,9 @@ export default function CertificatePage() {
         {cert && <CertificateView certificate={cert} />}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
-            Employers can verify this certificate at <span className="font-mono text-brand-500">akradhii.com/verify</span> using its unique ID.
+            Employers can verify this certificate at <span className="font-mono text-brand-500">akradhii.com/verify-certificate</span> using its unique ID.
           </p>
-          <Link href="/verify" target="_blank">
+          <Link href="/verify-certificate" target="_blank">
             <Button variant="gradient" size="sm">See verification page <ArrowRight className="h-4 w-4" /></Button>
           </Link>
         </div>

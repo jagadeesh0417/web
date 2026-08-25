@@ -191,7 +191,7 @@ export default function HomePage() {
             <p className="mt-3 text-muted-foreground">Real results for real clients — with numbers.</p>
           </div>
           <Button variant="outline">
-            <Link href="/portfolio" className="flex items-center gap-2">View all projects <ArrowRight className="h-4 w-4" /></Link>
+            <Link href="/our-work" className="flex items-center gap-2">View all projects <ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </Reveal>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -6,7 +6,14 @@ export const siteConfig = {
   url: "https://akradhii.com",
   email: "hello@akradhii.com",
   phone: "+91 98765 43210",
+  /** Lead / business WhatsApp (digits for wa.me links) */
+  whatsapp: "919848579053",
+  whatsappDisplay: "+91 98485 79053",
   address: "HITEC City, Hyderabad, Telangana 500081, India",
+  city: "Hyderabad",
+  region: "Telangana",
+  country: "India",
+  workingHours: "Mon–Sat, 10:00 AM – 7:00 PM IST",
   socials: {
     instagram: "https://instagram.com/akradhii",
     linkedin: "https://linkedin.com/company/akradhii",

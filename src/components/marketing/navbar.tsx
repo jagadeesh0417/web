@@ -13,10 +13,11 @@ import { homeForRole } from "@/lib/rbac";
 import { useToast } from "@/components/ui/toast";
 
 const links = [
+  { href: "/company", label: "Company" },
+  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/internships", label: "Internships" },
-  { href: "/portfolio", label: "Work" },
-  { href: "/about", label: "About" },
+  { href: "/our-work", label: "Our Work" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
@@ -36,6 +37,10 @@ export function Navbar() {
     });
   }, []);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     await signOut();
     toast("success", "Signed out", "You have been logged out securely.");
@@ -43,24 +48,38 @@ export function Navbar() {
     router.refresh();
   };
 
+  const isActive = (href: string) => {
+    if (href === "/our-work") return pathname.startsWith("/our-work") || pathname.startsWith("/portfolio");
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 glass">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 xl:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className={cn(
-                "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
-                pathname.startsWith(l.href) ? "text-foreground" : "text-muted-foreground",
+                "rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                isActive(l.href) ? "text-foreground" : "text-muted-foreground",
               )}
             >
               {l.label}
             </Link>
           ))}
+          <Link
+            href="/verify-certificate"
+            className={cn(
+              "rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
+              pathname.startsWith("/verify") ? "text-foreground" : "text-muted-foreground",
+            )}
+          >
+            Verify
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
@@ -79,7 +98,7 @@ export function Navbar() {
               <Button variant="ghost" size="sm" onClick={() => router.push("/login")}>
                 Log in
               </Button>
-              <Button variant="gradient" size="sm" onClick={() => router.push("/register")}>
+              <Button variant="gradient" size="sm" onClick={() => router.push("/contact")}>
                 Get started
               </Button>
             </>
@@ -87,37 +106,57 @@ export function Navbar() {
         </div>
 
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border xl:hidden"
           onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border bg-card lg:hidden">
+        <div className="border-t border-border bg-card xl:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
-            {links.map((l) => (
+            {[...links, { href: "/verify-certificate", label: "Verify Certificate" }].map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-lg px-3 py-2.5 text-sm font-medium",
-                  pathname.startsWith(l.href) ? "bg-muted text-foreground" : "text-muted-foreground",
+                  isActive(l.href) || (l.href === "/verify-certificate" && pathname.startsWith("/verify"))
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 {l.label}
               </Link>
             ))}
-            <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">
-              <Button variant="gradient" className="flex-1" onClick={() => { setOpen(false); router.push("/register"); }}>
-                Get started
+            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center">
+              <Button
+                variant="gradient"
+                className="flex-1"
+                onClick={() => {
+                  setOpen(false);
+                  router.push("/contact");
+                }}
+              >
+                Contact us
               </Button>
-              {ready && user && (
+              {ready && user ? (
                 <Button variant="outline" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" /> Sign out
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setOpen(false);
+                    router.push("/login");
+                  }}
+                >
+                  Log in
                 </Button>
               )}
             </div>

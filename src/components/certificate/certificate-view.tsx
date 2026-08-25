@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import type { Certificate } from "@/lib/types";
 
 export function CertificateView({ certificate }: { certificate: Certificate }) {
-  const verifyUrl = `${siteConfig.url}/verify?certificateId=${certificate.certificateId}`;
+  const verifyUrl = `${siteConfig.url}/verify-certificate?certificateId=${certificate.certificateId}`;
   return (
     <div className="certificate-sheet relative overflow-hidden rounded-2xl border-2 border-brand-500/40 bg-card">
       <div className="absolute inset-0 bg-grid opacity-40" />
