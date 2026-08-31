@@ -69,8 +69,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: "Program not found." }, { status: 404 });
     }
 
+    const durationWeeksFromProgram = parseInt(program.duration.match(/(\d+)/)?.[1] ?? "4", 10);
     const serverAmount = Math.round(
-      program.price * (duration / program.durationWeeks) * (duration === 8 ? 0.95 : 1),
+      program.price * (duration / durationWeeksFromProgram) * (duration === 8 ? 0.95 : 1),
     );
 
     // In demo mode: payment is auto-verified

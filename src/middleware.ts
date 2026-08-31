@@ -25,6 +25,16 @@ const PUBLIC_PATHS = [
   "/_next",
 ];
 
+const ADMIN_PUBLIC_PATHS = ["/admin/login"];
+
+function isAdminRoute(pathname: string): boolean {
+  return pathname.startsWith("/admin") && !ADMIN_PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
+function isAdminApiRoute(pathname: string): boolean {
+  return pathname.startsWith("/api/admin");
+}
+
 const ROLE_PATHS: Record<string, Role[]> = {
   "/student": ["intern", "applicant"],
   "/client": ["client"],
@@ -87,13 +97,21 @@ export async function middleware(request: NextRequest) {
       );
       const { data } = await supabase.auth.getUser();
       const user = data.user;
-      if (isPublic(pathname)) return response;
+      if (isPublic(pathname) && !isAdminRoute(pathname) && !isAdminApiRoute(pathname)) return response;
       if (!user) {
+        if (isAdminRoute(pathname) || isAdminApiRoute(pathname)) {
+          return NextResponse.redirect(new URL("/admin/login", request.url));
+        }
         const url = new URL("/login", request.url);
         url.searchParams.set("next", pathname);
         return NextResponse.redirect(url);
       }
       const role = (user.user_metadata?.role as Role) ?? "user";
+      if (isAdminRoute(pathname) || isAdminApiRoute(pathname)) {
+        if (role !== "admin" && role !== "super_admin") {
+          return NextResponse.redirect(new URL("/", request.url));
+        }
+      }
       const allowed = ROLE_PATHS[pathname.split("/")[1] ? `/${pathname.split("/")[1]}` : pathname];
       if (allowed && !allowed.includes(role)) {
         return NextResponse.redirect(new URL(homeForRole(role), request.url));
@@ -112,12 +130,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(homeForRole(session.role), request.url));
   }
 
-  if (isPublic(pathname)) return NextResponse.next();
+  if (isPublic(pathname) && !isAdminRoute(pathname) && !isAdminApiRoute(pathname)) return NextResponse.next();
 
   if (!session) {
+    if (isAdminRoute(pathname) || isAdminApiRoute(pathname)) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
     const url = new URL("/login", request.url);
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
+  }
+
+  if (isAdminRoute(pathname) || isAdminApiRoute(pathname)) {
+    if (session.role !== "admin" && session.role !== "super_admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next();
   }
 
   const segment = `/${pathname.split("/")[1]}`;

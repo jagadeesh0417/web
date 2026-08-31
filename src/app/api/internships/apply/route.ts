@@ -60,8 +60,9 @@ export async function POST(request: NextRequest) {
     const applicationId = `INT-${year}-${randomId(8).toUpperCase()}`;
     const orderId = `ORD-${year}-${randomId(8).toUpperCase()}`;
 
+    const durationWeeks = parseInt(program.duration.match(/(\d+)/)?.[1] ?? "4", 10);
     const amount = Math.round(
-      program.price * (data.duration / program.durationWeeks) * (data.duration === 8 ? 0.95 : 1),
+      program.price * (data.duration / durationWeeks) * (data.duration === 8 ? 0.95 : 1),
     );
 
     const application = {

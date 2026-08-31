@@ -149,14 +149,13 @@ export default function HomePage() {
                   )}
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold">{p.title}</h3>
-                    <Badge variant={p.featured ? "primary" : "default"}>{p.durationWeeks} weeks</Badge>
+                    <Badge variant={p.featured ? "primary" : "default"}>{p.duration}</Badge>
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{p.tagline}</p>
                   <ul className="mt-5 flex-1 space-y-2.5">
-                    {p.includes.map((inc) => (
-                      <li key={inc} className="flex items-start gap-2 text-sm">
+                    {p.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm">
                         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                        {inc}
+                        {f}
                       </li>
                     ))}
                   </ul>

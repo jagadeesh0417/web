@@ -5,11 +5,12 @@ export const PROGRAMS: InternshipProgram[] = [
     id: "p4",
     slug: "foundation",
     title: "Foundation Internship",
-    durationWeeks: 4,
-    tagline: "Perfect start for beginners",
     description:
       "A fast, focused immersion that builds your fundamentals with live mentorship, guided assignments and a mini project you can show off.",
-    includes: [
+    duration: "4 Weeks",
+    price: 1999,
+    featured: false,
+    features: [
       "4 live sessions",
       "4 assignments",
       "1 mini project",
@@ -17,17 +18,25 @@ export const PROGRAMS: InternshipProgram[] = [
       "Mentor support",
       "Dashboard access",
     ],
-    price: 1999,
+    modules: ["Fundamentals", "Hands-on Practice", "Mini Project", "Assessment"],
+    projects: 1,
+    assessmentPassingScore: 70,
+    certificateIncluded: true,
+    mentorshipIncluded: true,
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "p6",
     slug: "professional",
     title: "Professional Internship",
-    durationWeeks: 6,
-    tagline: "Most popular",
     description:
       "Go deeper with weekly assessments, two real projects and a performance report that proves you are job-ready.",
-    includes: [
+    duration: "6 Weeks",
+    price: 3499,
+    featured: true,
+    features: [
       "6 live sessions",
       "8 assignments",
       "2 projects",
@@ -36,18 +45,25 @@ export const PROGRAMS: InternshipProgram[] = [
       "Performance report",
       "Mentor support",
     ],
-    price: 3499,
-    featured: true,
+    modules: ["Core Skills", "Advanced Topics", "Project Building", "Assessment & Review", "Performance Report", "Capstone"],
+    projects: 2,
+    assessmentPassingScore: 70,
+    certificateIncluded: true,
+    mentorshipIncluded: true,
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "p8",
     slug: "industry",
     title: "Industry Internship",
-    durationWeeks: 8,
-    tagline: "For career-focused candidates",
     description:
       "Work on client-based projects with full mentorship, portfolio building and a letter of recommendation based on your performance.",
-    includes: [
+    duration: "8 Weeks",
+    price: 5499,
+    featured: false,
+    features: [
       "Full mentorship",
       "Client-based project",
       "Portfolio building",
@@ -57,7 +73,14 @@ export const PROGRAMS: InternshipProgram[] = [
       "Placement assistance (if offered)",
       "Final evaluation",
     ],
-    price: 5499,
+    modules: ["Industry Foundations", "Specialization", "Client Project", "Portfolio Development", "Interview Prep", "Final Evaluation", "Recommendation", "Career Launch"],
+    projects: 4,
+    assessmentPassingScore: 75,
+    certificateIncluded: true,
+    mentorshipIncluded: true,
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
   },
 ];
 
@@ -80,10 +103,12 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Basic programming familiarity", "A laptop with internet"],
     mentorId: "m1",
     faqs: [
-      { q: "Do I need prior coding experience?", a: "Basic familiarity with any programming language helps, but our curriculum starts from first principles." },
-      { q: "What will I build?", a: "A portfolio-grade project plus 4-8 guided assignments depending on your program duration." },
-      { q: "Is this a paid internship?", a: "It's a project-based learning internship. You invest in the program and earn a certificate, portfolio and mentorship." },
+      { question: "Do I need prior coding experience?", answer: "Basic familiarity with any programming language helps, but our curriculum starts from first principles." },
+      { question: "What will I build?", answer: "A portfolio-grade project plus 4-8 guided assignments depending on your program duration." },
+      { question: "Is this a paid internship?", answer: "It's a project-based learning internship. You invest in the program and earn a certificate, portfolio and mentorship." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c2",
@@ -103,9 +128,11 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["No prior design experience required"],
     mentorId: "m2",
     faqs: [
-      { q: "Which tools will I learn?", a: "Figma is the primary tool, alongside Miro for research and FigJam for collaboration." },
-      { q: "Will I get real projects?", a: "Industry internship students work on client-style design briefs and portfolio case studies." },
+      { question: "Which tools will I learn?", answer: "Figma is the primary tool, alongside Miro for research and FigJam for collaboration." },
+      { question: "Will I get real projects?", answer: "Industry internship students work on client-style design briefs and portfolio case studies." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c3",
@@ -125,9 +152,11 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Interest in digital marketing", "Access to a Meta account"],
     mentorId: "m3",
     faqs: [
-      { q: "Do I need money to run ads?", a: "No. You learn on simulations and our mentor's live account walkthroughs; we do not ask you to spend." },
-      { q: "Will I get certified?", a: "You receive the Akradhii completion certificate; you can also attempt Meta Blueprint exams on your own." },
+      { question: "Do I need money to run ads?", answer: "No. You learn on simulations and our mentor's live account walkthroughs; we do not ask you to spend." },
+      { question: "Will I get certified?", answer: "You receive the Akradhii completion certificate; you can also attempt Meta Blueprint exams on your own." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c4",
@@ -147,8 +176,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Strong written communication"],
     mentorId: "m4",
     faqs: [
-      { q: "What projects will I work on?", a: "You'll build a marketing plan for a fictional (or your own) brand and execute content tasks." },
+      { question: "What projects will I work on?", answer: "You'll build a marketing plan for a fictional (or your own) brand and execute content tasks." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c5",
@@ -168,8 +199,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Logical thinking", "Familiarity with common SaaS tools"],
     mentorId: "m1",
     faqs: [
-      { q: "Do I need to code?", a: "No. Automation is built visually; we teach API basics along the way." },
+      { question: "Do I need to code?", answer: "No. Automation is built visually; we teach API basics along the way." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c6",
@@ -189,9 +222,11 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Comfort with computers", "Curiosity about AI"],
     mentorId: "m5",
     faqs: [
-      { q: "Do I need ML knowledge?", a: "No — we work with no-code and API-first AI tools." },
-      { q: "What do I build?", a: "A working AI assistant deployed on a real channel (web, WhatsApp or Slack)." },
+      { question: "Do I need ML knowledge?", answer: "No — we work with no-code and API-first AI tools." },
+      { question: "What do I build?", answer: "A working AI assistant deployed on a real channel (web, WhatsApp or Slack)." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c7",
@@ -211,8 +246,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["No prior experience required"],
     mentorId: "m2",
     faqs: [
-      { q: "Which software will I use?", a: "Canva and Figma as primary, with Photoshop fundamentals introduced." },
+      { question: "Which software will I use?", answer: "Canva and Figma as primary, with Photoshop fundamentals introduced." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c8",
@@ -232,8 +269,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Strong English proficiency"],
     mentorId: "m4",
     faqs: [
-      { q: "Will my work get published?", a: "Top performers get their work featured on Akradhii's blog and client projects." },
+      { question: "Will my work get published?", answer: "Top performers get their work featured on Akradhii's blog and client projects." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c9",
@@ -253,8 +292,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["Basic website familiarity"],
     mentorId: "m5",
     faqs: [
-      { q: "What tools will I use?", a: "Google Search Console, Google Analytics 4, Screaming Frog and Ahrefs (trial)." },
+      { question: "What tools will I use?", answer: "Google Search Console, Google Analytics 4, Screaming Frog and Ahrefs (trial)." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
   {
     id: "c10",
@@ -274,8 +315,10 @@ export const CATEGORIES: InternshipCategory[] = [
     prerequisites: ["A computer that can run editing software"],
     mentorId: "m3",
     faqs: [
-      { q: "Do I need a camera?", a: "No — you'll edit provided footage; you can use your phone to shoot your own content." },
+      { question: "Do I need a camera?", answer: "No — you'll edit provided footage; you can use your phone to shoot your own content." },
     ],
+    status: "active",
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
 ];
 

@@ -2,63 +2,124 @@
 
 import { useEffect, useState } from "react";
 import {
-  Users, Briefcase, GraduationCap, BookOpen, FileStack, Award, IndianRupee, Percent,
-  Globe2, LifeBuoy, FolderKanban,
+  Users, GraduationCap, BookOpen, CreditCard, CheckCircle, FileText, Award, IndianRupee,
 } from "lucide-react";
 import {
-  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { getSession } from "@/lib/auth";
-import { getApplications, getCertificates, getPayments } from "@/lib/data/repository";
-import { analytics } from "@/lib/data/sample-data";
+import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import type { AppUser } from "@/lib/types";
 
 const PIE_COLORS = ["#8b5cf6", "#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ec4899", "#64748b"];
 
+interface AdminStats {
+  totalStudents: number;
+  activeInterns: number;
+  totalEnrollments: number;
+  pendingPayments: number;
+  successfulPayments: number;
+  pendingSubmissions: number;
+  completedInternships: number;
+  certificatesIssued: number;
+  totalUsers: number;
+  totalApplications: number;
+  recentEnrollments: { id: string; enrollmentId: string; studentName: string; programTitle: string; status: string; startedAt: string }[];
+  recentPayments: { id: string; amount: number; status: string; createdAt: string; studentId: string }[];
+  recentCertificates: { id: string; certificateId: string; programTitle: string; issuedAt: string }[];
+  revenueByMonth: { month: string; revenue: number }[];
+  usersByRole: Record<string, number>;
+  enrollmentsByStatus: Record<string, number>;
+}
+
+function SkeletonCard() {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="flex items-start justify-between">
+        <div className="space-y-2">
+          <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+          <div className="h-7 w-16 animate-pulse rounded bg-muted" />
+        </div>
+        <div className="h-10 w-10 animate-pulse rounded-xl bg-muted" />
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
-  const [user, setUser] = useState<AppUser | null>(null);
-  const [ready, setReady] = useState(false);
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getSession().then(({ user }) => {
-      setUser(user);
-      setReady(true);
-    });
+    fetch("/api/admin/stats")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch stats");
+        return res.json();
+      })
+      .then((data) => setStats(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (!ready || !user) return <DashboardShell><div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-brand-500" /></DashboardShell>;
+  if (loading) {
+    return (
+      <DashboardShell>
+        <PageHeader title="Admin analytics" description="Platform-wide performance — users, internships, revenue and more." />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <SkeletonCard key={i} />)}
+        </div>
+        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 h-72 animate-pulse rounded-xl border border-border bg-card" />
+          <div className="h-72 animate-pulse rounded-xl border border-border bg-card" />
+        </div>
+        <div className="mt-6 grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 h-72 animate-pulse rounded-xl border border-border bg-card" />
+          <div className="h-72 animate-pulse rounded-xl border border-border bg-card" />
+        </div>
+      </DashboardShell>
+    );
+  }
 
-  const applications = getApplications();
-  const certificates = getCertificates();
-  const payments = getPayments();
-  const revenue = payments.filter((p) => p.status === "succeeded").reduce((a, p) => a + p.amount, 0);
+  if (error || !stats) {
+    return (
+      <DashboardShell>
+        <PageHeader title="Admin analytics" description="Platform-wide performance — users, internships, revenue and more." />
+        <Card className="p-8 text-center">
+          <p className="text-destructive font-medium">Failed to load dashboard data</p>
+          <p className="mt-1 text-sm text-muted-foreground">{error ?? "Unknown error"}</p>
+          <button onClick={() => window.location.reload()} className="mt-4 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
+            Retry
+          </button>
+        </Card>
+      </DashboardShell>
+    );
+  }
 
-  const stats = [
-    { title: "Total users", value: String(analytics.totalUsers), delta: 18, icon: Users, gradient: "from-violet-600 to-indigo-600" },
-    { title: "Total clients", value: String(analytics.totalClients), delta: 6, icon: Briefcase, gradient: "from-blue-600 to-cyan-500" },
-    { title: "Total interns", value: String(analytics.totalInterns), delta: 22, icon: GraduationCap, gradient: "from-emerald-600 to-teal-500" },
-    { title: "Active internships", value: String(analytics.activeInternships), delta: 2, icon: BookOpen, gradient: "from-fuchsia-600 to-pink-600" },
-    { title: "Applications", value: String(applications.length), delta: 9, icon: FileStack, gradient: "from-amber-500 to-orange-600" },
-    { title: "Certificates issued", value: String(certificates.length), delta: 12, icon: Award, gradient: "from-purple-600 to-violet-500" },
-    { title: "Revenue", value: formatCurrency(revenue), delta: 24, icon: IndianRupee, gradient: "from-emerald-500 to-green-600" },
-    { title: "Conversion rate", value: `${analytics.conversionRate}%`, delta: 1.2, icon: Percent, gradient: "from-sky-500 to-blue-600" },
+  const totalRevenue = stats.revenueByMonth.reduce((sum, m) => sum + m.revenue, 0);
+  const rolesData = Object.entries(stats.usersByRole).map(([role, count]) => ({ name: role, count }));
+
+  const statCards = [
+    { title: "Total Students", value: stats.totalStudents.toLocaleString("en-IN"), icon: Users, gradient: "from-violet-600 to-indigo-600" },
+    { title: "Active Interns", value: stats.activeInterns.toLocaleString("en-IN"), icon: GraduationCap, gradient: "from-emerald-600 to-teal-500" },
+    { title: "Total Enrollments", value: stats.totalEnrollments.toLocaleString("en-IN"), icon: BookOpen, gradient: "from-blue-600 to-cyan-500" },
+    { title: "Pending Payments", value: stats.pendingPayments.toLocaleString("en-IN"), icon: CreditCard, gradient: "from-amber-500 to-orange-600" },
+    { title: "Successful Payments", value: stats.successfulPayments.toLocaleString("en-IN"), icon: CheckCircle, gradient: "from-green-500 to-emerald-600" },
+    { title: "Pending Submissions", value: stats.pendingSubmissions.toLocaleString("en-IN"), icon: FileText, gradient: "from-fuchsia-600 to-pink-600" },
+    { title: "Completed Internships", value: stats.completedInternships.toLocaleString("en-IN"), icon: Award, gradient: "from-purple-600 to-violet-500" },
+    { title: "Certificates Issued", value: stats.certificatesIssued.toLocaleString("en-IN"), icon: Award, gradient: "from-sky-500 to-blue-600" },
   ];
 
   return (
     <DashboardShell>
-      <PageHeader
-        title="Admin analytics"
-        description="Platform-wide performance — users, internships, revenue and more."
-      />
+      <PageHeader title="Admin analytics" description="Platform-wide performance — users, internships, revenue and more." />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => (
+        {statCards.map((s) => (
           <StatCard key={s.title} {...s} />
         ))}
       </div>
@@ -66,42 +127,31 @@ export default function AdminDashboard() {
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Growth overview</CardTitle>
-            <CardDescription>Users & website visitors, last 8 months</CardDescription>
+            <CardTitle>Revenue by month</CardTitle>
+            <CardDescription>Last 6 months revenue</CardDescription>
           </CardHeader>
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={analytics.usersByMonth} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="gUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="gVisitors" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
+              <BarChart data={stats.revenueByMonth} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} />
-                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} />
-                <Area type="monotone" dataKey="visitors" name="Visitors" stroke="#0ea5e9" fill="url(#gVisitors)" />
-                <Area type="monotone" dataKey="users" name="Users" stroke="#8b5cf6" fill="url(#gUsers)" />
-              </AreaChart>
+                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} tickFormatter={(v: number) => `${v / 100000}L`} />
+                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} formatter={(v) => formatCurrency(Number(v))} />
+                <Bar dataKey="revenue" name="Revenue" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Applications by category</CardTitle>
+            <CardTitle>Users by role</CardTitle>
           </CardHeader>
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={analytics.applicationsByCategory} dataKey="count" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={2}>
-                  {analytics.applicationsByCategory.map((_, i) => (
+                <Pie data={rolesData} dataKey="count" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={2}>
+                  {rolesData.map((_, i) => (
                     <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>
@@ -114,44 +164,113 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card>
           <CardHeader>
-            <CardTitle>Revenue vs expenses</CardTitle>
-            <CardDescription>Monthly, in INR</CardDescription>
+            <CardTitle>Recent Enrollments</CardTitle>
           </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={analytics.revenueByMonth} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} />
-                <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} tickFormatter={(v: number) => `${v / 100000}L`} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} formatter={(v) => formatCurrency(Number(v))} />
-                <Bar dataKey="revenue" name="Revenue" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="expenses" name="Expenses" fill="#64748b" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent>
+            {stats.recentEnrollments.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No recent enrollments</p>
+            ) : (
+              <div className="space-y-3">
+                {stats.recentEnrollments.map((e) => (
+                  <div key={e.id} className="flex items-center gap-3 rounded-xl border border-border p-3.5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-600/10 text-violet-600">
+                      <GraduationCap className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{e.studentName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{e.programTitle}</p>
+                    </div>
+                    <Badge variant={e.status === "active" ? "success" : e.status === "completed" ? "info" : "default"}>
+                      {e.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Live platform stats</CardTitle>
+            <CardTitle>Recent Payments</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              { icon: Globe2, label: "Website visitors (30d)", value: analytics.websiteVisitors.toLocaleString("en-IN") },
-              { icon: LifeBuoy, label: "Open support tickets", value: String(analytics.supportTickets) },
-              { icon: FolderKanban, label: "Projects in progress", value: String(analytics.projectStatus.in_progress + analytics.projectStatus.review) },
-              { icon: Briefcase, label: "Completed projects", value: String(analytics.projectStatus.completed) },
-              { icon: Award, label: "Certificates verified", value: "1,240" },
-            ].map((row) => (
-              <div key={row.label} className="flex items-center justify-between rounded-xl border border-border p-3.5">
-                <span className="flex items-center gap-2.5 text-sm text-muted-foreground">
-                  <row.icon className="h-4 w-4 text-brand-500" /> {row.label}
-                </span>
-                <span className="font-bold">{row.value}</span>
+          <CardContent>
+            {stats.recentPayments.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No recent payments</p>
+            ) : (
+              <div className="space-y-3">
+                {stats.recentPayments.map((p) => (
+                  <div key={p.id} className="flex items-center gap-3 rounded-xl border border-border p-3.5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-600/10 text-green-600">
+                      <IndianRupee className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">{formatCurrency(p.amount)}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(p.createdAt).toLocaleDateString("en-IN")}</p>
+                    </div>
+                    <Badge variant={p.status === "succeeded" ? "success" : p.status === "pending" ? "warning" : "destructive"}>
+                      {p.status}
+                    </Badge>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Certificates</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats.recentCertificates.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No certificates issued</p>
+            ) : (
+              <div className="space-y-3">
+                {stats.recentCertificates.map((c) => (
+                  <div key={c.id} className="flex items-center gap-3 rounded-xl border border-border p-3.5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10 text-amber-500">
+                      <Award className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{c.programTitle}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(c.issuedAt).toLocaleDateString("en-IN")}</p>
+                    </div>
+                    <Badge variant="success">Issued</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Platform overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-xl border border-border p-4">
+                <p className="text-sm text-muted-foreground">Total Users</p>
+                <p className="mt-1 text-2xl font-bold">{stats.totalUsers.toLocaleString("en-IN")}</p>
+              </div>
+              <div className="rounded-xl border border-border p-4">
+                <p className="text-sm text-muted-foreground">Total Applications</p>
+                <p className="mt-1 text-2xl font-bold">{stats.totalApplications.toLocaleString("en-IN")}</p>
+              </div>
+              <div className="rounded-xl border border-border p-4">
+                <p className="text-sm text-muted-foreground">Total Revenue (6 mo)</p>
+                <p className="mt-1 text-2xl font-bold">{formatCurrency(totalRevenue)}</p>
+              </div>
+              <div className="rounded-xl border border-border p-4">
+                <p className="text-sm text-muted-foreground">Completed Internships</p>
+                <p className="mt-1 text-2xl font-bold">{stats.completedInternships.toLocaleString("en-IN")}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

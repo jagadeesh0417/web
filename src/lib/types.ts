@@ -49,12 +49,19 @@ export interface InternshipProgram {
   id: string;
   slug: string;
   title: string;
-  durationWeeks: 4 | 6 | 8;
-  tagline: string;
   description: string;
-  includes: string[];
+  duration: string;
   price: number;
-  featured?: boolean;
+  featured: boolean;
+  features: string[];
+  modules: string[];
+  projects: number;
+  assessmentPassingScore: number;
+  certificateIncluded: boolean;
+  mentorshipIncluded: boolean;
+  status: "active" | "inactive";
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface InternshipCategory {
@@ -62,13 +69,15 @@ export interface InternshipCategory {
   slug: string;
   name: string;
   icon: string;
+  gradient: string;
   description: string;
   learningOutcomes: string[];
   skills: string[];
   prerequisites: string[];
-  faqs: { q: string; a: string }[];
+  faqs: { question: string; answer: string }[];
   mentorId: string;
-  gradient: string;
+  status: "active" | "inactive";
+  createdAt: string;
 }
 
 export type ApplicationStatus = "pending" | "under_review" | "approved" | "rejected" | "requested_info";
@@ -396,6 +405,21 @@ export interface Analytics {
   usersByMonth: { month: string; users: number; visitors: number }[];
   revenueByMonth: { month: string; revenue: number; expenses: number }[];
   applicationsByCategory: { name: string; count: number }[];
+}
+
+export interface Video {
+  id: string;
+  title: string;
+  description: string;
+  driveUrl: string;
+  driveFileId: string;
+  embedUrl: string;
+  moduleId: string;
+  lessonOrder: number;
+  duration?: string;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
 }
 
 /** Re-export lead types for convenience */

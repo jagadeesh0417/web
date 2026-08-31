@@ -28,6 +28,11 @@ import { CATEGORIES, PROGRAMS } from "@/lib/constants";
 import { applicationSchema, validateFile } from "@/lib/validators";
 import { cn, formatCurrency } from "@/lib/utils";
 
+function parseDurationWeeks(d: string): number {
+  const match = d.match(/(\d+)/);
+  return match ? parseInt(match[1], 10) : 4;
+}
+
 const steps = ["Program", "Details", "Review", "Payment", "Confirmation"];
 
 const DURATION_META: Record<number, { modules: number; projects: number; completion: string; curriculum: string[] }> = {
@@ -309,7 +314,7 @@ function Wizard() {
                 >
                   <option value="">Select plan</option>
                   {PROGRAMS.map((p) => (
-                    <option key={p.id} value={p.slug}>{p.title} — {p.durationWeeks} weeks</option>
+                    <option key={p.id} value={p.slug}>{p.title} — {p.duration}</option>
                   ))}
                 </select>
               </Field>
@@ -319,7 +324,7 @@ function Wizard() {
               <div className="grid gap-3 sm:grid-cols-3">
                 {[4, 6, 8].map((d) => {
                   const m = DURATION_META[d];
-                  const p = Math.round(program.price * (d / program.durationWeeks) * (d === 8 ? 0.95 : 1));
+                   const p = Math.round(program.price * (d / parseDurationWeeks(program.duration)) * (d === 8 ? 0.95 : 1));
                   const selected = form.duration === d;
                   return (
                     <button
@@ -502,9 +507,9 @@ function Wizard() {
             <div className="rounded-2xl border border-brand-500/30 bg-brand-600/5 p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Payment Summary</p>
               <div className="mt-3 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(Math.round(program.price * (form.duration / program.durationWeeks) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Taxes</span><span className="text-success">Included</span></div>
-                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(Math.round(program.price * (form.duration / program.durationWeeks) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
               </div>
             </div>
 
@@ -538,7 +543,7 @@ function Wizard() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Amount</p>
-                  <p className="text-2xl font-extrabold">{formatCurrency(Math.round(program.price * (form.duration / program.durationWeeks) * (form.duration === 8 ? 0.95 : 1)))}</p>
+                  <p className="text-2xl font-extrabold">{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</p>
                 </div>
               </div>
             </div>
@@ -552,7 +557,7 @@ function Wizard() {
                 <div className="flex justify-between pt-2">
                   <Button variant="ghost" onClick={() => setStep(2)}><ArrowLeft className="h-4 w-4" /> Back</Button>
                   <Button variant="gradient" onClick={handlePayment}>
-                    Pay {formatCurrency(Math.round(program.price * (form.duration / program.durationWeeks) * (form.duration === 8 ? 0.95 : 1)))} securely
+                    Pay {formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))} securely
                   </Button>
                 </div>
               </>

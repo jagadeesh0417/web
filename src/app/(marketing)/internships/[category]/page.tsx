@@ -108,10 +108,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
               <div key={p.id} className="flex items-center justify-between rounded-xl border border-border p-4">
                 <div>
                   <p className="text-sm font-semibold">{p.title}</p>
-                  <p className="text-xs text-muted-foreground">{p.includes.slice(0, 2).join(" · ")}…</p>
+                  <p className="text-xs text-muted-foreground">{p.features.slice(0, 2).join(" · ")}…</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="default">{p.durationWeeks} weeks</Badge>
+                  <Badge variant="default">{p.duration}</Badge>
                   <Button variant="outline" size="sm">
                     <Link href={`/internships/apply?category=${category.slug}&program=${p.slug}`}>Choose</Link>
                   </Button>
@@ -142,12 +142,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <h2 className="text-center text-2xl font-bold">FAQ</h2>
         <div className="mt-6 space-y-3">
           {category.faqs.map((f) => (
-            <details key={f.q} className="group rounded-xl border border-border bg-card p-5">
+            <details key={f.question} className="group rounded-xl border border-border bg-card p-5">
               <summary className="flex cursor-pointer items-center justify-between font-medium list-none">
-                {f.q}
+                {f.question}
                 <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
               </summary>
-              <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{f.answer}</p>
             </details>
           ))}
         </div>
