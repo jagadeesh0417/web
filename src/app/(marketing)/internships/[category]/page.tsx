@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, GraduationCap, ChevronDown } from "lucide-react";
 import { CATEGORY_BY_SLUG, PROGRAMS } from "@/lib/constants";
+import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -18,6 +20,27 @@ const mentors = {
 
 export async function generateStaticParams() {
   return Object.keys(CATEGORY_BY_SLUG).map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
+  if (!category) return { title: "Internship not found" };
+  return {
+    title: `${category.name} Internship | Akradhii`,
+    description: `Join the ${category.name} internship at Akradhii. Learn ${category.skills.slice(0, 3).join(", ")} and more through project-based training.`,
+    openGraph: {
+      title: `${category.name} Internship | Akradhii`,
+      description: `Project-based ${category.name} internship with mentorship, real projects and verifiable certificates.`,
+      url: `${siteConfig.url}/internships/${slug}`,
+      type: "article",
+    },
+    alternates: { canonical: `${siteConfig.url}/internships/${slug}` },
+  };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Verify Certificate | Akradhii",
     description: "Public certificate authenticity verification.",
-    url: `${siteConfig.url}/verify-certificate`,
+    url: `${siteConfig.url}/verify`,
   },
-  alternates: { canonical: `${siteConfig.url}/verify-certificate` },
+  alternates: { canonical: `${siteConfig.url}/verify` },
 };
 
 export default function VerifyLayout({ children }: { children: React.ReactNode }) {

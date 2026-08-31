@@ -169,13 +169,19 @@ export default function InternshipsPage() {
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {learningFlow.map((f, i) => (
             <Reveal key={f.step} delay={i * 0.03}>
-              <Card className="h-full p-4">
+              <Card className="relative h-full p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-black text-brand-500/25">{f.step}</span>
                   <f.icon className="h-4 w-4 text-brand-400" />
                 </div>
                 <h3 className="mt-2 text-sm font-semibold">{f.title}</h3>
                 <p className="mt-1.5 text-xs text-muted-foreground">{f.text}</p>
+                {i < learningFlow.length - 1 && i !== 4 && (
+                  <span className="pointer-events-none absolute -right-3 top-1/2 -translate-y-1/2 text-lg font-bold text-muted-foreground/30 max-lg:hidden">→</span>
+                )}
+                {i === 4 && (
+                  <span className="pointer-events-none absolute -bottom-3 left-1/2 -translate-x-1/2 text-lg font-bold text-muted-foreground/30 max-lg:hidden">↓</span>
+                )}
               </Card>
             </Reveal>
           ))}

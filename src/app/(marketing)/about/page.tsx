@@ -15,7 +15,6 @@ import {
 import { siteConfig } from "@/config/site";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/marketing/reveal";
 
@@ -60,6 +59,7 @@ export default function AboutPage() {
     <div>
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-grid opacity-40" />
+        <div className="absolute inset-0 bg-glow" />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <Reveal className="mx-auto max-w-3xl text-center">
             <Badge variant="primary" className="mb-4">About us</Badge>
@@ -152,30 +152,32 @@ export default function AboutPage() {
           <Reveal>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-brand-400" />
-              <h2 className="text-3xl font-bold">Leadership</h2>
+              <h2 className="text-3xl font-bold">The team behind Akradhii</h2>
             </div>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              The people who set the bar for client delivery and mentorship. Bios reflect roles used across the platform.
+              A lean, hands-on team of full-stack engineers, performance marketers, product designers, and mentors — united by a shared commitment to craft and outcomes.
             </p>
           </Reveal>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { name: "Arjun Reddy", role: "Founder & CEO", bio: "Product engineering and digital growth. Sets studio direction across client work and internships." },
-              { name: "Teja Verma", role: "Head of Delivery", bio: "Owns client delivery quality, timelines and account health across engagements." },
-              { name: "Sneha Kulkarni", role: "Engineering & Mentorship Lead", bio: "Senior web engineer and lead mentor for the web development internship track." },
-            ].map((m, i) => (
-              <Reveal key={m.name} delay={i * 0.05}>
-                <Card className="flex h-full gap-4 p-6">
-                  <Avatar name={m.name} className="h-14 w-14 shrink-0 text-sm" />
-                  <div>
-                    <p className="font-semibold">{m.name}</p>
-                    <p className="text-xs text-brand-400">{m.role}</p>
-                    <p className="mt-2 text-sm text-muted-foreground">{m.bio}</p>
-                  </div>
+              { label: "Full-stack engineers", text: "Building fast, accessible web experiences from prototype to production." },
+              { label: "Performance marketers", text: "Driving qualified traffic and measurable ROI across paid and organic channels." },
+              { label: "Product designers", text: "Shaping intuitive interfaces and cohesive brand systems." },
+              { label: "Mentors & educators", text: "Guiding interns through real projects with structured feedback." },
+            ].map((c, i) => (
+              <Reveal key={c.label} delay={i * 0.05}>
+                <Card className="h-full p-6">
+                  <p className="font-semibold">{c.label}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{c.text}</p>
                 </Card>
               </Reveal>
             ))}
           </div>
+          <Reveal delay={0.2}>
+            <p className="mt-8 max-w-2xl text-sm text-muted-foreground">
+              We keep the core team small and senior, scaling through specialists and structured interns as projects demand. Everyone ships; nobody is just a title.
+            </p>
+          </Reveal>
         </div>
       </section>
 

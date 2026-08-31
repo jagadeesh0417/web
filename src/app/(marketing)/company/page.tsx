@@ -198,9 +198,11 @@ export default function CompanyPage() {
                 ))}
               </div>
               <p className="mt-8 text-xs font-medium uppercase tracking-wide text-muted-foreground">Teams we&apos;ve worked with</p>
-              <div className="mt-3 flex flex-wrap gap-4 opacity-70">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {partners.map((p) => (
-                  <span key={p} className="text-sm font-bold text-muted-foreground">{p}</span>
+                  <span key={p} className="rounded-full border border-border bg-muted/40 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-brand-500/40 hover:text-foreground">
+                    {p}
+                  </span>
                 ))}
               </div>
             </Reveal>

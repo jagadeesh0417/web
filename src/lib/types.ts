@@ -308,6 +308,9 @@ export interface PortfolioItem {
   service: string;
   client: string;
   summary: string;
+  challenge?: string;
+  solution?: string;
+  features?: string[];
   results: { label: string; value: string }[];
   gradient: string;
   tags: string[];
