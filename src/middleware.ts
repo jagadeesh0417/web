@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 import { homeForRole } from "@/lib/rbac";
 import type { Role } from "@/lib/types";
 
@@ -64,6 +63,7 @@ export async function middleware(request: NextRequest) {
 
   if (supabaseConfigured) {
     try {
+      const { createServerClient } = await import("@supabase/ssr");
       let response = NextResponse.next({ request });
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
