@@ -12,8 +12,14 @@ import {
   Sparkles,
   Star,
   GraduationCap,
+  Plus,
+  Minus,
+  Target,
+  Users,
+  Zap,
+  Award,
 } from "lucide-react";
-import { services, stats, partners } from "@/config/site";
+import { services, stats, partners, siteConfig } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 import { testimonials } from "@/lib/data/sample-data";
 import { portfolioItems } from "@/lib/data/sample-data";
@@ -27,7 +33,55 @@ const icons: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2, Megaphone, Workflow, Database, BrainCircuit, Search, Palette,
 };
 
+const faqItems = [
+  {
+    q: "What services does Akradhii provide?",
+    a: "We design and develop websites, run Meta Ads campaigns, build CRM pipelines, implement AI automation, handle SEO, and create brand identities. Every engagement is tailored to the client's business goals — no cookie-cutter solutions.",
+  },
+  {
+    q: "What type of websites do you build?",
+    a: "Corporate sites, SaaS landing pages, e-commerce stores, custom web applications and portfolio platforms. We work with Next.js, React, WordPress and headless CMS stacks depending on what the project actually needs.",
+  },
+  {
+    q: "Can you build a completely custom website?",
+    a: "Yes. From wireframes to deployment, we design and develop every project from scratch — custom UI, custom backend logic, custom integrations. Nothing is forced into a pre-built template.",
+  },
+  {
+    q: "How long does a website project take?",
+    a: "A landing page can ship in 1–2 weeks. A full business website or e-commerce build typically takes 4–8 weeks. Duration depends on scope, number of pages, functionality, content readiness and revision cycles.",
+  },
+  {
+    q: "How much does a website cost?",
+    a: "Pricing depends on requirements — pages, features, integrations and timeline. Contact us for a scoped estimate. We keep proposals transparent with no hidden line items.",
+  },
+  {
+    q: "Do you redesign existing websites?",
+    a: "Absolutely. We audit the current site, identify conversion and performance gaps, then redesign with a focus on speed, UX and business outcomes — not just visual refresh.",
+  },
+  {
+    q: "Do you provide support after launch?",
+    a: "Yes. We offer maintenance retainings for updates, security patches, performance monitoring and ongoing content changes. Support plans are flexible and month-to-month.",
+  },
+  {
+    q: "Do you work with clients outside Hyderabad?",
+    a: "Yes. We work with clients across India and internationally. Every project runs through structured communication — Slack, Notion, weekly calls — so location is never a blocker.",
+  },
+  {
+    q: "How do I start a project with Akradhii?",
+    a: "Reach out through the contact form or WhatsApp. We start with a discovery call, define scope and goals, send a proposal, then move into design and development. Simple and structured.",
+  },
+];
+
+const values = [
+  { icon: Target, title: "Results-first", desc: "Every decision ties back to measurable business outcomes — traffic, leads, revenue." },
+  { icon: Users, title: "Senior-led teams", desc: "No junior handoffs. Senior strategists, designers and engineers own your project end to end." },
+  { icon: Zap, title: "Speed without shortcuts", desc: "Fast iteration cycles with quality gates. We ship quickly and we ship right." },
+  { icon: Award, title: "Internship-grade quality", desc: "The same team that trains 300+ interns builds client projects — standards are non-negotiable." },
+];
+
 export default function HomePage() {
+  const whatsappUrl = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent("Hi, I'm interested in your services and would like to discuss a project.")}`;
+
   return (
     <>
       {/* Hero */}
@@ -80,6 +134,72 @@ export default function HomePage() {
               <span key={p} className="text-lg font-bold text-muted-foreground">{p}</span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* About the Company */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <Reveal>
+            <Badge variant="primary" className="mb-4">About Akradhii</Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Building digital experiences that move businesses forward
+            </h2>
+            <p className="mt-5 text-muted-foreground leading-relaxed">
+              Akradhii is a Hyderabad-based digital growth studio working with startups, SMBs and growing brands
+              across India. We combine strategy, design, development and performance marketing into a single
+              integrated workflow — so brands don&apos;t need five agencies to get results.
+            </p>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              Our team ships high-converting websites, runs data-driven Meta Ads campaigns, builds CRM
+              pipelines, implements AI automation and crafts brand identities that stick. Every project is
+              led by senior practitioners — not outsourced to the lowest bidder.
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-4">
+              {values.map((v) => (
+                <div key={v.title} className="rounded-xl border border-border bg-card/50 p-4">
+                  <v.icon className="h-5 w-5 text-brand-500" />
+                  <p className="mt-2 text-sm font-semibold">{v.title}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{v.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button variant="gradient">
+                <Link href="/about" className="flex items-center gap-2">Learn more about us <ArrowRight className="h-4 w-4" /></Link>
+              </Button>
+              <Button variant="outline">
+                <Link href="/contact" className="flex items-center gap-2">Start your project <ArrowRight className="h-4 w-4" /></Link>
+              </Button>
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-violet-600/10 to-indigo-600/10 blur-2xl" />
+              <div className="relative grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 p-6 text-white">
+                    <p className="text-3xl font-extrabold">120+</p>
+                    <p className="mt-1 text-sm text-white/80">Projects delivered</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card/80 p-6 backdrop-blur">
+                    <p className="text-3xl font-extrabold text-gradient">98%</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Client satisfaction</p>
+                  </div>
+                </div>
+                <div className="mt-8 space-y-4">
+                  <div className="rounded-2xl border border-border bg-card/80 p-6 backdrop-blur">
+                    <p className="text-3xl font-extrabold text-gradient">300+</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Interns trained</p>
+                  </div>
+                  <div className="rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 p-6 text-white">
+                    <p className="text-3xl font-extrabold">500+</p>
+                    <p className="mt-1 text-sm text-white/80">Certificates issued</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -182,28 +302,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Portfolio preview */}
+      {/* Selected Projects */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Recent work</h2>
-            <p className="mt-3 text-muted-foreground">Real results for real clients — with numbers.</p>
+            <Badge variant="primary" className="mb-3">Our work</Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Selected projects</h2>
+            <p className="mt-3 text-muted-foreground">Selected work we&apos;ve created for businesses and brands — with real numbers.</p>
           </div>
           <Button variant="outline">
-            <Link href="/our-work" className="flex items-center gap-2">View all projects <ArrowRight className="h-4 w-4" /></Link>
+            <Link href="/portfolio" className="flex items-center gap-2">View all projects <ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </Reveal>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {portfolioItems.slice(0, 4).map((p, i) => (
-            <Reveal key={p.id} delay={i * 0.05}>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {portfolioItems.slice(0, 6).map((p, i) => (
+            <Reveal key={p.id} delay={i * 0.06}>
               <Link href={`/portfolio/${p.slug}`}>
-                <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl">
-                  <div className={`flex h-40 items-center justify-center bg-gradient-to-br ${p.gradient}`}>
-                    <span className="text-4xl font-black text-white/30 group-hover:scale-125 transition-transform">A</span>
+                <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-600/10">
+                  <div className={`relative flex h-48 items-center justify-center bg-gradient-to-br ${p.gradient} overflow-hidden`}>
+                    <span className="text-6xl font-black text-white/20 transition-transform duration-500 group-hover:scale-110">A</span>
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                   </div>
                   <div className="p-5">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{p.service}</p>
-                    <h3 className="mt-1 font-semibold">{p.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-[10px]">{p.service}</Badge>
+                      <span className="text-[10px] text-muted-foreground">{p.year}</span>
+                    </div>
+                    <h3 className="mt-2 font-semibold group-hover:text-brand-500 transition-colors">{p.title}</h3>
+                    <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2">{p.summary}</p>
                     <div className="mt-3 flex gap-4">
                       {p.results.map((r) => (
                         <div key={r.label}>
@@ -212,6 +338,9 @@ export default function HomePage() {
                         </div>
                       ))}
                     </div>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-500 opacity-0 transition-opacity group-hover:opacity-100">
+                      View project <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
                   </div>
                 </Card>
               </Link>
@@ -245,6 +374,23 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Frequently Asked Questions</h2>
+          <p className="mt-4 text-muted-foreground">
+            Everything you need to know before starting your project with us.
+          </p>
+        </Reveal>
+        <div className="mx-auto mt-12 max-w-3xl space-y-3">
+          {faqItems.map((item, i) => (
+            <Reveal key={i} delay={i * 0.03}>
+              <FaqItem question={item.q} answer={item.a} defaultOpen={i === 0} />
+            </Reveal>
+          ))}
         </div>
       </section>
 
@@ -289,6 +435,40 @@ export default function HomePage() {
           </div>
         </Reveal>
       </section>
+
+      {/* Floating WhatsApp */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with us on WhatsApp"
+        className="group fixed bottom-5 right-5 z-50 flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 transition-all hover:scale-110 hover:shadow-xl hover:shadow-[#25D366]/40 sm:bottom-6 sm:right-6 sm:h-[62px] sm:w-[62px]"
+      >
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-20" />
+        <svg viewBox="0 0 32 32" fill="currentColor" className="relative h-7 w-7">
+          <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.29l6.118-1.97A15.907 15.907 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.318 22.594c-.39 1.094-1.932 2.004-3.154 2.27-.834.18-1.924.322-5.596-1.202-4.7-1.95-7.724-6.72-7.954-7.026-.224-.306-1.836-2.44-1.836-4.656 0-2.214 1.16-3.3 1.572-3.764.39-.434.936-.554 1.246-.554.312 0 .624.002.894.016.288.014.676-.108 1.056.806.39.94 1.324 3.232 1.44 3.464.116.232.194.504.038.81-.156.306-.232.496-.464.764-.232.268-.488.598-.694.804-.232.232-.472.484-.202.948.272.464 1.206 1.986 2.59 3.218 1.778 1.586 3.276 2.078 3.74 2.31.464.232.736.194 1.008-.116.272-.31 1.156-1.346 1.464-1.81.306-.464.616-.384 1.042-.232.428.156 2.714 1.28 3.182 1.514.466.232.776.348.894.54.116.2.116 1.15-.274 2.244z" />
+        </svg>
+        <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 sm:block">
+          Chat with us on WhatsApp
+        </span>
+      </a>
     </>
+  );
+}
+
+function FaqItem({ question, answer, defaultOpen = false }: { question: string; answer: string; defaultOpen?: boolean }) {
+  return (
+    <details open={defaultOpen} className="group rounded-xl border border-border bg-card/50 backdrop-blur">
+      <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold leading-snug select-none marker:hidden list-none">
+        <span>{question}</span>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border transition-colors group-open:bg-brand-500 group-open:text-white">
+          <Plus className="h-3.5 w-3.5 transition-transform group-open:hidden" />
+          <Minus className="h-3.5 w-3.5 hidden transition-transform group-open:block" />
+        </span>
+      </summary>
+      <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">
+        {answer}
+      </div>
+    </details>
   );
 }
