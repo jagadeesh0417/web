@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     const enrollment = getEnrollmentByUser(userId);
-    const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://akradhii.com"}/verify?cert=${cert.certificateId}`;
+    const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://akradhii.vercel.app"}/verify?cert=${cert.certificateId}`;
 
     const templates = emailTemplates();
     const emailHtml = templates.certificateIssued(cert.studentName, cert.certificateId, verifyUrl);

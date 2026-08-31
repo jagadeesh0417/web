@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: "Digital Growth Studio",
   description:
     "Akradhii is a premium digital agency for website design & development, Meta Ads, business automation, CRM, AI automation, SEO and branding — plus structured internship programs that build real careers.",
-  url: "https://akradhii.com",
+  url: "https://akradhii.vercel.app",
   email: "hello@akradhii.com",
   phone: "+91 98765 43210",
   /** Lead / business WhatsApp (digits for wa.me links) */
