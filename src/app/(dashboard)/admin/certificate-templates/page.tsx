@@ -407,7 +407,7 @@ function TemplateConfigEditor({
 
 function PreviewSection({ config }: { config: TemplateConfig }) {
   const sampleDate = "2024-06-15";
-  const verifyUrl = `${siteConfig.url}/verify-certificate?certificateId=AKR-2024-PREVIEW01`;
+  const verifyUrl = `${siteConfig.url}/verify?cert=AKR-2024-PREVIEW01`;
 
   return (
     <div className="space-y-4">

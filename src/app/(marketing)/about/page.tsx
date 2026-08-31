@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
+  Building2,
+  CheckCircle2,
   Compass,
   Eye,
   HeartHandshake,
+  Layers,
   Lightbulb,
   Rocket,
   Shield,
@@ -12,11 +15,13 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { siteConfig } from "@/config/site";
+import { siteConfig, services, partners } from "@/config/site";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/marketing/reveal";
+import { BlogListing } from "@/components/marketing/blog-listing";
+import { blogPosts } from "@/lib/data/sample-data";
 
 export const metadata: Metadata = {
   title: "About Us | Akradhii",
@@ -54,6 +59,37 @@ const differentiators = [
   },
 ];
 
+const approach = [
+  { title: "Discover", text: "Goals, constraints, audience and success metrics before any build begins." },
+  { title: "Design the system", text: "Architecture, messaging and process — not just screens or ad sets." },
+  { title: "Ship in milestones", text: "Visible progress, demos and feedback loops instead of big-bang delivery." },
+  { title: "Measure & improve", text: "Analytics, iteration and support so the work keeps compounding." },
+];
+
+const audiences = [
+  "Startups launching or rebuilding their digital presence",
+  "Small and mid-size businesses generating leads online",
+  "E-commerce and D2C brands scaling acquisition",
+  "Service businesses and professional firms",
+  "Education and training organizations",
+  "Teams that want both delivery and internship talent pipelines",
+];
+
+const capabilities = [
+  "Next.js / React web apps",
+  "Meta Ads & creative testing",
+  "CRM setup & pipelines",
+  "Workflow automation",
+  "AI assistants & RAG",
+  "Technical SEO",
+  "Brand systems",
+  "Internship LMS & certificates",
+];
+
+const publishedPosts = blogPosts
+  .filter((post) => post.published)
+  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
 export default function AboutPage() {
   return (
     <div>
@@ -62,13 +98,25 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-glow" />
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <Reveal className="mx-auto max-w-3xl text-center">
-            <Badge variant="primary" className="mb-4">About us</Badge>
+            <Badge variant="primary" className="mb-4">
+              <Building2 className="h-3 w-3" /> About us
+            </Badge>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Built to grow brands — and people
+              A digital growth studio — and more
             </h1>
             <p className="mt-5 text-lg text-muted-foreground">
               Akradhii is a digital growth studio in {siteConfig.city}. We help businesses ship technology that converts, and we train students through structured, project-based internships.
             </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button variant="gradient" size="lg">
+                <Link href="/contact" className="flex items-center gap-2">
+                  Work with us <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg">
+                <Link href="/services">Explore services</Link>
+              </Button>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -110,20 +158,53 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <Reveal>
+            <h2 className="text-3xl font-bold tracking-tight">What we do</h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              Akradhii operates as an integrated digital partner: strategy, design, engineering and growth under one roof. We solve fragmented vendor stacks, slow websites, untracked ads and manual operations — so founders and teams can focus on the product and customers.
+            </p>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              Based in {siteConfig.city}, we work with startups, SMBs and growing brands across India and remote engagements worldwide.
+            </p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <Card className="p-6 sm:p-8">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Layers className="h-4 w-4 text-brand-400" /> Core expertise
+              </h3>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {services.map((s) => (
+                  <li key={s.id}>
+                    <Link
+                      href={`/services/${s.id}`}
+                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:border-brand-500/40 hover:bg-muted/40"
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
+                      {s.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="text-center">
-            <h2 className="text-3xl font-bold">Values we work by</h2>
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight">Our approach</h2>
+            <p className="mt-3 text-muted-foreground">How we turn goals into measurable outcomes.</p>
           </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {values.map((v, i) => (
-              <Reveal key={v.title} delay={i * 0.04}>
-                <Card className="h-full p-6">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
-                    <v.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="mt-4 font-semibold">{v.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{v.text}</p>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {approach.map((a, i) => (
+              <Reveal key={a.title} delay={i * 0.05}>
+                <Card className="h-full p-5">
+                  <span className="text-xs font-bold text-brand-400">0{i + 1}</span>
+                  <h3 className="mt-2 font-semibold">{a.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{a.text}</p>
                 </Card>
               </Reveal>
             ))}
@@ -133,17 +214,76 @@ export default function AboutPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold">What makes us different</h2>
+          <h2 className="text-3xl font-bold">Values we work by</h2>
         </Reveal>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {differentiators.map((d, i) => (
-            <Reveal key={d.title} delay={i * 0.05}>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {values.map((v, i) => (
+            <Reveal key={v.title} delay={i * 0.04}>
               <Card className="h-full p-6">
-                <h3 className="font-semibold">{d.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{d.text}</p>
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
+                  <v.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-semibold">{v.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{v.text}</p>
               </Card>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-card/30">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold">What makes us different</h2>
+          </Reveal>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {differentiators.map((d, i) => (
+              <Reveal key={d.title} delay={i * 0.05}>
+                <Card className="h-full p-6">
+                  <h3 className="font-semibold">{d.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{d.text}</p>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <Reveal>
+            <div className="flex items-center gap-2 text-brand-400">
+              <Users className="h-5 w-5" />
+              <h2 className="text-2xl font-bold">Who we serve</h2>
+            </div>
+            <ul className="mt-6 space-y-3">
+              {audiences.map((a) => (
+                <li key={a} className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                  <span>{a}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h2 className="text-2xl font-bold">Capabilities & platforms</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Representative stack — final tools are chosen per engagement.</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {capabilities.map((c) => (
+                <span key={c} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium">
+                  {c}
+                </span>
+              ))}
+            </div>
+            <p className="mt-8 text-xs font-medium uppercase tracking-wide text-muted-foreground">Teams we&apos;ve worked with</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {partners.map((p) => (
+                <span key={p} className="rounded-full border border-border bg-muted/40 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-brand-500/40 hover:text-foreground">
+                  {p}
+                </span>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -182,18 +322,32 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold">Insights from the team</h2>
+          <p className="mt-3 text-muted-foreground">
+            Practical plays on growth, technology and the intern experience.
+          </p>
+        </Reveal>
+        <div className="mt-10">
+          <BlogListing posts={publishedPosts} />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
-          <Card className="flex flex-col items-center gap-6 bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white sm:flex-row sm:justify-between sm:text-left">
-            <div>
-              <h2 className="text-2xl font-bold">Want to work with Akradhii?</h2>
-              <p className="mt-2 max-w-lg text-white/85">Start a project conversation or explore how our internship programs work.</p>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
+          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white sm:p-14">
+            <h2 className="text-2xl font-bold sm:text-3xl">Have a project in mind? Let&apos;s talk.</h2>
+            <p className="mx-auto mt-3 max-w-xl text-white/85">
+              Tell us your goals — we&apos;ll map a practical path across services, timeline and budget.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button size="lg" className="bg-white text-violet-800 hover:bg-white/90">
-                <Link href="/contact" className="flex items-center gap-2">Contact <ArrowRight className="h-4 w-4" /></Link>
+                <Link href="/contact" className="flex items-center gap-2">
+                  Contact us <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
               <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
-                <Link href="/company">Company overview</Link>
+                <Link href="/internships">Explore internships</Link>
               </Button>
             </div>
           </Card>

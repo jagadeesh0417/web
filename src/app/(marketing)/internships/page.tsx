@@ -220,7 +220,7 @@ export default function InternshipsPage() {
                     <Link href="/login">Student login</Link>
                   </Button>
                   <Button variant="outline">
-                    <Link href="/verify-certificate">Verify a certificate</Link>
+                    <Link href="/verify">Verify a certificate</Link>
                   </Button>
                 </div>
               </Card>
@@ -238,7 +238,7 @@ export default function InternshipsPage() {
           {[
             { q: "Is the internship paid?", a: "It is a project-based learning internship. You invest in the program and receive mentorship, projects, a portfolio trail and a verifiable certificate." },
             { q: "How do modules unlock?", a: "Complete the week’s lessons and get that week’s assignment approved. The next module unlocks automatically in your dashboard." },
-            { q: "How do I get the certificate?", a: "Finish required lessons, get assignments approved, pass the final assessment (70%+), then issue or download from the Certificate page. Anyone can verify it via QR or /verify-certificate." },
+            { q: "How do I get the certificate?", a: "Finish required lessons, get assignments approved, pass the final assessment (70%+), then issue or download from the Certificate page. Anyone can verify it via QR or /verify." },
             { q: "Can I switch tracks?", a: "Talk to support early in the program. Switches depend on seat availability and progress." },
             { q: "Where do I apply?", a: "Use Apply now — the wizard captures profile details, program, duration and payment, then activates your student account." },
           ].map((f) => (
@@ -250,6 +250,59 @@ export default function InternshipsPage() {
               <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
             </details>
           ))}
+        </div>
+      </section>
+
+      {/* Verify certificate */}
+      <section className="border-y border-border bg-card/30">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+            <Reveal>
+              <div className="flex items-center gap-2 text-brand-400">
+                <Award className="h-5 w-5" />
+                <h2 className="text-3xl font-bold tracking-tight">Verify your certificate</h2>
+              </div>
+              <p className="mt-4 text-muted-foreground leading-relaxed">
+                Every Akradhii certificate includes a unique ID and QR code. Anyone — employers, recruiters, universities — can instantly confirm it is authentic and has not been revoked.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  "Enter the certificate ID to check validity",
+                  "Scan the QR code printed on the PDF",
+                  "See issuing date, category, duration and current status",
+                  "Confirm the certificate has not been revoked",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6">
+                <Button variant="gradient">
+                  <Link href="/verify">Verify a certificate</Link>
+                </Button>
+              </div>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <Card className="p-6 sm:p-8">
+                <h3 className="font-semibold">How verification works</h3>
+                <div className="mt-4 space-y-3">
+                  {[
+                    { step: "01", text: "Click the link on the certificate PDF or scan the QR code" },
+                    { step: "02", text: "The unique ID is sent to our verification API" },
+                    { step: "03", text: "We return the certificate status and details" },
+                    { step: "04", text: "Employers see: valid, revoked, or not found" },
+                  ].map((s) => (
+                    <div key={s.step} className="flex items-start gap-3">
+                      <span className="text-xs font-bold text-brand-400 mt-1">{s.step}</span>
+                      <p className="text-sm text-muted-foreground">{s.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </Reveal>
+          </div>
         </div>
       </section>
 

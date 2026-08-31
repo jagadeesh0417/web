@@ -30,8 +30,8 @@ export function Footer() {
           <h4 className="mb-4 text-sm font-semibold">Company</h4>
           <ul className="space-y-2.5">
             {[
-              { href: "/company", label: "Company" },
               { href: "/about", label: "About us" },
+              { href: "/services", label: "Services" },
               { href: "/contact", label: "Contact" },
             ].map((l) => (
               <li key={l.href}>
@@ -65,9 +65,7 @@ export function Footer() {
             {[
               { href: "/internships", label: "Internships" },
               { href: "/internships/apply", label: "Apply now" },
-              { href: "/verify-certificate", label: "Verify certificate" },
-              { href: "/our-work", label: "Our work" },
-              { href: "/blog", label: "Blog" },
+              { href: "/verify", label: "Verify certificate" },
             ].map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -107,7 +105,7 @@ export function Footer() {
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-5">
-            <Link href="/verify-certificate" className="hover:text-foreground">
+            <Link href="/verify" className="hover:text-foreground">
               Certificate verification
             </Link>
             <Link href="/privacy" className="hover:text-foreground">

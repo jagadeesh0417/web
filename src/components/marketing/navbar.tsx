@@ -13,12 +13,10 @@ import { homeForRole } from "@/lib/rbac";
 import { useToast } from "@/components/ui/toast";
 
 const links = [
-  { href: "/company", label: "Company" },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/internships", label: "Internships" },
-  { href: "/our-work", label: "Our Work" },
-  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -49,7 +47,7 @@ export function Navbar() {
   };
 
   const isActive = (href: string) => {
-    if (href === "/our-work") return pathname.startsWith("/our-work") || pathname.startsWith("/portfolio");
+    if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
@@ -71,15 +69,6 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/verify-certificate"
-            className={cn(
-              "rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
-              pathname.startsWith("/verify") ? "text-foreground" : "text-muted-foreground",
-            )}
-          >
-            Verify
-          </Link>
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
@@ -94,14 +83,9 @@ export function Navbar() {
               </Button>
             </div>
           ) : (
-            <>
-              <Button variant="ghost" size="sm" onClick={() => router.push("/login")}>
-                Log in
-              </Button>
-              <Button variant="gradient" size="sm" onClick={() => router.push("/contact")}>
-                Get started
-              </Button>
-            </>
+            <Button variant="ghost" size="sm" onClick={() => router.push("/login")}>
+              Log in
+            </Button>
           )}
         </div>
 
@@ -118,32 +102,20 @@ export function Navbar() {
       {open && (
         <div className="border-t border-border bg-card xl:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
-            {[...links, { href: "/verify-certificate", label: "Verify Certificate" }].map((l) => (
+            {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-lg px-3 py-2.5 text-sm font-medium",
-                  isActive(l.href) || (l.href === "/verify-certificate" && pathname.startsWith("/verify"))
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground",
+                  isActive(l.href) ? "bg-muted text-foreground" : "text-muted-foreground",
                 )}
               >
                 {l.label}
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center">
-              <Button
-                variant="gradient"
-                className="flex-1"
-                onClick={() => {
-                  setOpen(false);
-                  router.push("/contact");
-                }}
-              >
-                Contact us
-              </Button>
               {ready && user ? (
                 <Button variant="outline" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" /> Sign out
