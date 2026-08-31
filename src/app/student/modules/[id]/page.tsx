@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -13,13 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea, Field } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
-import { getSession } from "@/lib/auth";
-import {
-  getModuleById, isModuleUnlocked, isLessonComplete, markLessonComplete,
-  getAssignmentById, getSubmissionByAssignment, submitAssignment,
-} from "@/lib/data/repository";
+import { Spinner } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import type { AppUser, SubmissionLinkType } from "@/lib/types";
+import type { SubmissionLinkType } from "@/lib/types";
 
 const LINK_TYPES: Array<{ id: SubmissionLinkType; label: string; placeholder: string }> = [
   { id: "drive", label: "Google Drive", placeholder: "https://drive.google.com/file/d/…" },
@@ -29,29 +25,115 @@ const LINK_TYPES: Array<{ id: SubmissionLinkType; label: string; placeholder: st
   { id: "other", label: "Other", placeholder: "https://…" },
 ];
 
+interface LessonData {
+  id: string;
+  title: string;
+  duration: number;
+  videoUrl?: string;
+  notes: string;
+  learningObjectives?: string[];
+  type: string;
+  completed: boolean;
+}
+
+interface ModuleData {
+  id: string;
+  title: string;
+  week: number;
+  order: number;
+  description: string;
+  resources: { name: string; type: string }[];
+  lessons: LessonData[];
+  lessonsDone: number;
+  allLessonsDone: boolean;
+  percent: number;
+}
+
+interface AssignmentData {
+  id: string;
+  title: string;
+  description: string;
+  instructions: string[];
+  linkTypes: SubmissionLinkType[];
+}
+
+interface SubmissionData {
+  id: string;
+  links: string[];
+  linkType?: string;
+  note?: string;
+  status: string;
+  grade?: number;
+  feedback?: string;
+  submittedAt: string;
+}
+
+interface ApiResponse {
+  module: ModuleData;
+  unlocked: boolean;
+  lockReason?: string;
+  assignment: AssignmentData | null;
+  submission: SubmissionData | null;
+}
+
 export default function ModuleDetailPage() {
   const params = useParams<{ id: string }>();
   const { toast } = useToast();
-  const [user, setUser] = useState<AppUser | null>(null);
-  const [ready, setReady] = useState(false);
+  const [data, setData] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeLesson, setActiveLesson] = useState(0);
   const [linkType, setLinkType] = useState<SubmissionLinkType>("github");
   const [link, setLink] = useState("");
   const [comment, setComment] = useState("");
-  const [error, setError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/student/modules/${params.id}`);
+      if (!res.ok) {
+        if (res.status === 404) { setData(null); return; }
+        throw new Error("Failed to load module");
+      }
+      const json = await res.json();
+      setData(json);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to load module");
+    } finally {
+      setLoading(false);
+    }
+  }, [params.id]);
+
   useEffect(() => {
-    getSession().then(({ user }) => {
-      setUser(user);
-      setReady(true);
-    });
-  }, []);
+    fetchData();
+  }, [fetchData]);
 
-  if (!ready || !user) return <DashboardShell><div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-brand-500" /></DashboardShell>;
+  if (loading) {
+    return (
+      <DashboardShell>
+        <div className="flex items-center justify-center py-20"><Spinner /></div>
+      </DashboardShell>
+    );
+  }
 
-  const mod = getModuleById(params.id);
-  if (!mod) {
+  if (error) {
+    return (
+      <DashboardShell>
+        <PageHeader title="Module" description="Loading failed." />
+        <Card>
+          <CardContent className="flex flex-col items-center p-12 text-center">
+            <p className="text-sm text-destructive">{error}</p>
+            <Button variant="outline" size="sm" className="mt-4" onClick={fetchData}>Retry</Button>
+          </CardContent>
+        </Card>
+      </DashboardShell>
+    );
+  }
+
+  if (!data) {
     return (
       <DashboardShell>
         <PageHeader title="Module not found" description="This module doesn't exist." />
@@ -59,13 +141,9 @@ export default function ModuleDetailPage() {
     );
   }
 
-  const lock = isModuleUnlocked(user.id, mod);
-  const lessonsDone = mod.lessons.filter((l) => isLessonComplete(user.id, l.id)).length;
-  const allLessonsDone = lessonsDone === mod.lessons.length;
-  const assignment = mod.assignmentId ? getAssignmentById(mod.assignmentId) : undefined;
-  const submission = assignment ? getSubmissionByAssignment(assignment.id, user.id) : undefined;
+  const { module: mod, unlocked, lockReason, assignment, submission } = data;
 
-  if (!lock.unlocked) {
+  if (!unlocked) {
     return (
       <DashboardShell>
         <PageHeader title={mod.title} description={`Week ${mod.week}`} actions={
@@ -77,7 +155,7 @@ export default function ModuleDetailPage() {
               <Lock className="h-6 w-6" />
             </div>
             <h2 className="mt-4 text-lg font-bold">This module is locked</h2>
-            <p className="mt-1 max-w-sm text-sm text-muted-foreground">{lock.reason}</p>
+            <p className="mt-1 max-w-sm text-sm text-muted-foreground">{lockReason}</p>
             <Link href="/student/modules" className="mt-5">
               <Button variant="gradient">Back to modules</Button>
             </Link>
@@ -88,50 +166,93 @@ export default function ModuleDetailPage() {
   }
 
   const lesson = mod.lessons[activeLesson]!;
-  const lessonDone = isLessonComplete(user.id, lesson.id);
-  const modulePercent = Math.round((lessonsDone / mod.lessons.length) * 100);
+  const lessonDone = lesson.completed;
+  const { allLessonsDone } = mod;
 
-  const handleMarkComplete = () => {
-    markLessonComplete(user.id, lesson.id);
-    setActiveLesson((i) => (i + 1 < mod.lessons.length ? i + 1 : i));
-    toast("success", "Lesson complete", allLessonsDone ? "All lessons done — your assignment is now unlocked!" : "Great progress. Keep going!");
+  const handleMarkComplete = async () => {
+    try {
+      const res = await fetch("/api/student/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId: lesson.id }),
+      });
+      if (!res.ok) throw new Error("Failed to mark lesson");
+      setData((prev) => {
+        if (!prev) return prev;
+        const updatedLessons = prev.module.lessons.map((l, i) =>
+          i === activeLesson ? { ...l, completed: true } : l,
+        );
+        const done = updatedLessons.filter((l) => l.completed).length;
+        return {
+          ...prev,
+          module: {
+            ...prev.module,
+            lessons: updatedLessons,
+            lessonsDone: done,
+            allLessonsDone: done === updatedLessons.length,
+            percent: Math.round((done / updatedLessons.length) * 100),
+          },
+        };
+      });
+      setActiveLesson((i) => (i + 1 < mod.lessons.length ? i + 1 : i));
+      const nowDone = mod.lessonsDone + 1;
+      toast("success", "Lesson complete", nowDone === mod.lessons.length ? "All lessons done — your assignment is now unlocked!" : "Great progress. Keep going!");
+    } catch {
+      toast("error", "Error", "Could not mark lesson as complete. Try again.");
+    }
   };
 
-  const handleSubmitAssignment = () => {
+  const handleSubmitAssignment = async () => {
     if (!assignment) return;
-    setError("");
-    const allowed = assignment.linkTypes;
+    setSubmitError("");
     if (!link.trim()) {
-      setError("Paste a link to your work first.");
+      setSubmitError("Paste a link to your work first.");
       return;
     }
-    const validation = validateWorkLinkLocal(link, allowed);
-    if (validation) {
-      setError(validation);
+    try {
+      new URL(/^https?:\/\//i.test(link.trim()) ? link.trim() : `https://${link.trim()}`);
+    } catch {
+      setSubmitError("Enter a valid URL.");
+      return;
+    }
+    const allowed = assignment.linkTypes;
+    const detectedType = inferLinkTypeLocal(link);
+    if (allowed.length > 0 && !allowed.includes(detectedType)) {
+      setSubmitError(`Only ${allowed.join(", ")} links are accepted.`);
       return;
     }
     setSubmitting(true);
-    submitAssignment({
-      assignmentId: assignment.id,
-      studentId: user.id,
-      links: [link.trim()],
-      linkType: inferLinkTypeLocal(link),
-      files: [],
-      note: comment.trim() || undefined,
-    });
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      const res = await fetch("/api/student/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assignmentId: assignment.id,
+          link: link.trim(),
+          linkType: detectedType,
+          comment: comment.trim() || undefined,
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.ok) {
+        throw new Error(result.error || "Submission failed");
+      }
+      setData((prev) => prev ? { ...prev, submission: result.submission } : prev);
       toast("success", "Assignment submitted", "Your mentor will review it shortly — approval unlocks the next week.");
       setLink("");
       setComment("");
-    }, 500);
+    } catch (e: unknown) {
+      setSubmitError(e instanceof Error ? e.message : "Submission failed");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <DashboardShell>
       <PageHeader
         title={mod.title}
-        description={`Week ${mod.week} · ${lessonsDone}/${mod.lessons.length} lessons complete`}
+        description={`Week ${mod.week} · ${mod.lessonsDone}/${mod.lessons.length} lessons complete`}
         actions={
           <Link href="/student/modules"><Button variant="outline" size="sm"><ArrowLeft className="h-4 w-4" /> All modules</Button></Link>
         }
@@ -268,7 +389,7 @@ export default function ModuleDetailPage() {
                     <Field label="Comment (optional)">
                       <Textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="What did you build? Any notes for your mentor?" rows={2} />
                     </Field>
-                    {error && <p className="text-xs text-destructive">{error}</p>}
+                    {submitError && <p className="text-xs text-destructive">{submitError}</p>}
                     <Button variant="gradient" onClick={handleSubmitAssignment} loading={submitting} disabled={!allLessonsDone}>
                       <Send className="h-4 w-4" /> Submit for review
                     </Button>
@@ -283,11 +404,11 @@ export default function ModuleDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm font-semibold">Lessons</CardTitle>
-              <CardDescription>{modulePercent}% complete</CardDescription>
+              <CardDescription>{mod.percent}% complete</CardDescription>
             </CardHeader>
             <CardContent className="space-y-1.5">
               {mod.lessons.map((l, i) => {
-                const done = isLessonComplete(user.id, l.id);
+                const done = l.completed;
                 return (
                   <button
                     key={l.id}
@@ -344,20 +465,4 @@ function inferLinkTypeLocal(url: string): SubmissionLinkType {
   if (/figma\.com/.test(v)) return "figma";
   if (/canva\.com/.test(v)) return "canva";
   return "other";
-}
-
-function validateWorkLinkLocal(url: string, allowed: string[]): string | null {
-  const v = url.trim();
-  if (!v) return "Paste a link to your work";
-  try {
-    const parsed = new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`);
-    if (!["https:", "http:"].includes(parsed.protocol)) return "Only http(s) links are allowed";
-  } catch {
-    return "Enter a valid URL";
-  }
-  const type = inferLinkTypeLocal(v);
-  if (allowed.length > 0 && !allowed.includes(type)) {
-    return `Only ${allowed.join(", ")} links are accepted for this assignment.`;
-  }
-  return null;
 }

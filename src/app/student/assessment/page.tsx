@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Spinner } from "@/components/ui/progress";
 import { getSession } from "@/lib/auth";
 import {
   ASSESSMENT_RULES, getAssessmentEligibility, getAssessmentAttempts, submitAssessment, getEnrollmentByUser,
@@ -51,7 +52,26 @@ export default function AssessmentPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startedAt]);
 
-  if (!ready || !user) return <DashboardShell><div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-brand-500" /></DashboardShell>;
+  if (!ready) {
+    return (
+      <DashboardShell>
+        <div className="flex items-center justify-center py-20"><Spinner /></div>
+      </DashboardShell>
+    );
+  }
+
+  if (!user) {
+    return (
+      <DashboardShell>
+        <PageHeader title="Final Assessment" description={`${ASSESSMENT_RULES.questionsPerAttempt} questions · pass ${ASSESSMENT_RULES.passPercent}% · ${ASSESSMENT_RULES.maxAttempts} attempts`} />
+        <Card>
+          <CardContent className="flex flex-col items-center p-12 text-center">
+            <p className="text-sm text-muted-foreground">Please sign in to take the assessment.</p>
+          </CardContent>
+        </Card>
+      </DashboardShell>
+    );
+  }
 
   const eligibility = getAssessmentEligibility(user.id);
   const attempts = getAssessmentAttempts(user.id);
@@ -107,7 +127,6 @@ export default function AssessmentPage() {
   };
 
   const answered = Object.keys(answers).length;
-
   const mm = Math.floor(secondsLeft / 60);
   const ss = String(secondsLeft % 60).padStart(2, "0");
 
