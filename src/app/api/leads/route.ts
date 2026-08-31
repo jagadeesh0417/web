@@ -273,7 +273,9 @@ export async function GET(request: NextRequest) {
   const leads = await listLeads();
   // Strip internal-only fields before sending to client
   const safe = leads.map((l) => {
-    const { ipHash: _i, userAgent: _u, ...rest } = l;
+    const { ipHash, userAgent, ...rest } = l;
+    void ipHash;
+    void userAgent;
     const fields = { ...rest.fields };
     delete fields._phoneE164;
     return { ...rest, fields };

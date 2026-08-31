@@ -45,7 +45,7 @@ export default function ServicesHubPage() {
                   <Badge key={f} variant="outline">{f}</Badge>
                 ))}
               </div>
-              <Button variant="outline" className="mt-6 w-full" asChild={false}>
+              <Button variant="outline" className="mt-6 w-full">
                 <Link href={`/services/${s.id}`} className="flex w-full items-center justify-center gap-2">
                   Explore service <ArrowRight className="h-4 w-4" />
                 </Link>

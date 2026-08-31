@@ -89,7 +89,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 {service.heroDescription}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button variant="gradient" size="lg" asChild={false}>
+                <Button variant="gradient" size="lg">
                   <a href="#enquiry" className="flex items-center gap-2">
                     Get a free consultation <ArrowRight className="h-4 w-4" />
                   </a>
