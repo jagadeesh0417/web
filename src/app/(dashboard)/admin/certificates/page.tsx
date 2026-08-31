@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Field } from "@/components/ui/input";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { useToast } from "@/components/ui/toast";
 import { getSession } from "@/lib/auth";
 import { getCertificates, issueCertificate } from "@/lib/data/repository";
@@ -189,11 +190,16 @@ export default function AdminCertificatesPage() {
               </Field>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Duration">
-                  <select value={form.durationWeeks} onChange={(e) => setForm({ ...form, durationWeeks: e.target.value })} className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30">
-                    <option value="4">4 weeks</option>
-                    <option value="6">6 weeks</option>
-                    <option value="8">8 weeks</option>
-                  </select>
+                  <CustomSelect
+                    options={[
+                      { value: "4", label: "4 weeks" },
+                      { value: "6", label: "6 weeks" },
+                      { value: "8", label: "8 weeks" },
+                    ]}
+                    value={form.durationWeeks}
+                    onChange={(v) => setForm({ ...form, durationWeeks: v })}
+                    placeholder="Select duration"
+                  />
                 </Field>
                 <Field label="Score %">
                   <Input type="number" min={0} max={100} value={form.score} onChange={(e) => setForm({ ...form, score: e.target.value })} />

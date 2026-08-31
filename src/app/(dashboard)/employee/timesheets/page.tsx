@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Field } from "@/components/ui/input";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { useToast } from "@/components/ui/toast";
 import { getSession } from "@/lib/auth";
 import { getTimesheetsForEmployee, getProjects } from "@/lib/data/repository";
@@ -70,10 +71,12 @@ export default function TimesheetsPage() {
               <Field label="Date"><Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></Field>
               <Field label="Hours"><Input type="number" min={0.5} max={16} value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} /></Field>
               <Field label="Project">
-                <select value={form.projectName} onChange={(e) => setForm({ ...form, projectName: e.target.value })} className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30">
-                  <option value="">Select project</option>
-                  {projects.map((p) => <option key={p.id}>{p.name}</option>)}
-                </select>
+                <CustomSelect
+                  options={projects.map((p) => ({ value: p.name, label: p.name }))}
+                  value={form.projectName}
+                  onChange={(v) => setForm({ ...form, projectName: v })}
+                  placeholder="Select project"
+                />
               </Field>
             </div>
             <Field label="Note">

@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input, Field } from "@/components/ui/input";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/toast";
 import { CATEGORIES, PROGRAMS } from "@/lib/constants";
@@ -295,28 +296,20 @@ function Wizard() {
             <h2 className="text-lg font-semibold">1 · Choose your internship</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Category" error={errors.category}>
-                <select
+                <CustomSelect
+                  options={CATEGORIES.map((c) => ({ value: c.slug, label: c.name }))}
                   value={form.category}
-                  onChange={(e) => set("category", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Select category</option>
-                  {CATEGORIES.map((c) => (
-                    <option key={c.id} value={c.slug}>{c.name}</option>
-                  ))}
-                </select>
+                  onChange={(v) => set("category", v)}
+                  placeholder="Select category"
+                />
               </Field>
               <Field label="Plan" error={errors.program}>
-                <select
+                <CustomSelect
+                  options={PROGRAMS.map((p) => ({ value: p.slug, label: `${p.title} — ${p.duration}` }))}
                   value={form.program}
-                  onChange={(e) => set("program", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Select plan</option>
-                  {PROGRAMS.map((p) => (
-                    <option key={p.id} value={p.slug}>{p.title} — {p.duration}</option>
-                  ))}
-                </select>
+                  onChange={(v) => set("program", v)}
+                  placeholder="Select plan"
+                />
               </Field>
             </div>
 
@@ -398,17 +391,18 @@ function Wizard() {
                 <Input id="dob" type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />
               </Field>
               <Field label="Gender (optional)" htmlFor="gender">
-                <select
+                <CustomSelect
                   id="gender"
+                  options={[
+                    { value: "", label: "Prefer not to say" },
+                    { value: "Female", label: "Female" },
+                    { value: "Male", label: "Male" },
+                    { value: "Other", label: "Other" },
+                  ]}
                   value={form.gender}
-                  onChange={(e) => set("gender", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Prefer not to say</option>
-                  <option>Female</option>
-                  <option>Male</option>
-                  <option>Other</option>
-                </select>
+                  onChange={(v) => set("gender", v)}
+                  placeholder="Prefer not to say"
+                />
               </Field>
               <Field label="College / University" htmlFor="college" error={errors.college}>
                 <Input id="college" value={form.college} onChange={(e) => set("college", e.target.value)} placeholder="College name" autoComplete="organization" />
