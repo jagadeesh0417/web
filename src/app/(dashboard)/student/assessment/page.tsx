@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ClipboardCheck, AlertTriangle, CheckCircle2, XCircle, RotateCcw, ArrowRight } from "lucide-react";
+import { ClipboardCheck, AlertTriangle, CheckCircle2, XCircle, RotateCcw, ArrowRight, PartyPopper, Download, ExternalLink } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +25,9 @@ export default function AssessmentPage() {
   const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [generatingCert, setGeneratingCert] = useState(false);
+  const [certificateData, setCertificateData] = useState<{ certificateId: string; id: string } | null>(null);
+  const [certError, setCertError] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(TIMER_SECONDS);
 
   useEffect(() => {
@@ -64,7 +67,7 @@ export default function AssessmentPage() {
     setStartedAt(Date.now());
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!user || !startedAt) return;
     const enrollment = getEnrollmentByUser(user.id);
     if (!enrollment) return;
@@ -74,12 +77,33 @@ export default function AssessmentPage() {
       enrollment,
       questions.map((q) => ({ id: q.id, answer: answers[q.id] ?? -1 })),
     );
-    setTimeout(() => {
-      setStartedAt(null);
-      setQuestions([]);
-      setSubmitting(false);
-      // result shown via attempts list below
-    }, 600);
+    setStartedAt(null);
+    setQuestions([]);
+    setSubmitting(false);
+
+    const latestAttempts = getAssessmentAttempts(user.id);
+    const passed = latestAttempts.find((a) => a.passed);
+    if (passed) {
+      setGeneratingCert(true);
+      setCertError(null);
+      try {
+        const res = await fetch("/api/internships/certificate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.id }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || "Failed to generate certificate");
+        }
+        const data = await res.json();
+        setCertificateData(data);
+      } catch (err: unknown) {
+        setCertError(err instanceof Error ? err.message : "Failed to generate certificate");
+      } finally {
+        setGeneratingCert(false);
+      }
+    }
   };
 
   const answered = Object.keys(answers).length;
@@ -117,20 +141,68 @@ export default function AssessmentPage() {
         </Card>
       )}
 
-      {passedAttempt && (
+      {generatingCert && (
+        <Card>
+          <CardContent className="flex flex-col items-center p-10 text-center">
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-brand-500 border-t-transparent" />
+            <h2 className="mt-4 text-xl font-bold">Generating certificate...</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Please wait while we create your certificate.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {passedAttempt && !generatingCert && (
         <Card>
           <CardContent className="flex flex-col items-center p-10 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success/10 text-success">
-              <CheckCircle2 className="h-7 w-7" />
+              <PartyPopper className="h-7 w-7" />
             </div>
-            <h2 className="mt-4 text-xl font-bold">Assessment passed</h2>
+            <h2 className="mt-4 text-xl font-bold">Congratulations!</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              You scored <strong className="text-foreground">{passedAttempt.score}/{passedAttempt.total}</strong> ({Math.round((passedAttempt.score / passedAttempt.total) * 100)}%) on {new Date(passedAttempt.completedAt).toLocaleDateString("en-IN")}.
+              You scored <strong className="text-foreground">{passedAttempt.score}/{passedAttempt.total}</strong> ({Math.round((passedAttempt.score / passedAttempt.total) * 100)}%)
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">Your certificate is now available.</p>
-            <a href="/student/certificate" className="mt-5">
-              <Button variant="gradient">Go to certificate <ArrowRight className="h-4 w-4" /></Button>
-            </a>
+
+            <div className="mt-5 space-y-2 text-sm">
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-success" /> Result: <span className="font-semibold">Passed</span> ✓
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-success" /> Internship: <span className="font-semibold">Completed</span> ✓
+              </div>
+              {certificateData ? (
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-success" /> Certificate: <span className="font-semibold">Generated</span> ✓
+                </div>
+              ) : certError ? (
+                <div className="flex items-center justify-center gap-2 text-destructive">
+                  <XCircle className="h-4 w-4" /> Certificate: <span className="font-semibold">Error — {certError}</span>
+                </div>
+              ) : null}
+            </div>
+
+            {certificateData && (
+              <p className="mt-3 text-xs text-muted-foreground">Certificate ID: <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{certificateData.certificateId}</code></p>
+            )}
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <a href="/student/certificate">
+                <Button variant="gradient"><ArrowRight className="h-4 w-4" /> View Certificate</Button>
+              </a>
+              <a href="/student/certificate">
+                <Button variant="outline"><Download className="h-4 w-4" /> Download Certificate</Button>
+              </a>
+              {certificateData && (
+                <a href={`/verify-certificate?id=${certificateData.certificateId}`} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline"><ExternalLink className="h-4 w-4" /> Verify Certificate</Button>
+                </a>
+              )}
+            </div>
+
+            {certError && (
+              <Button variant="outline" size="sm" className="mt-4" onClick={() => handleSubmit()}>
+                Retry certificate generation
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}

@@ -184,6 +184,7 @@ export const ROLE_NAV: Partial<Record<Role, NavItem[]>> = {
     { href: "/admin/internships", label: "Internships", icon: "BookOpen" },
     { href: "/admin/projects", label: "Projects", icon: "FolderKanban" },
     { href: "/admin/certificates", label: "Certificates", icon: "Award" },
+    { href: "/admin/certificate-templates", label: "Cert Templates", icon: "FileText" },
     { href: "/admin/blog", label: "Blog", icon: "PenLine" },
     { href: "/admin/cms", label: "Website CMS", icon: "Globe" },
     { href: "/admin/testimonials", label: "Testimonials", icon: "Quote" },
