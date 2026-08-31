@@ -234,6 +234,27 @@ export interface Certificate {
   issuedAt: string;
   score: number;
   issuedBy: string;
+  status: "valid" | "revoked";
+  revokedAt?: string;
+  revokeReason?: string;
+  pdfUrl?: string;
+}
+
+export interface CompanySettings {
+  id: string;
+  companyName: string;
+  companyTagline: string;
+  logoUrl: string;
+  websiteUrl: string;
+  udyamNumber: string;
+  msmeInfo: string;
+  address: string;
+  authorizedSignatoryName: string;
+  authorizedSignatoryDesignation: string;
+  certificatePrefix: string;
+  supportEmail: string;
+  phone: string;
+  updatedAt: string;
 }
 
 export interface Announcement {

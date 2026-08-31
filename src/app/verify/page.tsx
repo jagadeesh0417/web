@@ -42,6 +42,7 @@ function toViewModel(api: PublicCert): Certificate {
     issuedAt: api.issuedAt,
     score: api.score,
     issuedBy: api.issuedBy,
+    status: (api.status as "valid" | "revoked") || "valid",
   };
 }
 
@@ -68,7 +69,9 @@ const steps = [
 
 function VerifyInner() {
   const params = useSearchParams();
+  // Support both ?cert= (QR code) and ?certificateId= and ?id= (legacy)
   const initial =
+    params.get("cert") ??
     params.get("certificateId") ??
     params.get("id") ??
     "";
@@ -214,24 +217,40 @@ function VerifyInner() {
 
         {result === "found" && cert && (
           <div className="mt-8">
-            <Card className="mx-auto mb-6 max-w-md border-success/40 bg-success/5">
-              <CardContent className="flex items-center gap-4 p-5">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
-                  <ShieldCheck className="h-6 w-6" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-bold text-success">✓ Certificate verified</p>
-                  <p className="text-xs text-muted-foreground">
-                    Issued to {cert.studentName} · {cert.categoryName} · {cert.programTitle} ({cert.durationWeeks} weeks) ·
-                    completed {formatDate(cert.endDate)}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            <CertificateView certificate={cert} />
+            {cert.status === "revoked" ? (
+              <Card className="mx-auto mb-6 max-w-md border-destructive/40 bg-destructive/5">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                    <ShieldX className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-bold text-destructive">✕ Certificate Revoked</p>
+                    <p className="text-xs text-muted-foreground">
+                      This certificate (#{cert.certificateId}) is no longer valid.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="mx-auto mb-6 max-w-md border-success/40 bg-success/5">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-bold text-success">✓ Certificate Valid</p>
+                    <p className="text-xs text-muted-foreground">
+                      Issued to {cert.studentName} · {cert.categoryName} · {cert.programTitle} ({cert.durationWeeks} weeks) ·
+                      completed {formatDate(cert.endDate)}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            <CertificateView certificate={cert} showActions={cert.status !== "revoked"} />
             <p className="mt-4 text-center text-xs text-muted-foreground">
-              <Badge variant="success">
-                <Award className="h-3 w-3" /> Verified against the Akradhii certificate registry
+              <Badge variant={cert.status === "revoked" ? "destructive" : "success"}>
+                <Award className="h-3 w-3" /> {cert.status === "revoked" ? "Certificate revoked" : "Verified against the Akradhii certificate registry"}
               </Badge>
             </p>
           </div>

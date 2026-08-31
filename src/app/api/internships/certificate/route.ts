@@ -126,6 +126,7 @@ export async function POST(request: NextRequest) {
         issuedAt: cert.issuedAt,
         score: cert.score,
         issuedBy: cert.issuedBy,
+        status: cert.status,
         verifyUrl,
       },
     });

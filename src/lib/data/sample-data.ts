@@ -570,6 +570,7 @@ export const certificates: Certificate[] = [
     issuedAt: daysAgo(1),
     score: 88,
     issuedBy: "Akradhii",
+    status: "valid",
   },
   {
     id: "cert_2",
@@ -584,6 +585,7 @@ export const certificates: Certificate[] = [
     issuedAt: daysAgo(137),
     score: 94,
     issuedBy: "Akradhii",
+    status: "valid",
   },
 ];
 

@@ -9,6 +9,7 @@ import type {
   Assignment,
   BlogPost,
   Certificate,
+  CompanySettings,
   Enrollment,
   InAppNotification,
   Lesson,
@@ -119,7 +120,8 @@ export type CollectionName =
   | "timesheets"
   | "email-log"
   | "notifications"
-  | "profiles";
+  | "profiles"
+  | "company-settings";
 
 export type CollectionTypeMap = {
   users: AppUser;
@@ -157,6 +159,7 @@ export type CollectionTypeMap = {
   "email-log": { id: string; to: string; subject: string; template: string; status: "sent" | "failed"; createdAt: string };
   notifications: InAppNotification;
   profiles: { id: string; userId: string; fullName: string; mobile: string; email: string; college?: string; course?: string; branch?: string; yearOfStudy?: string; graduationYear?: string; dob?: string; gender?: string; city?: string; state?: string; linkedin?: string; github?: string; resumeUrl?: string; idUrl?: string; skills?: string[]; bio?: string; title?: string };
+  "company-settings": CompanySettings;
 };
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
@@ -336,6 +339,22 @@ export async function seedInitialData(): Promise<void> {
     seedIfEmpty("email-templates", []);
     seedIfEmpty("audit-log", []);
     seedIfEmpty("profiles", []);
+    seedIfEmpty("company-settings", [{
+      id: "company_default",
+      companyName: "Akradhii",
+      companyTagline: "Digital Growth Studio",
+      logoUrl: "",
+      websiteUrl: "https://akradhii.vercel.app",
+      udyamNumber: "UDYAM-TS-19-0012345",
+      msmeInfo: "MSME Registered Enterprise",
+      address: "HITEC City, Hyderabad, Telangana 500081, India",
+      authorizedSignatoryName: "Akradhii",
+      authorizedSignatoryDesignation: "Director",
+      certificatePrefix: "AKR",
+      supportEmail: "support@akradhii.com",
+      phone: "+91 98485 79053",
+      updatedAt: new Date().toISOString(),
+    }] as CompanySettings[]);
   } catch {
     // If import fails (e.g. in edge runtime), skip seeding.
   }
@@ -660,4 +679,30 @@ export const notificationsStore = {
   count: () => count("notifications"),
   find: (predicate: (item: InAppNotification) => boolean) => find<InAppNotification>("notifications", predicate),
   findOne: (predicate: (item: InAppNotification) => boolean) => findOne<InAppNotification>("notifications", predicate),
+};
+
+export const companySettingsStore = {
+  getAll: () => getAll<CompanySettings>("company-settings"),
+  get: () => findOne<CompanySettings>("company-settings", (s) => s.id === "company_default"),
+  update: (patch: Partial<CompanySettings>) => {
+    const existing = findOne<CompanySettings>("company-settings", (s) => s.id === "company_default");
+    if (existing) return update<CompanySettings>("company-settings", "company_default", { ...patch, updatedAt: new Date().toISOString() });
+    return create<CompanySettings>("company-settings", {
+      id: "company_default",
+      companyName: "Akradhii",
+      companyTagline: "Digital Growth Studio",
+      logoUrl: "",
+      websiteUrl: "https://akradhii.vercel.app",
+      udyamNumber: "UDYAM-TS-19-0012345",
+      msmeInfo: "MSME Registered Enterprise",
+      address: "HITEC City, Hyderabad, Telangana 500081, India",
+      authorizedSignatoryName: "Akradhii",
+      authorizedSignatoryDesignation: "Director",
+      certificatePrefix: "AKR",
+      supportEmail: "support@akradhii.com",
+      phone: "+91 98485 79053",
+      updatedAt: new Date().toISOString(),
+      ...patch,
+    });
+  },
 };

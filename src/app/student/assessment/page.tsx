@@ -211,7 +211,7 @@ export default function AssessmentPage() {
                 <Button variant="outline"><Download className="h-4 w-4" /> Download Certificate</Button>
               </a>
               {certificateData && (
-                <a href={`/verify-certificate?id=${certificateData.certificateId}`} target="_blank" rel="noopener noreferrer">
+                <a href={`/verify?cert=${certificateData.certificateId}`} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline"><ExternalLink className="h-4 w-4" /> Verify Certificate</Button>
                 </a>
               )}

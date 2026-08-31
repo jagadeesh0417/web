@@ -561,11 +561,25 @@ export function getCertificateById(certId: string): Certificate | undefined {
   );
 }
 
-export function issueCertificate(input: Omit<Certificate, "id" | "issuedAt">): Certificate {
+export function issueCertificate(input: Omit<Certificate, "id" | "issuedAt" | "status">): Certificate {
   return mutate((db) => {
-    const cert: Certificate = { ...input, id: generateId("cert"), issuedAt: new Date().toISOString() };
+    const cert: Certificate = { ...input, id: generateId("cert"), issuedAt: new Date().toISOString(), status: "valid" };
     db.certificates.unshift(cert);
     return cert;
+  });
+}
+
+export function revokeCertificate(certId: string, reason?: string): Certificate | undefined {
+  return mutate((db) => {
+    const idx = db.certificates.findIndex((c) => c.certificateId === certId);
+    if (idx === -1) return undefined;
+    db.certificates[idx] = {
+      ...db.certificates[idx],
+      status: "revoked",
+      revokedAt: new Date().toISOString(),
+      revokeReason: reason,
+    };
+    return db.certificates[idx];
   });
 }
 

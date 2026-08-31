@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { Award, Lock, CheckCircle2, ArrowRight, Download, Eye, ExternalLink, Loader2, Calendar, Hash } from "lucide-react";
+import { Award, Lock, CheckCircle2, ArrowRight, ExternalLink, Loader2, Calendar, Hash } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,10 +78,6 @@ export default function CertificatePage() {
     certificateRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handleDownload = () => {
-    window.print();
-  };
-
   if (!ready || !user) return <DashboardShell><div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-brand-500" /></DashboardShell>;
 
   const eligibility = getCertificateEligibility(user.id);
@@ -95,12 +91,9 @@ export default function CertificatePage() {
         />
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <Button variant="outline" size="sm" onClick={scrollToCertificate}>
-            <Eye className="mr-2 h-4 w-4" /> View Certificate
+            <Award className="mr-2 h-4 w-4" /> View Certificate
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownload}>
-            <Download className="mr-2 h-4 w-4" /> Download Certificate
-          </Button>
-          <Link href={`/verify-certificate?id=${cert.id}`} target="_blank">
+          <Link href={`/verify?cert=${cert.certificateId}`} target="_blank">
             <Button variant="gradient" size="sm">
               <ExternalLink className="mr-2 h-4 w-4" /> Verify Certificate
             </Button>
@@ -111,7 +104,7 @@ export default function CertificatePage() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 <Hash className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-mono font-medium">Certificate ID: {cert.id}</span>
+                <span className="text-sm font-mono font-medium">Certificate ID: {cert.certificateId}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -127,7 +120,7 @@ export default function CertificatePage() {
           </CardContent>
         </Card>
         <div ref={certificateRef}>
-          <CertificateView certificate={cert} />
+          <CertificateView certificate={cert} showActions />
         </div>
       </DashboardShell>
     );
@@ -141,9 +134,11 @@ export default function CertificatePage() {
           <CardContent className="flex flex-col items-center p-10 text-center">
             <Loader2 className="h-12 w-12 animate-spin text-brand-500" />
             <h2 className="mt-4 text-xl font-bold">Generating Certificate</h2>
-            <p className="mt-2 max-w-md text-sm text-muted-foreground">
-              Please wait while we generate your certificate. This may take a moment...
-            </p>
+            <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+              <p>Creating certificate ID…</p>
+              <p>Generating verification QR…</p>
+              <p>Preparing your certificate…</p>
+            </div>
           </CardContent>
         </Card>
       </DashboardShell>

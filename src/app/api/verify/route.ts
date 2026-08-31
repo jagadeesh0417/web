@@ -30,7 +30,13 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const certificateId = (searchParams.get("certificateId") ?? searchParams.get("id") ?? "").trim();
+  // Support both ?cert= (QR code format) and ?certificateId= (search format)
+  const certificateId = (
+    searchParams.get("cert") ??
+    searchParams.get("certificateId") ??
+    searchParams.get("id") ??
+    ""
+  ).trim();
 
   if (!certificateId) {
     return NextResponse.json({ ok: false, error: "certificateId is required" }, { status: 400 });
@@ -63,7 +69,7 @@ export async function GET(request: Request) {
       completionDate: cert.endDate,
       issuedAt: cert.issuedAt,
       score: cert.score,
-      status: "verified",
+      status: cert.status || "valid",
       issuedBy: cert.issuedBy,
     },
   });
