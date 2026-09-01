@@ -27,10 +27,28 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "The story, mission, vision and values behind Akradhii — a digital growth studio and internship platform based in Hyderabad.",
+  keywords: [
+    "about akradhii",
+    "digital growth studio hyderabad",
+    "internship program india",
+    "digital agency hyderabad",
+  ],
   openGraph: {
-  title: "About Us",
+    title: "About Us",
     description: "Story, mission and values of Akradhii Digital Growth Studio.",
     url: `${siteConfig.url}/about`,
+    images: [
+      {
+        url: `${siteConfig.url}/og-default.svg`,
+        width: 1200,
+        height: 630,
+        alt: "About Akradhii",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [`${siteConfig.url}/og-default.svg`],
   },
   alternates: { canonical: `${siteConfig.url}/about` },
 };

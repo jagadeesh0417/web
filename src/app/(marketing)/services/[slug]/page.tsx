@@ -31,6 +31,52 @@ export function generateStaticParams() {
   return getAllServiceSlugs().map((slug) => ({ slug }));
 }
 
+const serviceKeywords: Record<string, string[]> = {
+  "web-development": [
+    "website development hyderabad",
+    "next.js agency india",
+    "web app development",
+    "landing page design",
+    "e-commerce website development",
+  ],
+  "meta-ads": [
+    "meta ads agency",
+    "facebook ads management india",
+    "instagram ads agency hyderabad",
+    "paid advertising services",
+  ],
+  automation: [
+    "business automation services",
+    "workflow automation india",
+    "process automation agency",
+    "CRM automation hyderabad",
+  ],
+  crm: [
+    "CRM solutions hyderabad",
+    "CRM setup agency india",
+    "sales pipeline management",
+    "CRM consulting services",
+  ],
+  "ai-automation": [
+    "AI automation services india",
+    "AI chatbot development",
+    "AI workflow automation",
+    "machine learning agency",
+  ],
+  seo: [
+    "SEO agency india",
+    "SEO services hyderabad",
+    "technical SEO audit",
+    "local SEO services",
+  ],
+  branding: [
+    "branding agency hyderabad",
+    "logo design india",
+    "brand identity services",
+    "visual identity design",
+  ],
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
@@ -38,12 +84,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: service.seoTitle,
     description: service.seoDescription,
+    keywords: serviceKeywords[slug] ?? [],
     openGraph: {
       title: service.seoTitle,
       description: service.seoDescription,
       url: `${siteConfig.url}/services/${service.slug}`,
       siteName: siteConfig.name,
       type: "website",
+      images: [
+        {
+          url: `${siteConfig.url}/og-default.svg`,
+          width: 1200,
+          height: 630,
+          alt: service.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${siteConfig.url}/og-default.svg`],
     },
     alternates: {
       canonical: `${siteConfig.url}/services/${service.slug}`,

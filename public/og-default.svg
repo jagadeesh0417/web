@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b1020"/>
+      <stop offset="100%" style="stop-color:#1a1f3a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative dots -->
+  <circle cx="100" cy="100" r="2" fill="#6366f1" opacity="0.3"/>
+  <circle cx="150" cy="80" r="1.5" fill="#8b5cf6" opacity="0.2"/>
+  <circle cx="1100" cy="530" r="2" fill="#6366f1" opacity="0.3"/>
+  <circle cx="1050" cy="550" r="1.5" fill="#8b5cf6" opacity="0.2"/>
+  <circle cx="200" cy="500" r="1" fill="#a78bfa" opacity="0.15"/>
+  <circle cx="1000" cy="120" r="1" fill="#a78bfa" opacity="0.15"/>
+  <!-- Accent line -->
+  <rect x="400" y="260" width="400" height="2" rx="1" fill="url(#accent)" opacity="0.6"/>
+  <!-- Logotype -->
+  <text x="600" y="310" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" fill="#ffffff" letter-spacing="-1">Akradhii</text>
+  <!-- Tagline -->
+  <text x="600" y="350" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#94a3b8" letter-spacing="4" text-transform="uppercase">Digital Growth Studio</text>
+</svg>

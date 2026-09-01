@@ -38,6 +38,18 @@ export async function generateMetadata({
       description: item.summary,
       url: `${siteConfig.url}/portfolio/${item.slug}`,
       type: "article",
+      images: [
+        {
+          url: `${siteConfig.url}/og-default.svg`,
+          width: 1200,
+          height: 630,
+          alt: item.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${siteConfig.url}/og-default.svg`],
     },
     alternates: { canonical: `${siteConfig.url}/portfolio/${item.slug}` },
   };

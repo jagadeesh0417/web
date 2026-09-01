@@ -20,9 +20,21 @@ export const metadata: Metadata = {
   description:
     "A look at what we've built — websites, Meta campaigns, automations and brand systems from the Akradhii studio.",
   openGraph: {
-  title: "Our Work",
+    title: "Our Work",
     description: "Selected Akradhii projects and case studies.",
     url: `${siteConfig.url}/portfolio`,
+    images: [
+      {
+        url: `${siteConfig.url}/og-default.svg`,
+        width: 1200,
+        height: 630,
+        alt: "Akradhii Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [`${siteConfig.url}/og-default.svg`],
   },
   alternates: { canonical: `${siteConfig.url}/portfolio` },
 };

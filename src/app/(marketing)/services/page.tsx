@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { servicesHub } from "@/config/services-detail";
+import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -14,6 +15,30 @@ export const metadata: Metadata = {
   title: "Services",
   description:
     "Explore Akradhii services — website development, Meta Ads, automation, CRM, AI, SEO and branding. Open a dedicated page for each offering.",
+  keywords: [
+    "web design services",
+    "meta ads agency",
+    "CRM solutions hyderabad",
+    "AI automation services",
+    "SEO agency india",
+  ],
+  openGraph: {
+    title: "Services",
+    description: "Website development, Meta Ads, automation, CRM, AI, SEO and branding services.",
+    url: `${siteConfig.url}/services`,
+    images: [
+      {
+        url: `${siteConfig.url}/og-default.svg`,
+        width: 1200,
+        height: 630,
+        alt: "Akradhii Services",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [`${siteConfig.url}/og-default.svg`],
+  },
 };
 
 const stats = [

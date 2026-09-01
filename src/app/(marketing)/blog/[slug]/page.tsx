@@ -32,6 +32,18 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.publishedAt,
       authors: [post.author],
+      images: [
+        {
+          url: `${siteConfig.url}/og-default.svg`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${siteConfig.url}/og-default.svg`],
     },
     alternates: { canonical: `${siteConfig.url}/blog/${post.slug}` },
   };

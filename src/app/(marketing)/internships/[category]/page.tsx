@@ -34,10 +34,22 @@ export async function generateMetadata({
       title: `${category.name} Internship`,
     description: `Join the ${category.name} internship at Akradhii. Learn ${category.skills.slice(0, 3).join(", ")} and more through project-based training.`,
     openGraph: {
-    title: `${category.name} Internship`,
+      title: `${category.name} Internship`,
       description: `Project-based ${category.name} internship with mentorship, real projects and verifiable certificates.`,
       url: `${siteConfig.url}/internships/${slug}`,
       type: "article",
+      images: [
+        {
+          url: `${siteConfig.url}/og-default.svg`,
+          width: 1200,
+          height: 630,
+          alt: `${category.name} Internship`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${siteConfig.url}/og-default.svg`],
     },
     alternates: { canonical: `${siteConfig.url}/internships/${slug}` },
   };
