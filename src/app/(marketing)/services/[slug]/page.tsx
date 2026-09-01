@@ -5,7 +5,6 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronRight,
-  CircleDot,
   Sparkles,
   Target,
   Users,
@@ -24,6 +23,7 @@ import { Reveal } from "@/components/marketing/reveal";
 import { ServiceEnquiryForm } from "@/components/services/service-enquiry-form";
 import { ServiceFaq } from "@/components/services/service-faq";
 import { ServiceIcon } from "@/components/services/service-icons";
+import { ProcessTimeline } from "@/components/services/process-timeline";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -215,7 +215,7 @@ export default async function ServiceDetailPage({ params }: Props) {
             <Reveal key={item.title} delay={i * 0.03}>
               <Card className="h-full p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600/15 text-brand-400">
-                  <CircleDot className="h-4 w-4" />
+                  <CheckCircle2 className="h-4 w-4 text-brand-400" />
                 </div>
                 <h3 className="mt-4 font-semibold">{item.title}</h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">{item.description}</p>
@@ -265,21 +265,9 @@ export default async function ServiceDetailPage({ params }: Props) {
 
           <Reveal delay={0.08}>
             <h2 className="text-2xl font-bold tracking-tight">Our process</h2>
-            <ol className="mt-6 space-y-4">
-              {service.process.map((step) => (
-                <li key={step.step} className="flex gap-4">
-                  <span
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${service.gradient} text-xs font-bold text-white`}
-                  >
-                    {step.step}
-                  </span>
-                  <div>
-                    <p className="font-semibold">{step.title}</p>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{step.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <div className="mt-6">
+              <ProcessTimeline steps={service.process} gradient={service.gradient} />
+            </div>
           </Reveal>
         </div>
       </section>

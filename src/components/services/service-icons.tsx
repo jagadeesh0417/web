@@ -1,22 +1,24 @@
 import {
-  Code2,
+  Bot,
+  Globe,
+  LayoutGrid,
   Megaphone,
-  Workflow,
-  Database,
-  BrainCircuit,
-  Search,
   Palette,
+  Search,
+  Sparkles,
+  TrendingUp,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 
 export const serviceIconMap: Record<string, LucideIcon> = {
-  Code2,
-  Megaphone,
-  Workflow,
-  Database,
-  BrainCircuit,
+  Code2: Globe,
+  Megaphone: TrendingUp,
+  Workflow: Zap,
+  Database: LayoutGrid,
+  BrainCircuit: Bot,
   Search,
-  Palette,
+  Palette: Sparkles,
 };
 
 export function ServiceIcon({
@@ -26,6 +28,6 @@ export function ServiceIcon({
   name: string;
   className?: string;
 }) {
-  const Icon = serviceIconMap[name] ?? Code2;
+  const Icon = serviceIconMap[name] ?? Globe;
   return <Icon className={className} />;
 }
