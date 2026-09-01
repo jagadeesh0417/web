@@ -81,8 +81,6 @@ const values = [
 ];
 
 export default function HomePage() {
-  const whatsappUrl = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent("Hi, I'm interested in your services and would like to discuss a project.")}`;
-
   return (
     <>
       {/* Hero */}
@@ -422,23 +420,6 @@ export default function HomePage() {
           </div>
         </Reveal>
       </section>
-
-      {/* Floating WhatsApp */}
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat with us on WhatsApp"
-        className="group fixed bottom-5 right-5 z-50 flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 transition-all hover:scale-110 hover:shadow-xl hover:shadow-[#25D366]/40 sm:bottom-6 sm:right-6 sm:h-[62px] sm:w-[62px]"
-      >
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#25D366] opacity-20" />
-        <svg viewBox="0 0 32 32" fill="currentColor" className="relative h-7 w-7">
-          <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.29l6.118-1.97A15.907 15.907 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.318 22.594c-.39 1.094-1.932 2.004-3.154 2.27-.834.18-1.924.322-5.596-1.202-4.7-1.95-7.724-6.72-7.954-7.026-.224-.306-1.836-2.44-1.836-4.656 0-2.214 1.16-3.3 1.572-3.764.39-.434.936-.554 1.246-.554.312 0 .624.002.894.016.288.014.676-.108 1.056.806.39.94 1.324 3.232 1.44 3.464.116.232.194.504.038.81-.156.306-.232.496-.464.764-.232.268-.488.598-.694.804-.232.232-.472.484-.202.948.272.464 1.206 1.986 2.59 3.218 1.778 1.586 3.276 2.078 3.74 2.31.464.232.736.194 1.008-.116.272-.31 1.156-1.346 1.464-1.81.306-.464.616-.384 1.042-.232.428.156 2.714 1.28 3.182 1.514.466.232.776.348.894.54.116.2.116 1.15-.274 2.244z" />
-        </svg>
-        <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 sm:block">
-          Chat with us on WhatsApp
-        </span>
-      </a>
     </>
   );
 }
