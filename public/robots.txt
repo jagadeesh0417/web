@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+Disallow: /login
+Disallow: /api/
+
+Sitemap: https://akradhii.vercel.app/sitemap.xml

@@ -63,8 +63,52 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Akradhii",
+    description:
+      "Premium digital growth studio — websites, Meta Ads, CRM, AI automation, SEO, branding and structured internship programs.",
+    url: "https://akradhii.vercel.app",
+    logo: "https://akradhii.vercel.app/logo.svg",
+    image: "https://akradhii.vercel.app/og-default.svg",
+    telephone: "+919848579053",
+    email: "hello@akradhii.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "HITEC City",
+      addressLocality: "Hyderabad",
+      addressRegion: "Telangana",
+      postalCode: "500081",
+      addressCountry: "IN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "17.4435",
+      longitude: "78.3772",
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "10:00",
+      closes: "19:00",
+    },
+    sameAs: [
+      "https://instagram.com/akradhii",
+      "https://linkedin.com/company/akradhii",
+      "https://x.com/akradhii",
+      "https://youtube.com/@akradhii",
+    ],
+  };
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ToastProvider>
           <DialogProvider>{children}</DialogProvider>
