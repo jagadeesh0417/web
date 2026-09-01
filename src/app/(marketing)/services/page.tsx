@@ -11,7 +11,7 @@ import { PortfolioGrid } from "@/components/marketing/portfolio-grid";
 import { portfolioItems } from "@/lib/data/sample-data";
 
 export const metadata: Metadata = {
-  title: "Services | Akradhii",
+  title: "Services",
   description:
     "Explore Akradhii services — website development, Meta Ads, automation, CRM, AI, SEO and branding. Open a dedicated page for each offering.",
 };

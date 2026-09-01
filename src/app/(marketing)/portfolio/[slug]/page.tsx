@@ -31,7 +31,7 @@ export async function generateMetadata({
   const item = portfolioItems.find((p) => p.slug === slug);
   if (!item) return { title: "Project not found" };
   return {
-    title: `${item.title} | Akradhii Portfolio`,
+    title: `${item.title} Portfolio`,
     description: item.summary,
     openGraph: {
       title: item.title,

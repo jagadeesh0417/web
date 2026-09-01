@@ -23,7 +23,7 @@ export async function generateMetadata({
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) return { title: "Article not found" };
   return {
-    title: `${post.title} | Akradhii Blog`,
+    title: `${post.title} Blog`,
     description: post.excerpt,
     openGraph: {
       title: post.title,

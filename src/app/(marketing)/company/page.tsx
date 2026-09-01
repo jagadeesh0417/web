@@ -17,11 +17,11 @@ import { Reveal } from "@/components/marketing/reveal";
 import { ServiceIcon } from "@/components/services/service-icons";
 
 export const metadata: Metadata = {
-  title: "Company | Akradhii",
+  title: "Company",
   description:
     "Akradhii is a digital growth studio in Hyderabad — websites, Meta Ads, automation, CRM, AI, SEO, branding and structured internship programs.",
   openGraph: {
-    title: "Company | Akradhii",
+  title: "Company",
     description: siteConfig.description,
     url: `${siteConfig.url}/company`,
   },

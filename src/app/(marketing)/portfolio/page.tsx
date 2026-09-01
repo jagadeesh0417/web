@@ -16,11 +16,11 @@ const stats = [
 ];
 
 export const metadata: Metadata = {
-  title: "Our Work | Akradhii",
+  title: "Our Work",
   description:
     "A look at what we've built — websites, Meta campaigns, automations and brand systems from the Akradhii studio.",
   openGraph: {
-    title: "Our Work | Akradhii",
+  title: "Our Work",
     description: "Selected Akradhii projects and case studies.",
     url: `${siteConfig.url}/portfolio`,
   },

@@ -6,11 +6,11 @@ import { Reveal } from "@/components/marketing/reveal";
 import { BlogListing } from "@/components/marketing/blog-listing";
 
 export const metadata: Metadata = {
-  title: "Blog | Akradhii",
+  title: "Blog",
   description:
     "Growth insights from the Akradhii team — AI, Meta Ads, design, engineering and careers.",
   openGraph: {
-    title: "Blog | Akradhii",
+  title: "Blog",
     description: "Practical plays on AI, advertising, design, engineering and building a career.",
     url: `${siteConfig.url}/blog`,
   },

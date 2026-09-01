@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "Contact | Akradhii",
+  title: "Contact",
   description:
     "Contact Akradhii for websites, Meta Ads, automation, CRM, AI, SEO, branding or internship enquiries. Hyderabad studio.",
   openGraph: {
-    title: "Contact | Akradhii",
+  title: "Contact",
     description: "Let's build something together.",
     url: `${siteConfig.url}/contact`,
   },

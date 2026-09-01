@@ -31,10 +31,10 @@ export async function generateMetadata({
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) return { title: "Internship not found" };
   return {
-    title: `${category.name} Internship | Akradhii`,
+      title: `${category.name} Internship`,
     description: `Join the ${category.name} internship at Akradhii. Learn ${category.skills.slice(0, 3).join(", ")} and more through project-based training.`,
     openGraph: {
-      title: `${category.name} Internship | Akradhii`,
+    title: `${category.name} Internship`,
       description: `Project-based ${category.name} internship with mentorship, real projects and verifiable certificates.`,
       url: `${siteConfig.url}/internships/${slug}`,
       type: "article",

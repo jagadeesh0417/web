@@ -24,11 +24,11 @@ import { BlogListing } from "@/components/marketing/blog-listing";
 import { blogPosts } from "@/lib/data/sample-data";
 
 export const metadata: Metadata = {
-  title: "About Us | Akradhii",
+  title: "About Us",
   description:
     "The story, mission, vision and values behind Akradhii — a digital growth studio and internship platform based in Hyderabad.",
   openGraph: {
-    title: "About Us | Akradhii",
+  title: "About Us",
     description: "Story, mission and values of Akradhii Digital Growth Studio.",
     url: `${siteConfig.url}/about`,
   },
