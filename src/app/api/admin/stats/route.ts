@@ -8,8 +8,10 @@ import {
   certificatesStore,
   submissionsStore,
   applicationsStore,
+  referralsStore,
+  withdrawalsStore,
 } from "@/lib/data/server-store";
-import type { AppUser, Enrollment, Payment, Certificate, Submission } from "@/lib/types";
+import type { AppUser, Enrollment, Payment, Certificate, Submission, Referral, Withdrawal } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,6 +28,9 @@ export async function GET(request: NextRequest) {
   const certificates = certificatesStore.getAll();
   const submissions = submissionsStore.getAll();
   const applications = applicationsStore.getAll();
+
+  const referrals = referralsStore.getAll();
+  const withdrawals = withdrawalsStore.getAll();
 
   const totalStudents = users.filter(
     (u: AppUser) => u.role === "intern" || u.role === "user",
@@ -49,6 +54,45 @@ export async function GET(request: NextRequest) {
   const certificatesIssued = certificates.length;
   const totalUsers = users.length;
   const totalApplications = applications.length;
+
+  const referralStats = {
+    total: referrals.length,
+    successful: referrals.filter((r: Referral) => r.status === "rewarded").length,
+    pending: referrals.filter((r: Referral) => r.status === "pending").length,
+    totalRewards: referrals.reduce((sum: number, r: Referral) => sum + (r.rewardAmount ?? 0), 0),
+  };
+
+  const withdrawalStats = {
+    pending: withdrawals.filter((w: Withdrawal) => w.status === "pending").length,
+    approved: withdrawals.filter((w: Withdrawal) => w.status === "approved").length,
+    paid: withdrawals.filter((w: Withdrawal) => w.status === "paid").length,
+    rejected: withdrawals.filter((w: Withdrawal) => w.status === "rejected").length,
+    totalPaid: withdrawals
+      .filter((w: Withdrawal) => w.status === "paid")
+      .reduce((sum: number, w: Withdrawal) => sum + (w.amount ?? 0), 0),
+  };
+
+  const now = new Date();
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const todayKey = now.toISOString().slice(0, 10);
+
+  const revenueThisMonth = payments
+    .filter(
+      (p: Payment) =>
+        p.status === "succeeded" && p.createdAt.slice(0, 7) === currentMonthKey,
+    )
+    .reduce((sum: number, p: Payment) => sum + p.amount, 0);
+
+  const revenueToday = payments
+    .filter(
+      (p: Payment) =>
+        p.status === "succeeded" && p.createdAt.slice(0, 10) === todayKey,
+    )
+    .reduce((sum: number, p: Payment) => sum + p.amount, 0);
+
+  const newUsersThisMonth = users.filter(
+    (u: AppUser) => u.createdAt?.slice(0, 7) === currentMonthKey,
+  ).length;
 
   const recentEnrollments = enrollments
     .slice()
@@ -85,7 +129,6 @@ export async function GET(request: NextRequest) {
     )
     .slice(0, 5);
 
-  const now = new Date();
   const revenueByMonth: { month: string; revenue: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -131,5 +174,10 @@ export async function GET(request: NextRequest) {
     revenueByMonth,
     usersByRole,
     enrollmentsByStatus,
+    referralStats,
+    withdrawalStats,
+    revenueThisMonth,
+    revenueToday,
+    newUsersThisMonth,
   });
 }

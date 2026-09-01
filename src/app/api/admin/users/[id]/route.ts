@@ -10,6 +10,9 @@ import {
   submissionsStore,
   assessmentAttemptsStore,
   lessonProgressStore,
+  referralsStore,
+  walletTransactionsStore,
+  withdrawalsStore,
   auditLog,
 } from "@/lib/data/server-store";
 import type { Role } from "@/lib/types";
@@ -50,6 +53,14 @@ export async function GET(
   const submissions = submissionsStore.find((s) => s.studentId === id);
   const assessmentAttempts = assessmentAttemptsStore.find((a) => a.userId === id);
   const lessonProgress = lessonProgressStore.getByUser(id);
+  const referrals = referralsStore.find((r) => r.referrerId === id);
+  const referredByReferral = referralsStore.findOne((r) => r.referredUserId === id);
+  const walletTransactions = walletTransactionsStore.find((w) => w.userId === id);
+  const withdrawals = withdrawalsStore.find((w) => w.userId === id);
+
+  const referredByName = referredByReferral
+    ? usersStore.getById(referredByReferral.referrerId)?.name ?? null
+    : null;
 
   return NextResponse.json({
     user,
@@ -59,6 +70,10 @@ export async function GET(
     submissions,
     assessmentAttempts,
     lessonProgress,
+    referrals,
+    referredByName,
+    walletTransactions,
+    withdrawals,
   });
 }
 

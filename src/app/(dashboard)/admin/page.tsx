@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   Users, GraduationCap, BookOpen, CreditCard, CheckCircle, FileText, Award, IndianRupee,
+  Gift, Wallet, TrendingUp, DollarSign, Clock,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -34,6 +35,11 @@ interface AdminStats {
   revenueByMonth: { month: string; revenue: number }[];
   usersByRole: Record<string, number>;
   enrollmentsByStatus: Record<string, number>;
+  referralStats: { total: number; successful: number; pending: number; totalRewards: number };
+  withdrawalStats: { pending: number; approved: number; paid: number; rejected: number; totalPaid: number };
+  revenueThisMonth: number;
+  revenueToday: number;
+  newUsersThisMonth: number;
 }
 
 function SkeletonCard() {
@@ -112,6 +118,13 @@ export default function AdminDashboard() {
     { title: "Pending Submissions", value: stats.pendingSubmissions.toLocaleString("en-IN"), icon: FileText, gradient: "from-fuchsia-600 to-pink-600" },
     { title: "Completed Internships", value: stats.completedInternships.toLocaleString("en-IN"), icon: Award, gradient: "from-purple-600 to-violet-500" },
     { title: "Certificates Issued", value: stats.certificatesIssued.toLocaleString("en-IN"), icon: Award, gradient: "from-sky-500 to-blue-600" },
+    { title: "Successful Referrals", value: stats.referralStats.successful.toLocaleString("en-IN"), icon: Gift, gradient: "from-pink-500 to-rose-500" },
+    { title: "Rewards Paid", value: formatCurrency(stats.referralStats.totalRewards), icon: Wallet, gradient: "from-teal-500 to-cyan-500" },
+    { title: "Withdrawals Pending", value: stats.withdrawalStats.pending.toLocaleString("en-IN"), icon: Clock, gradient: "from-orange-500 to-amber-500" },
+    { title: "Withdrawals Paid", value: formatCurrency(stats.withdrawalStats.totalPaid), icon: IndianRupee, gradient: "from-emerald-600 to-green-500" },
+    { title: "Revenue This Month", value: formatCurrency(stats.revenueThisMonth), icon: TrendingUp, gradient: "from-indigo-600 to-blue-500" },
+    { title: "Revenue Today", value: formatCurrency(stats.revenueToday), icon: DollarSign, gradient: "from-violet-500 to-purple-500" },
+    { title: "New Users This Month", value: stats.newUsersThisMonth.toLocaleString("en-IN"), icon: Users, gradient: "from-cyan-500 to-sky-500" },
   ];
 
   return (
@@ -273,6 +286,35 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <a href="/admin/audit-log" className="group">
+          <Card className="transition-colors hover:border-brand-600">
+            <CardContent className="flex items-center gap-4 p-5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-600/10 text-violet-600">
+                <FileText className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Quick Access</p>
+                <p className="text-lg font-semibold group-hover:text-brand-600">Audit Log</p>
+              </div>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="/admin/pricing" className="group">
+          <Card className="transition-colors hover:border-brand-600">
+            <CardContent className="flex items-center gap-4 p-5">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-600">
+                <DollarSign className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Quick Access</p>
+                <p className="text-lg font-semibold group-hover:text-brand-600">Pricing Management</p>
+              </div>
+            </CardContent>
+          </Card>
+        </a>
       </div>
     </DashboardShell>
   );

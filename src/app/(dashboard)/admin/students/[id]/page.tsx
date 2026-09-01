@@ -6,7 +6,8 @@ import { useParams } from "next/navigation";
 import {
   ArrowLeft, User, Mail, Phone, Building, Calendar, Shield, ShieldOff,
   GraduationCap, CreditCard, Award, BookOpen, ExternalLink, Send,
-  FileText, CheckCircle2, Clock, Lock, Globe,
+  FileText, CheckCircle2, Clock, Lock, Globe, Wallet, Users, TrendingUp,
+  ArrowDownLeft, ArrowUpRight, Hash,
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -17,7 +18,7 @@ import { Progress, Skeleton } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/toast";
 import { ROLE_LABEL } from "@/lib/rbac";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
-import type { Role, Enrollment, Payment, Certificate, Submission, AssessmentAttempt, LessonProgress } from "@/lib/types";
+import type { Role, Enrollment, Payment, Certificate, Submission, AssessmentAttempt, LessonProgress, Referral, WalletTransaction, Withdrawal } from "@/lib/types";
 
 interface UserData {
   id: string;
@@ -28,6 +29,11 @@ interface UserData {
   company?: string;
   emailVerified: boolean;
   avatarUrl?: string;
+  referralCode?: string;
+  referredByUserId?: string;
+  walletBalance?: number;
+  totalReferralEarnings?: number;
+  totalWithdrawn?: number;
   createdAt: string;
 }
 
@@ -39,6 +45,10 @@ interface UserDetailResponse {
   submissions: Submission[];
   assessmentAttempts: AssessmentAttempt[];
   lessonProgress: LessonProgress[];
+  referrals: Referral[];
+  referredByName: string | null;
+  walletTransactions: WalletTransaction[];
+  withdrawals: Withdrawal[];
 }
 
 const INACTIVE_ROLES = new Set(["guest"]);
@@ -126,7 +136,7 @@ export default function AdminUserDetailPage() {
     );
   }
 
-  const { user, enrollments, payments, submissions, assessmentAttempts, lessonProgress } = data;
+  const { user, enrollments, payments, submissions, assessmentAttempts, lessonProgress, referrals, referredByName, walletTransactions, withdrawals } = data;
 
   const progressPercent = (() => {
     if (!activeEnrollment) return 0;
@@ -464,6 +474,289 @@ export default function AdminUserDetailPage() {
                   </Button>
                 )}
               </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ── Referral & Wallet Row ───────────────────────────────────────────── */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        {/* Referral card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-brand-500" /> Referral Information
+            </CardTitle>
+            <CardDescription>
+              {referrals.length} successful referral{referrals.length !== 1 ? "s" : ""}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {user.referralCode && (
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Referral Code</p>
+                      <p className="mt-1 font-mono text-sm font-bold">{user.referralCode}</p>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => { navigator.clipboard.writeText(user.referralCode!); toast("success", "Copied", "Referral code copied to clipboard."); }}>
+                      <Hash className="h-3.5 w-3.5" /> Copy
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {user.referralCode && (
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Referral Link</p>
+                  <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
+                    {typeof window !== "undefined" ? `${window.location.origin}/register?ref=${user.referralCode}` : `/register?ref=${user.referralCode}`}
+                  </p>
+                </div>
+              )}
+              {referredByName && (
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Referred By</p>
+                  <p className="mt-1 text-sm font-medium">{referredByName}</p>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Successful Referrals</p>
+                  <p className="mt-1 text-2xl font-black">{referrals.filter((r) => r.status === "rewarded").length}</p>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Total Referral Earnings</p>
+                  <p className="mt-1 text-2xl font-black text-green-600">
+                    {formatCurrency(referrals.filter((r) => r.status === "rewarded").reduce((sum, r) => sum + r.rewardAmount, 0))}
+                  </p>
+                </div>
+              </div>
+              {referrals.length > 0 && (
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Referral History</p>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {referrals.map((r) => (
+                      <div key={r.id} className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-muted-foreground">{r.referralCode}</span>
+                        <span className="flex items-center gap-2">
+                          <span>{formatCurrency(r.rewardAmount)}</span>
+                          <Badge variant={r.status === "rewarded" ? "success" : r.status === "pending" ? "warning" : "outline"}>
+                            {r.status}
+                          </Badge>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {referrals.length === 0 && !user.referralCode && !referredByName && (
+                <p className="text-sm text-muted-foreground">No referral activity for this user.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Wallet card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Wallet className="h-4 w-4 text-brand-500" /> Wallet
+            </CardTitle>
+            <CardDescription>Balance & transaction history</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Available</p>
+                  <p className="mt-1 text-2xl font-black">{formatCurrency(user.walletBalance ?? 0)}</p>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Total Earned</p>
+                  <p className="mt-1 text-2xl font-black text-green-600">{formatCurrency(user.totalReferralEarnings ?? 0)}</p>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Total Withdrawn</p>
+                  <p className="mt-1 text-2xl font-black text-orange-600">{formatCurrency(user.totalWithdrawn ?? 0)}</p>
+                </div>
+              </div>
+              {walletTransactions.length > 0 ? (
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Transactions</p>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {walletTransactions.map((w) => (
+                      <div key={w.id} className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2 text-xs">
+                        <div className="flex items-center gap-2">
+                          {w.type === "REFERRAL_REWARD" ? (
+                            <ArrowDownLeft className="h-3.5 w-3.5 text-green-500" />
+                          ) : w.type === "WITHDRAWAL_REVERSAL" ? (
+                            <ArrowDownLeft className="h-3.5 w-3.5 text-blue-500" />
+                          ) : (
+                            <ArrowUpRight className="h-3.5 w-3.5 text-orange-500" />
+                          )}
+                          <div>
+                            <p className="font-medium">{w.description}</p>
+                            <p className="text-muted-foreground">{formatDateTime(w.createdAt)}</p>
+                          </div>
+                        </div>
+                        <span className={`font-mono font-bold ${w.type === "REFERRAL_REWARD" || w.type === "WITHDRAWAL_REVERSAL" ? "text-green-600" : "text-orange-600"}`}>
+                          {w.type === "REFERRAL_REWARD" || w.type === "WITHDRAWAL_REVERSAL" ? "+" : "-"}{formatCurrency(w.amount)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No wallet transactions.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ── Withdrawal History Row ──────────────────────────────────────────── */}
+      <div className="mt-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ArrowUpRight className="h-4 w-4 text-brand-500" /> Withdrawal History
+            </CardTitle>
+            <CardDescription>
+              {withdrawals.length} withdrawal request{withdrawals.length !== 1 ? "s" : ""}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {withdrawals.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No withdrawal requests.</p>
+            ) : (
+              <div className="space-y-2">
+                {withdrawals.map((w) => (
+                  <div key={w.id} className="flex items-center justify-between rounded-xl border border-border bg-muted/20 px-4 py-3 text-sm">
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <p className="font-bold">{formatCurrency(w.amount)}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {w.paymentMethod === "upi" ? `UPI: ${w.upiId}` : `${w.accountHolderName} · ${w.accountNumber}`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground">{formatDateTime(w.createdAt)}</span>
+                      <Badge variant={
+                        w.status === "paid" || w.status === "approved" ? "success" :
+                        w.status === "processing" ? "info" :
+                        w.status === "rejected" ? "destructive" : "warning"
+                      }>
+                        {w.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ── Subscription & Course Progress Row ──────────────────────────────── */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        {/* Subscription / Active Enrollments */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="h-4 w-4 text-brand-500" /> Active Subscriptions
+            </CardTitle>
+            <CardDescription>
+              {enrollments.length} enrollment{enrollments.length !== 1 ? "s" : ""} total
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {enrollments.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No subscriptions found.</p>
+            ) : (
+              <div className="space-y-3">
+                {enrollments.map((e) => (
+                  <div key={e.id} className="rounded-xl border border-border bg-muted/20 p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-bold">{e.programTitle}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {e.durationWeeks} weeks · Started {formatDate(e.startedAt)}
+                        </p>
+                      </div>
+                      <Badge variant={e.status === "active" ? "success" : e.status === "completed" ? "info" : "warning"}>
+                        {e.status.replace("_", " ")}
+                      </Badge>
+                    </div>
+                    {e.completedAt && (
+                      <p className="mt-2 text-xs text-muted-foreground">Completed {formatDate(e.completedAt)}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Course Progress Detail */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-brand-500" /> Course Progress
+            </CardTitle>
+            <CardDescription>Modules & lessons completed</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {activeEnrollment ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
+                    <p className="text-2xl font-black">{lessonProgress.length}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Lessons Done</p>
+                  </div>
+                  <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
+                    <p className="text-2xl font-black">{submissions.filter((s) => s.status === "approved").length}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Tasks Approved</p>
+                  </div>
+                  <div className="rounded-xl border border-border bg-muted/20 p-4 text-center">
+                    <p className="text-2xl font-black">{assessmentAttempts.filter((a) => a.passed).length}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Assessments Passed</p>
+                  </div>
+                </div>
+                <div className="flex items-end justify-between">
+                  <span className="text-3xl font-black bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+                    {progressPercent}%
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {lessonProgress.length} / {activeEnrollment.durationWeeks * 3} expected lessons
+                  </span>
+                </div>
+                <Progress value={progressPercent} />
+                <div className="rounded-xl border border-border bg-muted/20 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Status Summary</p>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                      <span>{submissions.filter((s) => s.status === "approved").length} submissions approved</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-3.5 w-3.5 text-yellow-500" />
+                      <span>{submissions.filter((s) => s.status === "submitted").length} pending review</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                      <span>{assessmentAttempts.filter((a) => a.passed).length} assessments passed</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>{assessmentAttempts.filter((a) => !a.passed).length} assessments failed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">No active enrollment to track progress.</p>
             )}
           </CardContent>
         </Card>
