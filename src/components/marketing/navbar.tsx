@@ -17,6 +17,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/internships", label: "Internships" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -83,7 +84,12 @@ export function Navbar() {
               </Button>
             </div>
           ) : (
-            <Button variant="ghost" size="sm" onClick={() => router.push("/login")}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-violet-500 text-violet-500 hover:bg-violet-500 hover:text-white dark:border-violet-400 dark:text-violet-400 dark:hover:bg-violet-400 dark:hover:text-white"
+              onClick={() => router.push("/login")}
+            >
               Log in
             </Button>
           )}
