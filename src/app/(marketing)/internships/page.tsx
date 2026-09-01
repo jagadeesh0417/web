@@ -3,14 +3,27 @@ import Link from "next/link";
 import {
   ArrowRight,
   Award,
+  BarChart2,
   BookOpen,
+  Bot,
+  Brush,
+  Check,
   CheckCircle2,
   ClipboardCheck,
+  Code2,
+  FileText,
   GraduationCap,
   Lock,
+  Palette,
+  PenTool,
   PlayCircle,
+  Search,
   Send,
+  TrendingUp,
   Unlock,
+  Video,
+  X,
+  Zap,
 } from "lucide-react";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 import { siteConfig } from "@/config/site";
@@ -50,6 +63,32 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: `${siteConfig.url}/internships` },
 };
+
+const trackIcons: Record<string, React.ElementType> = {
+  "web-development": Code2,
+  "ui-ux-design": Palette,
+  "meta-ads": TrendingUp,
+  "digital-marketing": BarChart2,
+  automation: Zap,
+  "ai-automation": Bot,
+  "graphic-design": PenTool,
+  "content-writing": FileText,
+  seo: Search,
+  "video-editing": Video,
+};
+
+const comparisonFeatures = [
+  { label: "Duration", foundation: "4 Weeks", professional: "6 Weeks", industry: "8 Weeks" },
+  { label: "Live sessions", foundation: "4", professional: "6", industry: "Full" },
+  { label: "Assignments", foundation: "4", professional: "8", industry: "—" },
+  { label: "Projects", foundation: "1 mini", professional: "2", industry: "Client-based" },
+  { label: "Weekly assessments", foundation: false, professional: true, industry: true },
+  { label: "Performance report", foundation: false, professional: true, industry: true },
+  { label: "Letter of recommendation", foundation: false, professional: false, industry: "✓ (performance)" },
+  { label: "Placement assistance", foundation: false, professional: false, industry: "✓ (if offered)" },
+  { label: "Certificate", foundation: true, professional: true, industry: true },
+  { label: "Price", foundation: "₹1,999", professional: "₹3,499", industry: "₹5,499" },
+];
 
 const learningFlow = [
   { step: "01", title: "Choose program", text: "Pick a category track that matches your career goals.", icon: GraduationCap },
@@ -141,6 +180,56 @@ export default function InternshipsPage() {
         </div>
       </section>
 
+      {/* Feature comparison table */}
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Compare plans</h2>
+          <p className="mt-3 text-muted-foreground">
+            Side-by-side breakdown so you can pick the right fit.
+          </p>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <div className="mt-10 overflow-x-auto rounded-xl border border-border">
+            <table className="w-full min-w-[600px] text-sm">
+              <thead>
+                <tr className="border-b border-border bg-gradient-to-r from-violet-700 to-indigo-700 text-white">
+                  <th className="px-5 py-4 text-left font-semibold">Feature</th>
+                  <th className="px-5 py-4 text-center font-semibold">Foundation</th>
+                  <th className="relative px-5 py-4 text-center font-semibold">
+                    Professional
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-violet-700 shadow">Most popular</span>
+                  </th>
+                  <th className="px-5 py-4 text-center font-semibold">Industry</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonFeatures.map((f, i) => (
+                  <tr key={f.label} className={`border-b border-border ${i % 2 === 0 ? "bg-card/50" : "bg-card/30"}`}>
+                    <td className="px-5 py-3.5 font-medium">{f.label}</td>
+                    {(["foundation", "professional", "industry"] as const).map((plan) => {
+                      const val = f[plan];
+                      return (
+                        <td key={plan} className="px-5 py-3.5 text-center">
+                          {typeof val === "boolean" ? (
+                            val ? (
+                              <Check className="mx-auto h-4 w-4 text-success" />
+                            ) : (
+                              <X className="mx-auto h-4 w-4 text-muted-foreground/40" />
+                            )
+                          ) : (
+                            <span className={plan === "professional" ? "font-semibold text-brand-400" : ""}>{val}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Reveal>
+      </section>
+
       {/* Categories / programs */}
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -151,14 +240,16 @@ export default function InternshipsPage() {
             </p>
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {CATEGORIES.map((c, i) => (
-              <Reveal key={c.id} delay={i * 0.03}>
-                <Link href={`/internships/${c.slug}`}>
-                  <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${c.gradient} text-white`}>
-                      <GraduationCap className="h-5 w-5" />
-                    </div>
-                    <h3 className="mt-4 font-semibold">{c.name}</h3>
+            {CATEGORIES.map((c, i) => {
+              const Icon = trackIcons[c.slug] || GraduationCap;
+              return (
+                <Reveal key={c.id} delay={i * 0.03}>
+                  <Link href={`/internships/${c.slug}`}>
+                    <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl">
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${c.gradient} text-white`}>
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-4 font-semibold">{c.name}</h3>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
                     <div className="mt-3 flex flex-wrap gap-1">
                       {c.skills.slice(0, 3).map((s) => (
@@ -171,7 +262,8 @@ export default function InternshipsPage() {
                   </Card>
                 </Link>
               </Reveal>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
