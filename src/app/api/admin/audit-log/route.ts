@@ -1,38 +1,56 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { requireAdminApi } from "@/lib/auth/api-guard";
-import { seedInitialData, auditLogStore } from "@/lib/data/server-store";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
 
-  await seedInitialData();
-
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get("page") ?? "1", 10);
-  const limit = parseInt(searchParams.get("limit") ?? "20", 10);
-  const actionFilter = searchParams.get("action") ?? undefined;
+  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "20", 10) || 20));
+  const actionFilter = searchParams.get("action")?.trim() ?? "";
+  const targetTypeFilter = searchParams.get("targetType")?.trim() ?? "";
 
-  let logs = auditLogStore.getAll();
+  const db = await getDb();
 
+  const filter: Record<string, unknown> = {};
   if (actionFilter) {
-    logs = logs.filter((log) => log.action === actionFilter);
+    filter.action = actionFilter;
+  }
+  if (targetTypeFilter) {
+    filter.targetType = targetTypeFilter;
   }
 
-  logs.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-
-  const total = logs.length;
+  const total = await db.collection(COLLECTIONS.auditLogs).countDocuments(filter);
   const totalPages = Math.ceil(total / limit);
-  const startIndex = (page - 1) * limit;
-  const paginatedLogs = logs.slice(startIndex, startIndex + limit);
+  const skip = (page - 1) * limit;
+
+  const logs = await db
+    .collection(COLLECTIONS.auditLogs)
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .toArray();
+
+  const result = logs.map((log) => ({
+    id: log._id.toString(),
+    adminId: log.adminId?.toString(),
+    action: log.action,
+    targetType: log.targetType,
+    targetId: log.targetId?.toString(),
+    previousValue: log.previousValue,
+    newValue: log.newValue,
+    createdAt: log.createdAt,
+  }));
 
   return NextResponse.json({
-    logs: paginatedLogs,
+    ok: true,
+    logs: result,
     total,
     page,
     totalPages,

@@ -1,46 +1,82 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { requireAdminApi } from "@/lib/auth/api-guard";
-import { seedInitialData, usersStore, auditLog } from "@/lib/data/server-store";
+import { ObjectId } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const INACTIVE_ROLES = new Set(["guest"]);
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
   const { id } = await params;
-  const user = usersStore.getById(id);
+
+  let userObjectId: ObjectId;
+  try {
+    userObjectId = new ObjectId(id);
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid user ID format" },
+      { status: 400 },
+    );
+  }
+
+  const db = await getDb();
+
+  const user = await db.collection(COLLECTIONS.users).findOne({ _id: userObjectId });
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
   }
 
-  const isActive = !INACTIVE_ROLES.has(user.role);
-  const newRole = isActive ? "guest" : "user";
-  const updated = usersStore.update(id, { role: newRole } as Partial<typeof user>);
-
-  if (!updated) {
-    return NextResponse.json({ error: "Failed to toggle status" }, { status: 500 });
+  let body: { status?: string };
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
   }
 
-  const newStatus = INACTIVE_ROLES.has(newRole) ? "inactive" : "active";
-  auditLog(
-    "user.toggle_status",
-    "users",
-    `Toggled ${user.name} (${user.email}) to ${newStatus}`,
-    auth.user.id,
-    id,
-  );
+  const newStatus = body.status as string | undefined;
+
+  let targetStatus: string;
+  if (newStatus && ["ACTIVE", "SUSPENDED", "DISABLED"].includes(newStatus)) {
+    targetStatus = newStatus;
+  } else {
+    targetStatus = user.accountStatus === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
+  }
+
+  if (targetStatus === "ACTIVE" && user.accountStatus === "DISABLED") {
+    targetStatus = "ACTIVE";
+  }
+
+  const previousStatus = user.accountStatus;
+
+  await db
+    .collection(COLLECTIONS.users)
+    .updateOne(
+      { _id: userObjectId },
+      { $set: { accountStatus: targetStatus, updatedAt: new Date() } },
+    );
+
+  await db.collection(COLLECTIONS.auditLogs).insertOne({
+    adminId: new ObjectId(auth.userId),
+    action: "user.toggle_status",
+    targetType: "users",
+    targetId: userObjectId,
+    previousValue: { accountStatus: previousStatus },
+    newValue: { accountStatus: targetStatus },
+    createdAt: new Date(),
+  });
 
   return NextResponse.json({
-    success: true,
-    user: updated,
-    status: newStatus,
+    ok: true,
+    status: targetStatus,
+    message: `User ${targetStatus === "ACTIVE" ? "activated" : targetStatus === "SUSPENDED" ? "suspended" : "disabled"}`,
   });
 }

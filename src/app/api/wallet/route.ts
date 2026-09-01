@@ -1,27 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStudentApi } from "@/lib/auth/student-api-guard";
-import {
-  seedInitialData,
-  usersStore,
-  withdrawalsStore,
-} from "@/lib/data/server-store";
+import { ObjectId } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const auth = await requireStudentApi(request);
+  const auth = await requireAuth(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
-  const user = usersStore.getById(auth.user.id);
+  const db = await getDb();
+  const user = await db.collection(COLLECTIONS.users).findOne({
+    _id: new ObjectId(auth.userId),
+  });
+
   if (!user) {
-    return NextResponse.json({ ok: false, error: "User not found" }, { status: 404 });
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
   }
 
-  const pendingWithdrawals = withdrawalsStore.find(
-    (w) => w.userId === user.id && w.status === "pending",
-  ).length;
+  const pendingWithdrawals = await db
+    .collection(COLLECTIONS.withdrawals)
+    .countDocuments({
+      userId: user._id,
+      status: "pending",
+    });
 
   return NextResponse.json({
     ok: true,

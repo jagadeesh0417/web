@@ -1,45 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { requireStudentApi } from "@/lib/auth/student-api-guard";
-import {
-  seedInitialData,
-  usersStore,
-  withdrawalsStore,
-  walletTransactionsStore,
-} from "@/lib/data/server-store";
+import { ObjectId, Double } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const createWithdrawalSchema = z
-  .object({
-    amount: z.number().min(200, "Minimum withdrawal is ₹200"),
-    paymentMethod: z.enum(["bank_transfer", "upi"]),
-    upiId: z.string().optional(),
-    accountHolderName: z.string().optional(),
-    accountNumber: z.string().optional(),
-    ifsc: z.string().optional(),
-  })
-  .strict();
-
 export async function GET(request: NextRequest) {
-  const auth = await requireStudentApi(request);
+  const auth = await requireAuth(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
-  const withdrawals = withdrawalsStore.find((w) => w.userId === auth.user.id);
+  const db = await getDb();
+
+  const withdrawals = await db
+    .collection(COLLECTIONS.withdrawals)
+    .find({ userId: new ObjectId(auth.userId) })
+    .sort({ createdAt: -1 })
+    .toArray();
 
   return NextResponse.json({ ok: true, withdrawals });
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireStudentApi(request);
+  const auth = await requireAuth(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
-  let json: unknown;
+  let body: unknown;
   try {
-    json = await request.json();
+    body = await request.json();
   } catch {
     return NextResponse.json(
       { ok: false, error: "Invalid request body" },
@@ -47,22 +35,49 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const parsed = createWithdrawalSchema.safeParse(json);
-  if (!parsed.success) {
-    const errors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0] ?? "");
-      if (key && !errors[key]) errors[key] = issue.message;
-    }
+  const { amount, paymentMethod, upiId, accountHolderName, accountNumber, ifsc } =
+    (body ?? {}) as {
+      amount?: number;
+      paymentMethod?: string;
+      upiId?: string;
+      accountHolderName?: string;
+      accountNumber?: string;
+      ifsc?: string;
+    };
+
+  if (!amount || typeof amount !== "number" || amount < 200) {
     return NextResponse.json(
-      { ok: false, error: "Validation failed", details: errors },
+      { ok: false, error: "Minimum withdrawal amount is ₹200" },
       { status: 400 },
     );
   }
 
-  const { amount, paymentMethod, upiId, accountHolderName, accountNumber, ifsc } = parsed.data;
+  if (!paymentMethod || !["bank_transfer", "upi"].includes(paymentMethod)) {
+    return NextResponse.json(
+      { ok: false, error: "paymentMethod must be 'bank_transfer' or 'upi'" },
+      { status: 400 },
+    );
+  }
 
-  const user = usersStore.getById(auth.user.id);
+  if (paymentMethod === "upi" && !upiId) {
+    return NextResponse.json(
+      { ok: false, error: "upiId is required for UPI withdrawals" },
+      { status: 400 },
+    );
+  }
+
+  if (paymentMethod === "bank_transfer" && (!accountHolderName || !accountNumber || !ifsc)) {
+    return NextResponse.json(
+      { ok: false, error: "accountHolderName, accountNumber, and ifsc are required for bank transfers" },
+      { status: 400 },
+    );
+  }
+
+  const db = await getDb();
+  const user = await db.collection(COLLECTIONS.users).findOne({
+    _id: new ObjectId(auth.userId),
+  });
+
   if (!user) {
     return NextResponse.json(
       { ok: false, error: "User not found" },
@@ -78,32 +93,52 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  usersStore.update(user.id, { walletBalance: balance - amount });
+  const now = new Date();
 
-  const withdrawal = withdrawalsStore.create({
-    id: `wd_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    userId: user.id,
+  await db.collection(COLLECTIONS.users).updateOne(
+    { _id: user._id },
+    {
+      $inc: {
+        walletBalance: -amount,
+        totalWithdrawn: amount,
+      },
+    },
+  );
+
+  const withdrawalResult = await db.collection(COLLECTIONS.withdrawals).insertOne({
+    userId: user._id,
     userName: user.name,
-    amount,
+    amount: new Double(amount),
     paymentMethod,
-    upiId: paymentMethod === "upi" ? upiId : undefined,
-    accountHolderName: paymentMethod === "bank_transfer" ? accountHolderName : undefined,
-    accountNumber: paymentMethod === "bank_transfer" ? accountNumber : undefined,
-    ifsc: paymentMethod === "bank_transfer" ? ifsc : undefined,
+    upiId: paymentMethod === "upi" ? upiId : null,
+    accountHolderName: paymentMethod === "bank_transfer" ? accountHolderName : null,
+    accountNumber: paymentMethod === "bank_transfer" ? accountNumber : null,
+    ifsc: paymentMethod === "bank_transfer" ? ifsc : null,
     status: "pending",
-    createdAt: new Date().toISOString(),
+    adminNote: null,
+    rejectionReason: null,
+    createdAt: now,
+    processedAt: null,
   });
 
-  walletTransactionsStore.create({
-    id: `wtx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    userId: user.id,
+  await db.collection(COLLECTIONS.walletTransactions).insertOne({
+    userId: user._id,
     type: "WITHDRAWAL",
-    amount,
-    referenceId: withdrawal.id,
+    amount: new Double(amount),
+    referenceId: withdrawalResult.insertedId,
     description: `Withdrawal request of ₹${amount}`,
     status: "pending",
-    createdAt: new Date().toISOString(),
+    createdAt: now,
   });
 
-  return NextResponse.json({ ok: true, withdrawal });
+  return NextResponse.json({
+    ok: true,
+    withdrawal: {
+      id: withdrawalResult.insertedId.toString(),
+      amount,
+      paymentMethod,
+      status: "pending",
+      createdAt: now,
+    },
+  });
 }

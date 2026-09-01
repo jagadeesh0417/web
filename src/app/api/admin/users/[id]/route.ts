@@ -1,79 +1,94 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { z } from "zod";
-import { requireAdminApi } from "@/lib/auth/api-guard";
-import {
-  seedInitialData,
-  usersStore,
-  enrollmentsStore,
-  paymentsStore,
-  certificatesStore,
-  submissionsStore,
-  assessmentAttemptsStore,
-  lessonProgressStore,
-  referralsStore,
-  walletTransactionsStore,
-  withdrawalsStore,
-  auditLog,
-} from "@/lib/data/server-store";
-import type { Role } from "@/lib/types";
+import { ObjectId } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const ROLES: Role[] = ["guest", "user", "client", "applicant", "intern", "mentor", "employee", "admin", "super_admin"];
-
-const updateUserSchema = z.object({
-  name: z.string().trim().min(2).max(100).optional(),
-  phone: z.string().trim().max(20).optional(),
-  company: z.string().trim().max(200).optional(),
-  role: z.enum(ROLES as [string, ...string[]]).optional(),
-  emailVerified: z.boolean().optional(),
-  avatarUrl: z.string().url().optional().nullable(),
-}).strict();
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
   const { id } = await params;
-  const user = usersStore.getById(id);
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+  let userObjectId: ObjectId;
+  try {
+    userObjectId = new ObjectId(id);
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid user ID format" },
+      { status: 400 },
+    );
   }
 
-  const enrollments = enrollmentsStore.find(
-    (e) => e.userId === id || e.studentId === id,
-  );
-  const payments = paymentsStore.find((p) => p.userId === id || p.studentId === id);
-  const certificates = certificatesStore.find((c) => c.studentId === id);
-  const submissions = submissionsStore.find((s) => s.studentId === id);
-  const assessmentAttempts = assessmentAttemptsStore.find((a) => a.userId === id);
-  const lessonProgress = lessonProgressStore.getByUser(id);
-  const referrals = referralsStore.find((r) => r.referrerId === id);
-  const referredByReferral = referralsStore.findOne((r) => r.referredUserId === id);
-  const walletTransactions = walletTransactionsStore.find((w) => w.userId === id);
-  const withdrawals = withdrawalsStore.find((w) => w.userId === id);
+  const db = await getDb();
 
-  const referredByName = referredByReferral
-    ? usersStore.getById(referredByReferral.referrerId)?.name ?? null
-    : null;
+  const user = await db.collection(COLLECTIONS.users).findOne({ _id: userObjectId });
+  if (!user) {
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
+  }
+
+  const safeUser = { ...user };
+  delete (safeUser as Record<string, unknown>).passwordHash;
+
+  const enrollments = await db
+    .collection(COLLECTIONS.subscriptions)
+    .find({ userId: userObjectId })
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  const purchases = await db
+    .collection(COLLECTIONS.purchases)
+    .find({ userId: userObjectId })
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  const referrals = await db
+    .collection(COLLECTIONS.referrals)
+    .find({ referrerId: userObjectId })
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  const wallet = await db
+    .collection(COLLECTIONS.walletTransactions)
+    .find({ userId: userObjectId })
+    .sort({ createdAt: -1 })
+    .toArray();
 
   return NextResponse.json({
-    user,
-    enrollments,
-    payments,
-    certificates,
-    submissions,
-    assessmentAttempts,
-    lessonProgress,
-    referrals,
-    referredByName,
-    walletTransactions,
-    withdrawals,
+    ok: true,
+    user: {
+      ...safeUser,
+      _id: user._id.toString(),
+      id: user._id.toString(),
+    },
+    enrollments: enrollments.map((e) => ({
+      ...e,
+      _id: e._id.toString(),
+      id: e._id.toString(),
+    })),
+    purchases: purchases.map((p) => ({
+      ...p,
+      _id: p._id.toString(),
+      id: p._id.toString(),
+    })),
+    referrals: referrals.map((r) => ({
+      ...r,
+      _id: r._id.toString(),
+      id: r._id.toString(),
+    })),
+    wallet: wallet.map((w) => ({
+      ...w,
+      _id: w._id.toString(),
+      id: w._id.toString(),
+    })),
   });
 }
 
@@ -81,89 +96,156 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
   const { id } = await params;
-  const user = usersStore.getById(id);
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
 
-  let json: unknown;
+  let userObjectId: ObjectId;
   try {
-    json = await request.json();
+    userObjectId = new ObjectId(id);
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "Invalid user ID format" },
+      { status: 400 },
+    );
   }
 
-  const parsed = updateUserSchema.safeParse(json);
-  if (!parsed.success) {
-    const errors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0] ?? "");
-      if (key && !errors[key]) errors[key] = issue.message;
+  const db = await getDb();
+
+  const user = await db.collection(COLLECTIONS.users).findOne({ _id: userObjectId });
+  if (!user) {
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
+
+  const allowedFields = ["name", "phone", "role", "accountStatus"];
+  const update: Record<string, unknown> = {};
+
+  for (const field of allowedFields) {
+    if (body[field] !== undefined) {
+      update[field] = body[field];
     }
-    return NextResponse.json({ error: "Validation failed", details: errors }, { status: 400 });
   }
 
-  const data = parsed.data;
-  const patch: Record<string, unknown> = {};
-
-  if (data.name !== undefined) patch.name = data.name;
-  if (data.phone !== undefined) patch.phone = data.phone;
-  if (data.company !== undefined) patch.company = data.company;
-  if (data.role !== undefined) patch.role = data.role;
-  if (data.emailVerified !== undefined) patch.emailVerified = data.emailVerified;
-  if (data.avatarUrl !== undefined) patch.avatarUrl = data.avatarUrl;
-
-  if (Object.keys(patch).length === 0) {
-    return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json(
+      { ok: false, error: "No valid fields to update" },
+      { status: 400 },
+    );
   }
 
-  const updated = usersStore.update(id, patch as Partial<typeof user>);
-  if (!updated) {
-    return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+  const validRoles = ["USER", "ADMIN"];
+  if (update.role && !validRoles.includes(update.role as string)) {
+    return NextResponse.json(
+      { ok: false, error: "Invalid role" },
+      { status: 400 },
+    );
   }
 
-  auditLog(
-    "user.update",
-    "users",
-    `Updated fields: ${Object.keys(patch).join(", ")}`,
-    auth.user.id,
-    id,
-  );
+  const validStatuses = ["ACTIVE", "SUSPENDED", "DISABLED"];
+  if (update.accountStatus && !validStatuses.includes(update.accountStatus as string)) {
+    return NextResponse.json(
+      { ok: false, error: "Invalid account status" },
+      { status: 400 },
+    );
+  }
 
-  return NextResponse.json({ user: updated });
+  update.updatedAt = new Date();
+
+  await db
+    .collection(COLLECTIONS.users)
+    .updateOne({ _id: userObjectId }, { $set: update });
+
+  await db.collection(COLLECTIONS.auditLogs).insertOne({
+    adminId: new ObjectId(auth.userId),
+    action: "user.update",
+    targetType: "users",
+    targetId: userObjectId,
+    previousValue: Object.fromEntries(
+      Object.keys(update)
+        .filter((k) => k !== "updatedAt")
+        .map((k) => [k, user[k]]),
+    ),
+    newValue: Object.fromEntries(
+      Object.keys(update)
+        .filter((k) => k !== "updatedAt")
+        .map((k) => [k, update[k]]),
+    ),
+    createdAt: new Date(),
+  });
+
+  const updated = await db.collection(COLLECTIONS.users).findOne({ _id: userObjectId });
+  const safeUser = { ...updated! };
+  delete (safeUser as Record<string, unknown>).passwordHash;
+
+  return NextResponse.json({ ok: true, user: safeUser });
 }
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
   const { id } = await params;
-  const user = usersStore.getById(id);
+
+  let userObjectId: ObjectId;
+  try {
+    userObjectId = new ObjectId(id);
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid user ID format" },
+      { status: 400 },
+    );
+  }
+
+  const db = await getDb();
+
+  const user = await db.collection(COLLECTIONS.users).findOne({ _id: userObjectId });
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
   }
 
-  const updated = usersStore.update(id, { role: "guest" } as Partial<typeof user>);
-  if (!updated) {
-    return NextResponse.json({ error: "Failed to deactivate user" }, { status: 500 });
+  if (user.role === "ADMIN") {
+    return NextResponse.json(
+      { ok: false, error: "Cannot deactivate admin users" },
+      { status: 400 },
+    );
   }
 
-  auditLog(
-    "user.delete",
-    "users",
-    `Soft-deleted user: ${user.name} (${user.email})`,
-    auth.user.id,
-    id,
-  );
+  await db
+    .collection(COLLECTIONS.users)
+    .updateOne(
+      { _id: userObjectId },
+      { $set: { accountStatus: "DISABLED", updatedAt: new Date() } },
+    );
 
-  return NextResponse.json({ success: true, message: "User deactivated" });
+  await db.collection(COLLECTIONS.auditLogs).insertOne({
+    adminId: new ObjectId(auth.userId),
+    action: "user.deactivate",
+    targetType: "users",
+    targetId: userObjectId,
+    previousValue: { accountStatus: user.accountStatus },
+    newValue: { accountStatus: "DISABLED" },
+    createdAt: new Date(),
+  });
+
+  return NextResponse.json({ ok: true, message: "User deactivated" });
 }

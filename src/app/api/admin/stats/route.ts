@@ -1,183 +1,187 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { requireAdminApi } from "@/lib/auth/api-guard";
-import {
-  seedInitialData,
-  usersStore,
-  enrollmentsStore,
-  paymentsStore,
-  certificatesStore,
-  submissionsStore,
-  applicationsStore,
-  referralsStore,
-  withdrawalsStore,
-} from "@/lib/data/server-store";
-import type { AppUser, Enrollment, Payment, Certificate, Submission, Referral, Withdrawal } from "@/lib/types";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+interface AggBucket {
+  _id: string;
+  count: number;
+  amount: number;
+  rewardAmount?: number;
+}
+
 export async function GET(request: NextRequest) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireAdmin(request);
   if ("error" in auth) return auth.error;
 
-  await seedInitialData();
+  const db = await getDb();
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  const users = usersStore.getAll();
-  const enrollments = enrollmentsStore.getAll();
-  const payments = paymentsStore.getAll();
-  const certificates = certificatesStore.getAll();
-  const submissions = submissionsStore.getAll();
-  const applications = applicationsStore.getAll();
+  const [totalUsers, newUsersThisMonth, activeUsers] = await Promise.all([
+    db.collection(COLLECTIONS.users).countDocuments({}),
+    db.collection(COLLECTIONS.users).countDocuments({ createdAt: { $gte: startOfMonth } }),
+    db.collection(COLLECTIONS.users).countDocuments({ accountStatus: "ACTIVE" }),
+  ]);
 
-  const referrals = referralsStore.getAll();
-  const withdrawals = withdrawalsStore.getAll();
+  const [totalCourses, publishedCourses, draftCourses] = await Promise.all([
+    db.collection(COLLECTIONS.courses).countDocuments({}),
+    db.collection(COLLECTIONS.courses).countDocuments({ status: "PUBLISHED" }),
+    db.collection(COLLECTIONS.courses).countDocuments({ status: "DRAFT" }),
+  ]);
 
-  const totalStudents = users.filter(
-    (u: AppUser) => u.role === "intern" || u.role === "user",
-  ).length;
-  const activeInterns = enrollments.filter(
-    (e: Enrollment) => e.status === "active",
-  ).length;
-  const totalEnrollments = enrollments.length;
-  const pendingPayments = payments.filter(
-    (p: Payment) => p.status === "pending",
-  ).length;
-  const successfulPayments = payments.filter(
-    (p: Payment) => p.status === "succeeded",
-  ).length;
-  const pendingSubmissions = submissions.filter(
-    (s: Submission) => s.status === "submitted",
-  ).length;
-  const completedInternships = enrollments.filter(
-    (e: Enrollment) => e.status === "completed",
-  ).length;
-  const certificatesIssued = certificates.length;
-  const totalUsers = users.length;
-  const totalApplications = applications.length;
+  const purchasesAll = await db
+    .collection(COLLECTIONS.purchases)
+    .aggregate([
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: "$status",
+                count: { $sum: 1 },
+                amount: { $sum: "$amountPaid" },
+              },
+            },
+          ],
+          todayRevenue: [
+            { $match: { createdAt: { $gte: startOfDay }, status: "PAID" } },
+            { $group: { _id: null, amount: { $sum: "$amountPaid" } } },
+          ],
+          monthRevenue: [
+            { $match: { createdAt: { $gte: startOfMonth }, status: "PAID" } },
+            { $group: { _id: null, amount: { $sum: "$amountPaid" } } },
+          ],
+          totalRevenue: [
+            { $match: { status: "PAID" } },
+            { $group: { _id: null, amount: { $sum: "$amountPaid" } } },
+          ],
+        },
+      },
+    ])
+    .toArray();
+
+  const purchaseAgg = purchasesAll[0] as {
+    totals: AggBucket[];
+    todayRevenue: Array<{ amount: number }>;
+    monthRevenue: Array<{ amount: number }>;
+    totalRevenue: Array<{ amount: number }>;
+  };
+
+  const purchaseStats = {
+    total: purchaseAgg.totals.reduce((sum, s) => sum + s.count, 0),
+    paid: purchaseAgg.totals.find((s) => s._id === "PAID")?.count ?? 0,
+    pending: purchaseAgg.totals.find((s) => s._id === "PENDING")?.count ?? 0,
+    failed: purchaseAgg.totals.find((s) => s._id === "FAILED")?.count ?? 0,
+  };
+
+  const revenueStats = {
+    today: purchaseAgg.todayRevenue[0]?.amount ?? 0,
+    thisMonth: purchaseAgg.monthRevenue[0]?.amount ?? 0,
+    total: purchaseAgg.totalRevenue[0]?.amount ?? 0,
+  };
+
+  const [activeSubscriptions, expiredSubscriptions] = await Promise.all([
+    db.collection(COLLECTIONS.subscriptions).countDocuments({ status: "ACTIVE" }),
+    db.collection(COLLECTIONS.subscriptions).countDocuments({ status: "EXPIRED" }),
+  ]);
+
+  const referralAgg = (await db
+    .collection(COLLECTIONS.referrals)
+    .aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+          rewardAmount: { $sum: "$rewardAmount" },
+        },
+      },
+    ])
+    .toArray()) as AggBucket[];
 
   const referralStats = {
-    total: referrals.length,
-    successful: referrals.filter((r: Referral) => r.status === "rewarded").length,
-    pending: referrals.filter((r: Referral) => r.status === "pending").length,
-    totalRewards: referrals.reduce((sum: number, r: Referral) => sum + (r.rewardAmount ?? 0), 0),
+    total: referralAgg.reduce((sum, r) => sum + r.count, 0),
+    successful: referralAgg.find((r) => r._id === "rewarded")?.count ?? 0,
+    pending: referralAgg.find((r) => r._id === "pending")?.count ?? 0,
+    totalRewards: referralAgg.reduce((sum, r) => sum + (r.rewardAmount ?? 0), 0),
   };
+
+  const withdrawalAgg = (await db
+    .collection(COLLECTIONS.withdrawals)
+    .aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+          amount: { $sum: "$amount" },
+        },
+      },
+    ])
+    .toArray()) as AggBucket[];
 
   const withdrawalStats = {
-    pending: withdrawals.filter((w: Withdrawal) => w.status === "pending").length,
-    approved: withdrawals.filter((w: Withdrawal) => w.status === "approved").length,
-    paid: withdrawals.filter((w: Withdrawal) => w.status === "paid").length,
-    rejected: withdrawals.filter((w: Withdrawal) => w.status === "rejected").length,
-    totalPaid: withdrawals
-      .filter((w: Withdrawal) => w.status === "paid")
-      .reduce((sum: number, w: Withdrawal) => sum + (w.amount ?? 0), 0),
+    pending: withdrawalAgg.find((w) => w._id === "pending")?.count ?? 0,
+    approved: withdrawalAgg.find((w) => w._id === "approved")?.count ?? 0,
+    paid: withdrawalAgg.find((w) => w._id === "paid")?.count ?? 0,
+    rejected: withdrawalAgg.find((w) => w._id === "rejected")?.count ?? 0,
+    totalPaid: withdrawalAgg.find((w) => w._id === "paid")?.amount ?? 0,
   };
 
-  const now = new Date();
-  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const todayKey = now.toISOString().slice(0, 10);
+  const recentPurchases = await db
+    .collection(COLLECTIONS.purchases)
+    .find({})
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .toArray();
 
-  const revenueThisMonth = payments
-    .filter(
-      (p: Payment) =>
-        p.status === "succeeded" && p.createdAt.slice(0, 7) === currentMonthKey,
-    )
-    .reduce((sum: number, p: Payment) => sum + p.amount, 0);
-
-  const revenueToday = payments
-    .filter(
-      (p: Payment) =>
-        p.status === "succeeded" && p.createdAt.slice(0, 10) === todayKey,
-    )
-    .reduce((sum: number, p: Payment) => sum + p.amount, 0);
-
-  const newUsersThisMonth = users.filter(
-    (u: AppUser) => u.createdAt?.slice(0, 7) === currentMonthKey,
-  ).length;
-
-  const recentEnrollments = enrollments
-    .slice()
-    .sort(
-      (a: Enrollment, b: Enrollment) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
-    )
-    .slice(0, 5)
-    .map((e: Enrollment) => {
-      const student = users.find((u: AppUser) => u.id === e.studentId);
-      return {
-        id: e.id,
-        enrollmentId: e.enrollmentId,
-        studentName: student?.name ?? "Unknown",
-        programTitle: e.programTitle,
-        status: e.status,
-        startedAt: e.startedAt,
-      };
-    });
-
-  const recentPayments = payments
-    .slice()
-    .sort(
-      (a: Payment, b: Payment) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
-    .slice(0, 5);
-
-  const recentCertificates = certificates
-    .slice()
-    .sort(
-      (a: Certificate, b: Certificate) =>
-        new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime(),
-    )
-    .slice(0, 5);
-
-  const revenueByMonth: { month: string; revenue: number }[] = [];
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const monthLabel = d.toLocaleString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
-    const revenue = payments
-      .filter(
-        (p: Payment) =>
-          p.status === "succeeded" &&
-          p.createdAt.slice(0, 7) === monthKey,
-      )
-      .reduce((sum: number, p: Payment) => sum + p.amount, 0);
-    revenueByMonth.push({ month: monthLabel, revenue });
-  }
-
-  const usersByRole: Record<string, number> = {};
-  for (const u of users) {
-    usersByRole[u.role] = (usersByRole[u.role] ?? 0) + 1;
-  }
-
-  const enrollmentsByStatus: Record<string, number> = {};
-  for (const e of enrollments) {
-    enrollmentsByStatus[e.status] = (enrollmentsByStatus[e.status] ?? 0) + 1;
-  }
+  const recentEnrollments = await db
+    .collection(COLLECTIONS.subscriptions)
+    .find({})
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .toArray();
 
   return NextResponse.json({
-    totalStudents,
-    activeInterns,
-    totalEnrollments,
-    pendingPayments,
-    successfulPayments,
-    pendingSubmissions,
-    completedInternships,
-    certificatesIssued,
-    totalUsers,
-    totalApplications,
-    recentEnrollments,
-    recentPayments,
-    recentCertificates,
-    revenueByMonth,
-    usersByRole,
-    enrollmentsByStatus,
-    referralStats,
-    withdrawalStats,
-    revenueThisMonth,
-    revenueToday,
-    newUsersThisMonth,
+    ok: true,
+    users: {
+      total: totalUsers,
+      newThisMonth: newUsersThisMonth,
+      active: activeUsers,
+    },
+    courses: {
+      total: totalCourses,
+      published: publishedCourses,
+      draft: draftCourses,
+    },
+    revenue: revenueStats,
+    purchases: purchaseStats,
+    subscriptions: {
+      active: activeSubscriptions,
+      expired: expiredSubscriptions,
+    },
+    referrals: referralStats,
+    withdrawals: withdrawalStats,
+    recentActivity: {
+      recentPurchases: recentPurchases.map((p) => ({
+        id: String(p._id),
+        userId: p.userId ? String(p.userId) : undefined,
+        packageName: p.packageName,
+        amountPaid: p.amountPaid,
+        status: p.status,
+        createdAt: p.createdAt,
+      })),
+      recentEnrollments: recentEnrollments.map((e) => ({
+        id: String(e._id),
+        userId: e.userId ? String(e.userId) : undefined,
+        packageId: e.packageId,
+        packageName: e.packageName,
+        status: e.status,
+        startDate: e.startDate,
+        createdAt: e.createdAt,
+      })),
+    },
   });
 }

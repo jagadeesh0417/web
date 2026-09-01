@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireStudentApi } from "@/lib/auth/student-api-guard";
-import {
-  seedInitialData,
-  usersStore,
-  referralsStore,
-  paymentsStore,
-} from "@/lib/data/server-store";
-import { siteConfig } from "@/config/site";
+import { ObjectId } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAuth } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,36 +16,54 @@ function generateReferralCode(): string {
 }
 
 export async function GET(request: NextRequest) {
-  const auth = await requireStudentApi(request);
+  const auth = await requireAuth(request);
   if ("error" in auth) return auth.error;
-  await seedInitialData();
 
-  const user = usersStore.getById(auth.user.id);
+  const db = await getDb();
+  const user = await db.collection(COLLECTIONS.users).findOne({
+    _id: new ObjectId(auth.userId),
+  });
+
   if (!user) {
-    return NextResponse.json({ ok: false, error: "User not found" }, { status: 404 });
+    return NextResponse.json(
+      { ok: false, error: "User not found" },
+      { status: 404 },
+    );
   }
 
   let referralCode = user.referralCode;
   if (!referralCode) {
     referralCode = generateReferralCode();
-    usersStore.update(user.id, { referralCode });
+    await db.collection(COLLECTIONS.users).updateOne(
+      { _id: user._id },
+      { $set: { referralCode } },
+    );
   }
 
-  const referralLink = `${siteConfig.url}/register?ref=${referralCode}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://akradhii.vercel.app";
+  const referralLink = `${siteUrl}/register?ref=${referralCode}`;
 
-  const userReferrals = referralsStore.find((r) => r.referrerId === user.id);
+  const userReferrals = await db
+    .collection(COLLECTIONS.referrals)
+    .find({ referrerId: user._id })
+    .toArray();
+
   const totalReferrals = userReferrals.length;
   const successfulReferrals = userReferrals.filter((r) => r.status === "rewarded").length;
   const pendingReferrals = userReferrals.filter((r) => r.status === "pending").length;
   const totalEarned = userReferrals
     .filter((r) => r.status === "rewarded")
-    .reduce((sum, r) => sum + r.rewardAmount, 0);
-  const availableBalance = user.walletBalance ?? 0;
+    .reduce((sum, r) => sum + (r.rewardAmount ?? 0), 0);
 
-  const successfulPayments = paymentsStore.find(
-    (p) => (p.userId === user.id || p.studentId === user.id) && p.status === "succeeded",
-  );
-  const referralEligible = successfulPayments.length > 0;
+  const purchases = await db
+    .collection(COLLECTIONS.purchases)
+    .find({
+      userId: user._id,
+      status: "PAID",
+    })
+    .toArray();
+
+  const referralEligible = purchases.length > 0;
 
   return NextResponse.json({
     ok: true,
@@ -61,7 +74,7 @@ export async function GET(request: NextRequest) {
       successfulReferrals,
       pendingReferrals,
       totalEarned,
-      availableBalance,
+      availableBalance: user.walletBalance ?? 0,
     },
     referralEligible,
   });

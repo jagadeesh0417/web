@@ -1,0 +1,16 @@
+export const COLLECTIONS = {
+  users: "users",
+  courses: "courses",
+  modules: "modules",
+  lessons: "lessons",
+  videos: "videos",
+  pdfs: "pdfs",
+  purchases: "purchases",
+  subscriptions: "subscriptions",
+  referrals: "referrals",
+  walletTransactions: "walletTransactions",
+  withdrawals: "withdrawals",
+  auditLogs: "auditLogs",
+  pricingConfig: "pricingConfig",
+  courseAccess: "courseAccess",
+} as const;

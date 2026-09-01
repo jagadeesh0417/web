@@ -1,38 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { getAdminSession } from "@/lib/auth/admin-session";
-import {
-  seedInitialData,
-  usersStore,
-  withdrawalsStore,
-  walletTransactionsStore,
-} from "@/lib/data/server-store";
+import { NextResponse, type NextRequest } from "next/server";
+import { ObjectId } from "mongodb";
+import { getDb, COLLECTIONS } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const updateWithdrawalSchema = z
-  .object({
-    status: z.enum(["approved", "processing", "paid", "rejected"]),
-    rejectionReason: z.string().optional(),
-  })
-  .strict();
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const admin = await getAdminSession();
-  if (!admin) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
-  await seedInitialData();
+  const auth = await requireAdmin(request);
+  if ("error" in auth) return auth.error;
 
   const { id } = await params;
-  const withdrawal = withdrawalsStore.getById(id);
+
+  let withdrawalObjectId: ObjectId;
+  try {
+    withdrawalObjectId = new ObjectId(id);
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Invalid withdrawal ID format" },
+      { status: 400 },
+    );
+  }
+
+  const db = await getDb();
+
+  const withdrawal = await db
+    .collection(COLLECTIONS.withdrawals)
+    .findOne({ _id: withdrawalObjectId });
   if (!withdrawal) {
     return NextResponse.json(
       { ok: false, error: "Withdrawal not found" },
@@ -40,57 +37,83 @@ export async function PATCH(
     );
   }
 
-  let json: unknown;
+  let body: { status?: string; rejectionReason?: string };
   try {
-    json = await request.json();
+    body = await request.json();
   } catch {
     return NextResponse.json(
-      { ok: false, error: "Invalid request body" },
+      { ok: false, error: "Invalid JSON body" },
       { status: 400 },
     );
   }
 
-  const parsed = updateWithdrawalSchema.safeParse(json);
-  if (!parsed.success) {
-    const errors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0] ?? "");
-      if (key && !errors[key]) errors[key] = issue.message;
-    }
+  const validStatuses = ["approved", "processing", "paid", "rejected"];
+  if (!body.status || !validStatuses.includes(body.status)) {
     return NextResponse.json(
-      { ok: false, error: "Validation failed", details: errors },
+      { ok: false, error: "Invalid status. Must be: approved, processing, paid, or rejected" },
       { status: 400 },
     );
   }
 
-  const { status, rejectionReason } = parsed.data;
-
-  const patch: Record<string, unknown> = {
-    status,
-    processedAt: new Date().toISOString(),
+  const update: Record<string, unknown> = {
+    status: body.status,
+    processedAt: new Date(),
   };
-  if (rejectionReason) patch.rejectionReason = rejectionReason;
 
-  const updated = withdrawalsStore.update(id, patch as Record<string, unknown>);
+  if (body.rejectionReason) {
+    update.rejectionReason = body.rejectionReason;
+  }
 
-  if (status === "rejected" && withdrawal.status !== "rejected") {
-    const user = usersStore.getById(withdrawal.userId);
+  await db
+    .collection(COLLECTIONS.withdrawals)
+    .updateOne({ _id: withdrawalObjectId }, { $set: update });
+
+  if (body.status === "rejected" && withdrawal.status !== "rejected") {
+    const user = await db
+      .collection(COLLECTIONS.users)
+      .findOne({ _id: withdrawal.userId });
+
     if (user) {
       const currentBalance = user.walletBalance ?? 0;
-      usersStore.update(user.id, { walletBalance: currentBalance + withdrawal.amount });
+      await db
+        .collection(COLLECTIONS.users)
+        .updateOne(
+          { _id: withdrawal.userId },
+          { $set: { walletBalance: currentBalance + withdrawal.amount } },
+        );
 
-      walletTransactionsStore.create({
-        id: `wtx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-        userId: user.id,
+      await db.collection(COLLECTIONS.walletTransactions).insertOne({
+        userId: withdrawal.userId,
         type: "WITHDRAWAL_REVERSAL",
         amount: withdrawal.amount,
-        referenceId: withdrawal.id,
+        referenceId: withdrawal._id,
         description: `Withdrawal of ₹${withdrawal.amount} rejected — amount returned to wallet`,
         status: "completed",
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(),
       });
     }
   }
 
-  return NextResponse.json({ ok: true, withdrawal: updated });
+  await db.collection(COLLECTIONS.auditLogs).insertOne({
+    adminId: new ObjectId(auth.userId),
+    action: "withdrawal.update_status",
+    targetType: "withdrawals",
+    targetId: withdrawalObjectId,
+    previousValue: { status: withdrawal.status },
+    newValue: { status: body.status },
+    createdAt: new Date(),
+  });
+
+  const updated = await db
+    .collection(COLLECTIONS.withdrawals)
+    .findOne({ _id: withdrawalObjectId });
+
+  return NextResponse.json({
+    ok: true,
+    withdrawal: {
+      ...updated,
+      _id: updated!._id.toString(),
+      id: updated!._id.toString(),
+    },
+  });
 }
