@@ -128,79 +128,59 @@ export default function HomePage() {
       {/* Partners */}
       <section className="border-y border-border bg-card/40">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-60">
-            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Trusted by</span>
-            {partners.map((p) => (
-              <span key={p} className="text-lg font-bold text-muted-foreground">{p}</span>
-            ))}
+          <p className="mb-5 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Trusted by growing brands
+          </p>
+          <div className="relative overflow-hidden">
+            <div className="absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-card/40 to-transparent" />
+            <div className="absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-card/40 to-transparent" />
+            <div className="flex animate-marquee gap-0">
+              {[...partners, ...partners].map((p, i) => (
+                <span key={`${p}-${i}`} className="flex shrink-0 items-center gap-6 px-6">
+                  <span className="text-sm font-semibold tracking-widest text-[#c0c8d8] uppercase">{p}</span>
+                  <span className="text-muted-foreground/40">&middot;</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* About the Company */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-          <Reveal>
-            <Badge variant="primary" className="mb-4">About Akradhii</Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Building digital experiences that move businesses forward
-            </h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              Akradhii is a Hyderabad-based digital growth studio working with startups, SMBs and growing brands
-              across India. We combine strategy, design, development and performance marketing into a single
-              integrated workflow — so brands don&apos;t need five agencies to get results.
-            </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              Our team ships high-converting websites, runs data-driven Meta Ads campaigns, builds CRM
-              pipelines, implements AI automation and crafts brand identities that stick. Every project is
-              led by senior practitioners — not outsourced to the lowest bidder.
-            </p>
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              {values.map((v) => (
-                <div key={v.title} className="rounded-xl border border-border bg-card/50 p-4">
-                  <v.icon className="h-5 w-5 text-brand-500" />
-                  <p className="mt-2 text-sm font-semibold">{v.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{v.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button variant="gradient">
-                <Link href="/about" className="flex items-center gap-2">Learn more about us <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
-              <Button variant="outline">
-                <Link href="/contact" className="flex items-center gap-2">Start your project <ArrowRight className="h-4 w-4" /></Link>
-              </Button>
-            </div>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-violet-600/10 to-indigo-600/10 blur-2xl" />
-              <div className="relative grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 p-6 text-white">
-                    <p className="text-3xl font-extrabold">120+</p>
-                    <p className="mt-1 text-sm text-white/80">Projects delivered</p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-card/80 p-6 backdrop-blur">
-                    <p className="text-3xl font-extrabold text-gradient">98%</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Client satisfaction</p>
-                  </div>
-                </div>
-                <div className="mt-8 space-y-4">
-                  <div className="rounded-2xl border border-border bg-card/80 p-6 backdrop-blur">
-                    <p className="text-3xl font-extrabold text-gradient">300+</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Interns trained</p>
-                  </div>
-                  <div className="rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-600 p-6 text-white">
-                    <p className="text-3xl font-extrabold">500+</p>
-                    <p className="mt-1 text-sm text-white/80">Certificates issued</p>
-                  </div>
-                </div>
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <Badge variant="primary" className="mb-4">About Akradhii</Badge>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Building digital experiences that move businesses forward
+          </h2>
+          <p className="mt-5 text-muted-foreground leading-relaxed">
+            Akradhii is a Hyderabad-based digital growth studio working with startups, SMBs and growing brands
+            across India. We combine strategy, design, development and performance marketing into a single
+            integrated workflow — so brands don&apos;t need five agencies to get results.
+          </p>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Our team ships high-converting websites, runs data-driven Meta Ads campaigns, builds CRM
+            pipelines, implements AI automation and crafts brand identities that stick. Every project is
+            led by senior practitioners — not outsourced to the lowest bidder.
+          </p>
+          <div className="mt-8 grid grid-cols-2 gap-4 text-left sm:grid-cols-4">
+            {values.map((v) => (
+              <div key={v.title} className="rounded-xl border border-border bg-card/50 p-4">
+                <v.icon className="h-5 w-5 text-brand-500" />
+                <p className="mt-2 text-sm font-semibold">{v.title}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{v.desc}</p>
               </div>
-            </div>
-          </Reveal>
-        </div>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button variant="gradient">
+              <Link href="/about" className="flex items-center gap-2">Learn more about us <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button variant="outline">
+              <Link href="/contact" className="flex items-center gap-2">Start your project <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </Reveal>
       </section>
 
       {/* Services */}
