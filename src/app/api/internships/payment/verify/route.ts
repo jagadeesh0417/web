@@ -4,6 +4,14 @@ import { PROGRAM_BY_SLUG } from "@/lib/constants";
 import { createEnrollment } from "@/lib/data/repository";
 import { emailTemplates, sendWorkflowEmail } from "@/lib/notifications";
 import { submitLead } from "@/lib/leads/client";
+import {
+  seedInitialData,
+  usersStore,
+  referralsStore,
+  walletTransactionsStore,
+  referralConfigStore,
+} from "@/lib/data/server-store";
+import type { Referral, WalletTransaction } from "@/lib/types";
 
 const bodySchema = z.object({
   applicationId: z.string().min(1),
@@ -101,6 +109,77 @@ export async function POST(request: NextRequest) {
     app.paymentVerifiedAt = new Date().toISOString();
     apps[applicationId] = app;
     await saveApplications(apps);
+
+    // ─── Referral reward processing ──────────────────────────────────────────
+    try {
+      seedInitialData();
+      const referralCodeUsed = app.referralCode as string | undefined;
+      const referredEmail = student.email.toLowerCase();
+
+      if (referralCodeUsed) {
+        // Find the referrer by referral code
+        const referrer = usersStore.findOne(
+          (u) => u.referralCode?.toUpperCase() === referralCodeUsed.toUpperCase(),
+        );
+
+        if (referrer && referrer.id !== `pending:${referredEmail}`) {
+          // Check if this payment has already been rewarded
+          const existingReward = referralsStore.findOne(
+            (r) => r.qualifyingPaymentId === created.payment.id && r.status === "rewarded",
+          );
+
+          if (!existingReward) {
+            // Check if this referred user already has any rewarded referral
+            const existingReferralForUser = referralsStore.findOne(
+              (r) =>
+                r.referredUserId === `pending:${referredEmail}` && r.status === "rewarded",
+            );
+
+            if (!existingReferralForUser) {
+              const config = referralConfigStore.get();
+              const rewardAmount = config?.referralReward ?? 20;
+
+              // Create referral record
+              const referral: Referral = {
+                id: `ref_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                referrerId: referrer.id,
+                referredUserId: `pending:${referredEmail}`,
+                referralCode: referralCodeUsed.toUpperCase(),
+                rewardAmount,
+                status: "rewarded",
+                qualifyingPaymentId: created.payment.id,
+                createdAt: new Date().toISOString(),
+                rewardedAt: new Date().toISOString(),
+              };
+              referralsStore.create(referral);
+
+              // Credit referrer's wallet
+              const newBalance = (referrer.walletBalance ?? 0) + rewardAmount;
+              const newEarnings = (referrer.totalReferralEarnings ?? 0) + rewardAmount;
+              usersStore.update(referrer.id, {
+                walletBalance: newBalance,
+                totalReferralEarnings: newEarnings,
+              });
+
+              // Create wallet transaction
+              const tx: WalletTransaction = {
+                id: `wtx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                userId: referrer.id,
+                type: "REFERRAL_REWARD",
+                amount: rewardAmount,
+                referenceId: referral.id,
+                description: `Referral reward for referring ${referredEmail}`,
+                status: "completed",
+                createdAt: new Date().toISOString(),
+              };
+              walletTransactionsStore.create(tx);
+            }
+          }
+        }
+      }
+    } catch {
+      // Referral processing failure should not block enrollment
+    }
 
     // WhatsApp lead notification
     try {

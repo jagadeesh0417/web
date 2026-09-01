@@ -21,6 +21,7 @@ const bodySchema = z.object({
   state: z.string().optional(),
   linkedin: z.string().optional(),
   github: z.string().optional(),
+  referralCode: z.string().optional(),
 });
 
 export const runtime = "nodejs";
@@ -91,6 +92,7 @@ export async function POST(request: NextRequest) {
         linkedin: data.linkedin,
         github: data.github,
       },
+      referralCode: data.referralCode || undefined,
       createdAt: new Date().toISOString(),
     };
 

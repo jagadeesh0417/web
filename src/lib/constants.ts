@@ -8,7 +8,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "A fast, focused immersion that builds your fundamentals with live mentorship, guided assignments and a mini project you can show off.",
     duration: "4 Weeks",
-    price: 1999,
+    price: 149,
     featured: false,
     features: [
       "4 live sessions",
@@ -34,7 +34,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "Go deeper with weekly assessments, two real projects and a performance report that proves you are job-ready.",
     duration: "6 Weeks",
-    price: 3499,
+    price: 199,
     featured: true,
     features: [
       "6 live sessions",
@@ -61,7 +61,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "Work on client-based projects with full mentorship, portfolio building and a letter of recommendation based on your performance.",
     duration: "8 Weeks",
-    price: 5499,
+    price: 249,
     featured: false,
     features: [
       "Full mentorship",

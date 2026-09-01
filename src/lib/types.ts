@@ -18,6 +18,12 @@ export interface AppUser {
   emailVerified: boolean;
   phone?: string;
   company?: string;
+  referralCode?: string;
+  referredByUserId?: string;
+  referralEligible?: boolean;
+  walletBalance?: number;
+  totalReferralEarnings?: number;
+  totalWithdrawn?: number;
   createdAt: string;
 }
 
@@ -445,3 +451,70 @@ export interface Video {
 
 /** Re-export lead types for convenience */
 export type { WebsiteLead, LeadFormType, WhatsAppDeliveryStatus } from "@/lib/leads/types";
+
+// ─── Referral & Wallet Types ─────────────────────────────────────────────────
+
+export interface Referral {
+  id: string;
+  referrerId: string;
+  referredUserId: string;
+  referralCode: string;
+  rewardAmount: number;
+  status: "pending" | "rewarded" | "expired";
+  qualifyingPaymentId?: string;
+  createdAt: string;
+  rewardedAt?: string;
+}
+
+export type WalletTransactionType =
+  | "REFERRAL_REWARD"
+  | "WITHDRAWAL"
+  | "WITHDRAWAL_REVERSAL";
+
+export type WalletTransactionStatus = "completed" | "pending" | "reversed";
+
+export interface WalletTransaction {
+  id: string;
+  userId: string;
+  type: WalletTransactionType;
+  amount: number;
+  referenceId?: string;
+  description: string;
+  status: WalletTransactionStatus;
+  createdAt: string;
+}
+
+export type WithdrawalStatus =
+  | "pending"
+  | "approved"
+  | "processing"
+  | "paid"
+  | "rejected";
+
+export interface Withdrawal {
+  id: string;
+  userId: string;
+  userName: string;
+  amount: number;
+  paymentMethod: "bank_transfer" | "upi";
+  upiId?: string;
+  accountHolderName?: string;
+  accountNumber?: string;
+  ifsc?: string;
+  status: WithdrawalStatus;
+  adminNote?: string;
+  rejectionReason?: string;
+  createdAt: string;
+  processedAt?: string;
+}
+
+export interface ReferralConfig {
+  id: string;
+  fourWeekPrice: number;
+  sixWeekPrice: number;
+  eightWeekPrice: number;
+  referralReward: number;
+  minimumWithdrawal: number;
+  attributionDays: number;
+  updatedAt: string;
+}

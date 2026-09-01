@@ -83,6 +83,7 @@ function Wizard() {
     resume: null as File | null,
     agree: false,
   });
+  const [referralCode, setReferralCode] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [processing, setProcessing] = useState(false);
   const [paymentStep, setPaymentStep] = useState<"idle" | "processing" | "verifying" | "done" | "failed">("idle");
@@ -105,6 +106,12 @@ function Wizard() {
     if (params.get("duration")) {
       const d = Number(params.get("duration"));
       if ([4, 6, 8].includes(d)) set("duration", d);
+    }
+    // Read referral code from cookie
+    const cookies = document.cookie.split(";").map((c) => c.trim());
+    const refCookie = cookies.find((c) => c.startsWith("ak_ref="));
+    if (refCookie) {
+      setReferralCode(refCookie.split("=")[1] ?? "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -186,6 +193,7 @@ function Wizard() {
           state: form.state,
           linkedin: form.linkedin,
           github: form.github,
+          referralCode: referralCode || undefined,
         }),
       });
 

@@ -151,6 +151,7 @@ export const ROLE_NAV: Partial<Record<Role, NavItem[]>> = {
     { href: "/student/certificate", label: "Certificate", icon: "Award" },
     { href: "/student/profile", label: "Profile", icon: "User" },
     { href: "/student/support", label: "Support", icon: "LifeBuoy" },
+    { href: "/student/refer", label: "Refer & Earn", icon: "Gift" },
   ],
   applicant: [
     { href: "/student", label: "Application", icon: "LayoutDashboard" },
@@ -205,6 +206,7 @@ export const ROLE_NAV: Partial<Record<Role, NavItem[]>> = {
     { href: "/admin/leads", label: "Website Leads", icon: "MessageSquare" },
     { href: "/admin/verification", label: "Verification", icon: "ShieldCheck" },
     { href: "/admin/reports", label: "Reports", icon: "FileBarChart" },
+    { href: "/admin/referrals", label: "Referrals & Withdrawals", icon: "Gift" },
     { href: "/admin/profile", label: "Profile", icon: "User" },
   ],
 };

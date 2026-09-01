@@ -19,9 +19,13 @@ import type {
   Payment,
   PortfolioItem,
   Project,
+  Referral,
+  ReferralConfig,
   Submission,
   Testimonial,
   Video,
+  WalletTransaction,
+  Withdrawal,
 } from "@/lib/types";
 
 // ─── Extra types not in types.ts ─────────────────────────────────────────────
@@ -121,7 +125,11 @@ export type CollectionName =
   | "email-log"
   | "notifications"
   | "profiles"
-  | "company-settings";
+  | "company-settings"
+  | "referrals"
+  | "wallet-transactions"
+  | "withdrawals"
+  | "referral-config";
 
 export type CollectionTypeMap = {
   users: AppUser;
@@ -160,6 +168,10 @@ export type CollectionTypeMap = {
   notifications: InAppNotification;
   profiles: { id: string; userId: string; fullName: string; mobile: string; email: string; college?: string; course?: string; branch?: string; yearOfStudy?: string; graduationYear?: string; dob?: string; gender?: string; city?: string; state?: string; linkedin?: string; github?: string; resumeUrl?: string; idUrl?: string; skills?: string[]; bio?: string; title?: string };
   "company-settings": CompanySettings;
+  referrals: Referral;
+  "wallet-transactions": WalletTransaction;
+  withdrawals: Withdrawal;
+  "referral-config": ReferralConfig;
 };
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
@@ -355,6 +367,19 @@ export async function seedInitialData(): Promise<void> {
       phone: "+91 98485 79053",
       updatedAt: new Date().toISOString(),
     }] as CompanySettings[]);
+    seedIfEmpty("referrals", []);
+    seedIfEmpty("wallet-transactions", []);
+    seedIfEmpty("withdrawals", []);
+    seedIfEmpty("referral-config", [{
+      id: "default",
+      fourWeekPrice: 149,
+      sixWeekPrice: 199,
+      eightWeekPrice: 249,
+      referralReward: 20,
+      minimumWithdrawal: 200,
+      attributionDays: 30,
+      updatedAt: new Date().toISOString(),
+    }] as ReferralConfig[]);
   } catch {
     // If import fails (e.g. in edge runtime), skip seeding.
   }
@@ -701,6 +726,52 @@ export const companySettingsStore = {
       certificatePrefix: "AKR",
       supportEmail: "support@akradhii.com",
       phone: "+91 98485 79053",
+      updatedAt: new Date().toISOString(),
+      ...patch,
+    });
+  },
+};
+
+// ─── Referral & Wallet stores ────────────────────────────────────────────────
+
+export const referralsStore = {
+  getAll: () => getAll<Referral>("referrals"),
+  getById: (id: string) => getById<Referral>("referrals", id),
+  create: (data: Referral) => create<Referral>("referrals", data),
+  update: (id: string, patch: Partial<Referral>) => update<Referral>("referrals", id, patch),
+  find: (predicate: (item: Referral) => boolean) => find<Referral>("referrals", predicate),
+  findOne: (predicate: (item: Referral) => boolean) => findOne<Referral>("referrals", predicate),
+};
+
+export const walletTransactionsStore = {
+  getAll: () => getAll<WalletTransaction>("wallet-transactions"),
+  getById: (id: string) => getById<WalletTransaction>("wallet-transactions", id),
+  create: (data: WalletTransaction) => create<WalletTransaction>("wallet-transactions", data),
+  find: (predicate: (item: WalletTransaction) => boolean) => find<WalletTransaction>("wallet-transactions", predicate),
+  findOne: (predicate: (item: WalletTransaction) => boolean) => findOne<WalletTransaction>("wallet-transactions", predicate),
+};
+
+export const withdrawalsStore = {
+  getAll: () => getAll<Withdrawal>("withdrawals"),
+  getById: (id: string) => getById<Withdrawal>("withdrawals", id),
+  create: (data: Withdrawal) => create<Withdrawal>("withdrawals", data),
+  update: (id: string, patch: Partial<Withdrawal>) => update<Withdrawal>("withdrawals", id, patch),
+  find: (predicate: (item: Withdrawal) => boolean) => find<Withdrawal>("withdrawals", predicate),
+};
+
+export const referralConfigStore = {
+  get: () => findOne<ReferralConfig>("referral-config", (c) => c.id === "default"),
+  update: (patch: Partial<ReferralConfig>) => {
+    const existing = findOne<ReferralConfig>("referral-config", (c) => c.id === "default");
+    if (existing) return update<ReferralConfig>("referral-config", "default", { ...patch, updatedAt: new Date().toISOString() });
+    return create<ReferralConfig>("referral-config", {
+      id: "default",
+      fourWeekPrice: 149,
+      sixWeekPrice: 199,
+      eightWeekPrice: 249,
+      referralReward: 20,
+      minimumWithdrawal: 200,
+      attributionDays: 30,
       updatedAt: new Date().toISOString(),
       ...patch,
     });
