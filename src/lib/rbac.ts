@@ -182,6 +182,7 @@ export const ROLE_NAV: Partial<Record<Role, NavItem[]>> = {
   ],
   admin: [
     { href: "/admin", label: "Dashboard", icon: "BarChart3" },
+    { href: "/admin/courses", label: "Courses", icon: "BookOpen" },
     { href: "/admin/users", label: "Students", icon: "Users" },
     { href: "/admin/interns", label: "Interns", icon: "GraduationCap" },
     { href: "/admin/applications", label: "Applications", icon: "FileStack" },

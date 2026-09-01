@@ -23,6 +23,7 @@ const studentNav = [
   { href: "/student", label: "Dashboard", icon: "LayoutDashboard" },
   { href: "/student/internship", label: "My Internship", icon: "GraduationCap" },
   { href: "/student/modules", label: "Course Modules", icon: "BookOpen" },
+  { href: "/student/courses", label: "My Courses", icon: "GraduationCap" },
   { href: "/student/timeline", label: "Timeline", icon: "Clock" },
   { href: "/student/assignments", label: "Assignments", icon: "FileText" },
   { href: "/student/projects", label: "Projects", icon: "FolderKanban" },
