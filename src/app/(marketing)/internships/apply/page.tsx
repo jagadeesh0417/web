@@ -393,7 +393,7 @@ function Wizard() {
                 <Input id="confirmEmail" type="email" value={form.confirmEmail} onChange={(e) => set("confirmEmail", e.target.value)} placeholder="Re-enter your email" autoComplete="email" />
               </Field>
               <Field label="Mobile number" htmlFor="mobile" error={errors.mobile}>
-                <Input id="mobile" value={form.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="+91 98765 43210" autoComplete="tel" />
+                <Input id="mobile" value={form.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="+91 98485 79053" autoComplete="tel" />
               </Field>
               <Field label="Date of birth" htmlFor="dob" error={errors.dob}>
                 <Input id="dob" type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />

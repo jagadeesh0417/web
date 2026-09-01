@@ -5,7 +5,7 @@ export const siteConfig = {
     "Akradhii is a premium digital agency for website design & development, Meta Ads, business automation, CRM, AI automation, SEO and branding — plus structured internship programs that build real careers.",
   url: "https://akradhii.vercel.app",
   email: "hello@akradhii.com",
-  phone: "+91 98765 43210",
+  phone: "+91 98485 79053",
   /** Lead / business WhatsApp (digits for wa.me links) */
   whatsapp: "919848579053",
   whatsappDisplay: "+91 98485 79053",

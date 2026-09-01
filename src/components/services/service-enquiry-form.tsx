@@ -110,7 +110,7 @@ export function ServiceEnquiryForm({
           <Input id={`name-${serviceSlug}`} name="name" required autoComplete="name" placeholder="Your name" />
         </Field>
         <Field label="Phone" htmlFor={`phone-${serviceSlug}`} error={errors.phone}>
-          <Input id={`phone-${serviceSlug}`} name="phone" type="tel" required autoComplete="tel" placeholder="+91 98765 43210" />
+          <Input id={`phone-${serviceSlug}`} name="phone" type="tel" required autoComplete="tel" placeholder="+91 98485 79053" />
         </Field>
       </div>
 

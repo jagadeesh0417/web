@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Clock, Mail, MapPin, MessageCircle, Phone, Send, CheckCircle2 } from "lucide-react";
+import { Clock, ExternalLink, Mail, MapPin, MessageCircle, Phone, Send, Calendar, CheckCircle2 } from "lucide-react";
 import { siteConfig, services } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +86,14 @@ export default function ContactPage() {
             <p className="mt-4 text-muted-foreground">
               Project enquiries, partnerships or internship questions — we reply within 24 hours on business days.
             </p>
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <span className="text-sm text-muted-foreground">Prefer to talk first?</span>
+              <a href="https://calendly.com/akradhii" target="_blank" rel="noreferrer">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" /> Book a 15-min call <ExternalLink className="h-3 w-3" />
+                </Button>
+              </a>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -167,6 +175,20 @@ export default function ContactPage() {
                 </p>
               </div>
             </Card>
+
+            <div className="mt-6 overflow-hidden rounded-xl border border-border">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.2!2d78.38!3d17.44!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae3a4e1c5e3e3e3e!2sHITEC%20City%2C%20Hyderabad%2C%20Telangana%20500081!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                width="100%"
+                height="300"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Akradhii office location"
+                className="w-full"
+              />
+            </div>
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-3">
@@ -207,7 +229,7 @@ export default function ContactPage() {
                   </div>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Phone" htmlFor="phone" error={errors.phone}>
-                      <Input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="+91 98765 43210" />
+                      <Input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="+91 98485 79053" />
                     </Field>
                     <Field label="Company (optional)" htmlFor="company">
                       <Input id="company" name="company" autoComplete="organization" placeholder="Your company" />
