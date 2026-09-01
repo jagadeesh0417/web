@@ -4,11 +4,15 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
+  Code2,
   Compass,
   Eye,
+  GraduationCap,
   HeartHandshake,
   Layers,
   Lightbulb,
+  Megaphone,
+  Palette,
   Rocket,
   Shield,
   Sparkles,
@@ -305,7 +309,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-card/30">
+      <section id="team" className="border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
             <div className="flex items-center gap-2">
@@ -318,23 +322,31 @@ export default function AboutPage() {
           </Reveal>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: "Full-stack engineers", text: "Building fast, accessible web experiences from prototype to production." },
-              { label: "Performance marketers", text: "Driving qualified traffic and measurable ROI across paid and organic channels." },
-              { label: "Product designers", text: "Shaping intuitive interfaces and cohesive brand systems." },
-              { label: "Mentors & educators", text: "Guiding interns through real projects with structured feedback." },
+              { icon: Code2, label: "Full-stack engineers", text: "Building fast, accessible web experiences from prototype to production." },
+              { icon: Megaphone, label: "Performance marketers", text: "Driving qualified traffic and measurable ROI across paid and organic channels." },
+              { icon: Palette, label: "Product designers", text: "Shaping intuitive interfaces and cohesive brand systems." },
+              { icon: GraduationCap, label: "Mentors & educators", text: "Guiding interns through real projects with structured feedback." },
             ].map((c, i) => (
               <Reveal key={c.label} delay={i * 0.05}>
-                <Card className="h-full p-6">
-                  <p className="font-semibold">{c.label}</p>
+                <Card className="h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-600/10">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/25">
+                    <c.icon className="h-5 w-5" />
+                  </div>
+                  <p className="mt-4 font-semibold">{c.label}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{c.text}</p>
                 </Card>
               </Reveal>
             ))}
           </div>
           <Reveal delay={0.2}>
-            <p className="mt-8 max-w-2xl text-sm text-muted-foreground">
-              We keep the core team small and senior, scaling through specialists and structured interns as projects demand. Everyone ships; nobody is just a title.
-            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                We keep the core team small and senior, scaling through specialists and structured interns as projects demand. Everyone ships; nobody is just a title.
+              </p>
+              <Button variant="outline" size="sm" className="shrink-0">
+                <Link href="#team" className="flex items-center gap-2">Meet our team</Link>
+              </Button>
+            </div>
           </Reveal>
         </div>
       </section>

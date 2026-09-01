@@ -11,6 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CopyLinkButton } from "@/components/marketing/copy-link-button";
 
+const authorAvatars: Record<string, string> = {
+  "Sneha Kulkarni": "/team/sneha.svg",
+  "Priya Sharma": "/team/priya.svg",
+  "Rahul Iyer": "/team/rahul.svg",
+  "Arjun Reddy": "/team/arjun.svg",
+};
+
 export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
 }
@@ -83,7 +90,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <Badge variant="primary">{post.category}</Badge>
       <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{post.title}</h1>
       <div className="mt-5 flex items-center gap-3 border-b border-border pb-6">
-        <Avatar name={post.author} />
+        <Avatar name={post.author} src={authorAvatars[post.author]} />
         <div>
           <p className="text-sm font-semibold">{post.author}</p>
           <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

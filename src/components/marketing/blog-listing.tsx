@@ -7,8 +7,16 @@ import { ArrowRight, Clock, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Avatar } from "@/components/ui/avatar";
 import type { BlogPost } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+const authorAvatars: Record<string, string> = {
+  "Sneha Kulkarni": "/team/sneha.svg",
+  "Priya Sharma": "/team/priya.svg",
+  "Rahul Iyer": "/team/rahul.svg",
+  "Arjun Reddy": "/team/arjun.svg",
+};
 
 export function BlogListing({ posts }: { posts: BlogPost[] }) {
   const categories = useMemo(() => {
@@ -95,7 +103,8 @@ export function BlogListing({ posts }: { posts: BlogPost[] }) {
                   </div>
                   <h2 className="mt-3 text-2xl font-bold leading-snug group-hover:text-brand-300">{featured.title}</h2>
                   <p className="mt-2 text-sm text-muted-foreground">{featured.excerpt}</p>
-                  <p className="mt-4 text-xs text-muted-foreground">
+                  <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                    <Avatar name={featured.author} src={authorAvatars[featured.author]} className="h-6 w-6 text-[10px]" />
                     {featured.author} ·{" "}
                     {new Date(featured.publishedAt).toLocaleDateString("en-IN", {
                       day: "numeric",
@@ -133,7 +142,10 @@ export function BlogListing({ posts }: { posts: BlogPost[] }) {
                     </h2>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.excerpt}</p>
                     <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted-foreground">
-                      <span>{post.author}</span>
+                      <span className="flex items-center gap-2">
+                        <Avatar name={post.author} src={authorAvatars[post.author]} className="h-5 w-5 text-[9px]" />
+                        {post.author}
+                      </span>
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
