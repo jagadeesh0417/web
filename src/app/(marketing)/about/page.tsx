@@ -357,6 +357,11 @@ export default function AboutPage() {
           <p className="mt-3 text-muted-foreground">
             Practical plays on growth, technology and the intern experience.
           </p>
+          <Button variant="outline" size="sm" className="mt-4">
+            <Link href="/blog" className="flex items-center gap-2">
+              View all posts <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </Reveal>
         <div className="mt-10">
           <BlogListing posts={publishedPosts} />
