@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
 import { blogPosts } from "@/lib/data/sample-data";
@@ -101,8 +102,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
 
-      <div className={`mt-8 flex h-48 items-center justify-center rounded-2xl bg-gradient-to-br ${post.gradient} sm:h-56`}>
-        <span className="text-7xl font-black text-white/20">A</span>
+      <div className={`relative mt-8 h-48 overflow-hidden rounded-2xl bg-gradient-to-br ${post.gradient} sm:h-56`}>
+        <Image
+          src={`/blog/${post.slug}.svg`}
+          alt={post.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100vw, 768px"
+        />
       </div>
 
       <article className="mt-8 space-y-5">

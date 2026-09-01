@@ -8,6 +8,8 @@ const PUBLIC_PATHS = [
   "/about",
   "/contact",
   "/internships",
+  "/portfolio",
+  "/blog",
   "/verify",
   "/login",
   "/register",

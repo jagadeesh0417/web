@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Code2,
@@ -300,7 +301,13 @@ export default function HomePage() {
               <Link href={`/portfolio/${p.slug}`}>
                 <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-600/10">
                   <div className={`relative flex h-48 items-center justify-center bg-gradient-to-br ${p.gradient} overflow-hidden`}>
-                    <span className="text-6xl font-black text-white/20 transition-transform duration-500 group-hover:scale-110">A</span>
+                    <Image
+                      src={`/portfolio/${p.slug}.svg`}
+                      alt={`${p.title} — ${p.service}`}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                   </div>
                   <div className="p-5">

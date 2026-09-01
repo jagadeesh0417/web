@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -75,8 +76,14 @@ export function BlogListing({ posts }: { posts: BlogPost[] }) {
           {featured && (
             <Link href={`/blog/${featured.slug}`} className="mt-12 block">
               <Card className="group overflow-hidden transition-all hover:border-brand-500/40 lg:grid lg:grid-cols-2">
-                <div className={`flex min-h-[180px] items-center justify-center bg-gradient-to-br ${featured.gradient} lg:min-h-full`}>
-                  <span className="text-7xl font-black text-white/20">A</span>
+                <div className={`relative flex min-h-[180px] items-center justify-center bg-gradient-to-br ${featured.gradient} lg:min-h-full`}>
+                  <Image
+                    src={`/blog/${featured.slug}.svg`}
+                    alt={featured.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 </div>
                 <div className="flex flex-col justify-center p-6 sm:p-8">
                   <div className="flex flex-wrap items-center gap-2">
@@ -105,8 +112,14 @@ export function BlogListing({ posts }: { posts: BlogPost[] }) {
             {rest.map((post) => (
               <Link key={post.id} href={`/blog/${post.slug}`}>
                 <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-600/10">
-                  <div className={`flex h-36 items-center justify-center bg-gradient-to-br ${post.gradient}`}>
-                    <span className="text-5xl font-black text-white/20 transition-transform group-hover:scale-110">A</span>
+                  <div className={`relative flex h-36 items-center justify-center bg-gradient-to-br ${post.gradient}`}>
+                    <Image
+                      src={`/blog/${post.slug}.svg`}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between">

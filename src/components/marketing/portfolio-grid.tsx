@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -45,11 +46,15 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
           {filtered.map((p) => (
             <Link key={p.id} href={`/portfolio/${p.slug}`}>
               <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-600/10">
-                <div className={`relative flex h-52 items-center justify-center bg-gradient-to-br ${p.gradient}`}>
-                  <span className="text-7xl font-black text-white/20 transition-transform duration-300 group-hover:scale-125">
-                    A
-                  </span>
-                  <ArrowUpRight className="absolute right-5 top-5 h-6 w-6 text-white/70 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className={`relative flex h-52 items-center justify-center bg-gradient-to-br ${p.gradient} overflow-hidden`}>
+                  <Image
+                    src={`/portfolio/${p.slug}.svg`}
+                    alt={`${p.title} — ${p.service}`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                  />
+                  <ArrowUpRight className="absolute right-5 top-5 z-10 h-6 w-6 text-white/70 opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
                 <div className="p-6">
                   <div className="flex items-center justify-between">
