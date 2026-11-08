@@ -84,15 +84,15 @@ export function Navbar() {
               key={l.href}
               href={l.href}
               className={cn(
-                "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5",
+                "group relative rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5",
                 isActive(l.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {l.label}
               <span
                 className={cn(
-                  "absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600 transition-all duration-300",
-                  isActive(l.href) ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0",
+                  "absolute inset-x-3 -bottom-px h-0.5 origin-left rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600 transition-all duration-300",
+                  isActive(l.href) ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100",
                 )}
               />
             </Link>

@@ -90,7 +90,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "ui-ux-design",
     name: "UI/UX Design",
     icon: "Figma",
-    gradient: "from-fuchsia-600 to-pink-600",
+    gradient: "from-amber-600 to-orange-600",
     description:
       "Design delightful digital products — research, wireframes, high-fidelity UI and interactive prototypes in Figma.",
     learningOutcomes: [
@@ -112,7 +112,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "meta-ads",
     name: "Meta Ads",
     icon: "Megaphone",
-    gradient: "from-orange-600 to-cyan-500",
+    gradient: "from-orange-600 to-amber-500",
     description:
       "Master Facebook & Instagram advertising — from campaign structure and creative testing to scaling profitable ad accounts.",
     learningOutcomes: [
@@ -134,7 +134,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "digital-marketing",
     name: "Digital Marketing",
     icon: "TrendingUp",
-    gradient: "from-emerald-600 to-teal-500",
+    gradient: "from-amber-500 to-orange-600",
     description:
       "The full funnel: brand strategy, content marketing, email, paid media and analytics — a complete modern marketer's toolkit.",
     learningOutcomes: [
@@ -198,7 +198,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "graphic-design",
     name: "Graphic Design",
     icon: "Palette",
-    gradient: "from-rose-500 to-red-500",
+    gradient: "from-orange-600 to-amber-600",
     description:
       "Create scroll-stopping brand creatives, social media visuals and ad designs with a designer's eye and a marketer's mindset.",
     learningOutcomes: [
@@ -240,7 +240,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "seo",
     name: "SEO",
     icon: "Search",
-    gradient: "from-green-600 to-emerald-500",
+    gradient: "from-amber-600 to-orange-500",
     description:
       "Master technical SEO, on-page optimization and content strategy that compounds organic traffic over time.",
     learningOutcomes: [
@@ -261,7 +261,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "video-editing",
     name: "Video Editing",
     icon: "Clapperboard",
-    gradient: "from-cyan-500 to-orange-600",
+    gradient: "from-amber-500 to-orange-600",
     description:
       "Edit reels, YouTube videos and ad creatives that stop the scroll — with captions, motion graphics and sound design.",
     learningOutcomes: [
