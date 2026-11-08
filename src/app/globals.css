@@ -100,7 +100,7 @@ body {
     radial-gradient(1100px 550px at 85% -10%, color-mix(in srgb, #F58216 10%, transparent), transparent 60%),
     radial-gradient(900px 500px at -10% 15%, color-mix(in srgb, #D6A24A 8%, transparent), transparent 55%),
     radial-gradient(700px 400px at 50% 110%, color-mix(in srgb, #9E351B 6%, transparent), transparent 60%),
-    var(--background);
+    linear-gradient(145deg, #090A0D, #17120F, #090A0D);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-inter), Arial, sans-serif;
