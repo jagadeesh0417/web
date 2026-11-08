@@ -25,7 +25,7 @@ export function HeroVisual() {
         </div>
         <div className="hero-laptop-base" />
       </div>
-      <div className="hero-floating hero-floating-top"><span className="hero-floating-icon">↗</span><span><i /><i /></span></div>
+      <div className="hero-floating hero-floating-top"><span className="hero-floating-icon">&#8599;</span><span><i /><i /></span></div>
       <div className="hero-floating hero-floating-bottom"><span className="hero-pulse" /><span><i /><i /></span></div>
     </div>
   );
