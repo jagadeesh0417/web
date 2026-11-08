@@ -68,8 +68,8 @@ export default function StudentDashboard() {
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Overall progress" value={`${p.percent}%`} hint={`${p.completedLessons}/${p.totalLessons} lessons`} icon={BookOpen} gradient="bg-gradient-to-br from-violet-600 to-indigo-600" />
-        <StatCard title="Current week" value={`Week ${Math.min(p.currentWeek, p.modules.length)}`} hint={`of ${p.modules.length} weeks`} icon={ClipboardCheck} gradient="bg-gradient-to-br from-sky-500 to-blue-600" />
+        <StatCard title="Overall progress" value={`${p.percent}%`} hint={`${p.completedLessons}/${p.totalLessons} lessons`} icon={BookOpen} gradient="bg-gradient-to-br from-amber-600 to-orange-600" />
+        <StatCard title="Current week" value={`Week ${Math.min(p.currentWeek, p.modules.length)}`} hint={`of ${p.modules.length} weeks`} icon={ClipboardCheck} gradient="bg-gradient-to-br from-amber-500 to-orange-600" />
         <StatCard
           title="Assignments"
           value={`${p.approvedAssignments}/${p.totalAssignments}`}
@@ -82,7 +82,7 @@ export default function StudentDashboard() {
           value={certEligibility.eligible ? "Ready" : "In progress"}
           hint={certEligibility.eligible ? "issued on request" : p.percent < 100 ? `${p.percent}% to go` : "complete all steps"}
           icon={Award}
-          gradient={certEligibility.eligible ? "bg-gradient-to-br from-emerald-500 to-green-600" : "bg-gradient-to-br from-violet-600 to-indigo-600"}
+          gradient={certEligibility.eligible ? "bg-gradient-to-br from-emerald-500 to-green-600" : "bg-gradient-to-br from-amber-600 to-orange-600"}
         />
       </div>
 

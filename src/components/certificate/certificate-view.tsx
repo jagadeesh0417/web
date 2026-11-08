@@ -11,7 +11,7 @@ export function CertificateView({ certificate }: { certificate: Certificate }) {
     <div className="certificate-sheet relative overflow-hidden rounded-2xl border-2 border-brand-500/40 bg-card">
       <div className="absolute inset-0 bg-grid opacity-40" />
       <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-600/10 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-orange-600/10 blur-3xl" />
 
       <div className="relative p-8 sm:p-12">
         <div className="flex items-start justify-between">
@@ -19,7 +19,7 @@ export function CertificateView({ certificate }: { certificate: Certificate }) {
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-500">Akradhii Digital Growth Studio</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Certificate of Completion</h1>
           </div>
-          <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-xl font-black text-white sm:flex">
+          <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-600 to-orange-600 text-xl font-black text-white sm:flex">
             A
           </div>
         </div>

@@ -746,7 +746,7 @@ export const blogPosts: BlogPost[] = [
     readingTime: 6,
     publishedAt: daysAgo(6),
     published: true,
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-amber-600 to-orange-600",
     content: [
       "Every founder I meet spends 3-4 hours a day on tasks a well-built workflow could handle: qualifying leads, chasing invoices, summarizing documents, answering the same 10 questions.",
       "AI automation closes that gap. A lead capture form can route to your CRM, enrich the contact with firmographics, score it and book a meeting — all before you finish your coffee.",
@@ -764,7 +764,7 @@ export const blogPosts: BlogPost[] = [
     readingTime: 5,
     publishedAt: daysAgo(12),
     published: true,
-    gradient: "from-blue-600 to-cyan-500",
+    gradient: "from-orange-600 to-cyan-500",
     content: [
       "A 10x ROAS with ₹10,000 a day sounds amazing until you realize the budget caps your total profit.",
       "The metrics that matter: contribution margin per order, frequency, CPA trends and incrementality.",
@@ -800,7 +800,7 @@ export const testimonials: Testimonial[] = [
     quote: "Akradhii rebuilt our website in 6 weeks and our demo requests jumped 2.4x. The team thinks like product owners, not vendors.",
     rating: 5,
     initials: "VM",
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-amber-600 to-orange-600",
   },
   {
     id: "t2",
@@ -810,7 +810,7 @@ export const testimonials: Testimonial[] = [
     quote: "Their Meta ads team scaled our campaigns to a consistent 3.4x ROAS. Reporting is crystal clear every single week.",
     rating: 5,
     initials: "ZS",
-    gradient: "from-blue-600 to-cyan-500",
+    gradient: "from-orange-600 to-cyan-500",
   },
   {
     id: "t3",
@@ -857,7 +857,7 @@ export const portfolioItems: PortfolioItem[] = [
       { label: "Lighthouse", value: "98" },
       { label: "Time to launch", value: "6 wks" },
     ],
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-amber-600 to-orange-600",
     tags: ["Next.js", "React", "Tailwind", "CMS"],
     year: "2026",
   },
@@ -873,7 +873,7 @@ export const portfolioItems: PortfolioItem[] = [
       { label: "CPA reduction", value: "-38%" },
       { label: "New customers", value: "8,200" },
     ],
-    gradient: "from-blue-600 to-cyan-500",
+    gradient: "from-orange-600 to-cyan-500",
     tags: ["Meta Ads", "Creative Testing", "CRO"],
     year: "2026",
   },

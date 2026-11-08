@@ -1,4 +1,4 @@
-import type { AppUser, Role } from "@/lib/types";
+import type { AppUser, Profile, Role } from "@/lib/types";
 import { homeForRole } from "@/lib/rbac";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import {
@@ -92,8 +92,8 @@ export async function signUp(name: string, email: string, password: string, role
   if (demoMode()) {
     const res = demoRegister(name, email, password, role);
     if (!res.ok) return res;
-    demoPendingVerify(email);
-    return { ok: true, redirect: "/verify-email" };
+    demoVerifyEmail(email);
+    return { ok: true, user: res.user, redirect: homeForRole(role) };
   }
   const { createClient } = await import("@/lib/supabase/client");
   const supabase = createClient();
@@ -106,7 +106,41 @@ export async function signUp(name: string, email: string, password: string, role
     },
   });
   if (error) return { ok: false, error: error.message };
-  return { ok: true, redirect: data.session ? homeForRole(role) : "/verify-email" };
+  return { ok: true, redirect: data.session ? homeForRole(role) : homeForRole(role) };
+}
+
+export async function createInternAccount(
+  name: string,
+  email: string,
+  password: string,
+  profile?: Partial<Profile>,
+): Promise<AuthResult> {
+  if (demoMode()) {
+    const res = demoRegister(name, email, password, "intern");
+    if (!res.ok) return res;
+    demoVerifyEmail(email);
+    if (res.user?.id && profile) demoSaveProfile(res.user.id, profile);
+    return { ok: true, user: res.user };
+  }
+  const { createClient } = await import("@/lib/supabase/client");
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { full_name: name, role: "intern", ...profile } },
+  });
+  if (error) return { ok: false, error: error.message };
+  return {
+    ok: true,
+    user: {
+      id: data.user?.id ?? "",
+      email: data.user?.email ?? email,
+      name,
+      role: "intern",
+      emailVerified: true,
+      createdAt: new Date().toISOString(),
+    },
+  };
 }
 
 export async function signIn(email: string, password: string, remember: boolean): Promise<AuthResult> {

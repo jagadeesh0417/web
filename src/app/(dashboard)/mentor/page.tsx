@@ -48,9 +48,9 @@ export default function MentorDashboard() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Assigned interns" value={String(interns.length)} delta={2} deltaLabel="new this cohort" icon={Users} gradient="from-violet-600 to-indigo-600" />
+        <StatCard title="Assigned interns" value={String(interns.length)} delta={2} deltaLabel="new this cohort" icon={Users} gradient="from-amber-600 to-orange-600" />
         <StatCard title="Pending reviews" value={String(pendingReview)} delta={-1} deltaLabel="vs yesterday" icon={ClipboardCheck} gradient="from-amber-500 to-orange-600" />
-        <StatCard title="Upcoming sessions" value={String(sessions.filter((s) => s.date >= new Date().toISOString().slice(0, 10)).length)} delta={0} deltaLabel="this week" icon={Video} gradient="from-blue-600 to-cyan-500" />
+        <StatCard title="Upcoming sessions" value={String(sessions.filter((s) => s.date >= new Date().toISOString().slice(0, 10)).length)} delta={0} deltaLabel="this week" icon={Video} gradient="from-orange-600 to-cyan-500" />
         <StatCard title="Avg intern score" value="84%" delta={4} deltaLabel="vs last cohort" icon={Star} gradient="from-emerald-600 to-teal-500" />
       </div>
 

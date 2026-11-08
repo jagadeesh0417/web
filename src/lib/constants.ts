@@ -67,7 +67,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "web-development",
     name: "Web Development",
     icon: "Code2",
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-amber-600 to-orange-600",
     description:
       "Build production-grade websites and web apps with modern React, Next.js and TypeScript — the stack Akradhii ships for real clients.",
     learningOutcomes: [
@@ -112,7 +112,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "meta-ads",
     name: "Meta Ads",
     icon: "Megaphone",
-    gradient: "from-blue-600 to-cyan-500",
+    gradient: "from-orange-600 to-cyan-500",
     description:
       "Master Facebook & Instagram advertising — from campaign structure and creative testing to scaling profitable ad accounts.",
     learningOutcomes: [
@@ -126,7 +126,7 @@ export const CATEGORIES: InternshipCategory[] = [
     mentorId: "m3",
     faqs: [
       { q: "Do I need money to run ads?", a: "No. You learn on simulations and our mentor's live account walkthroughs; we do not ask you to spend." },
-      { q: "Will I get certified?", a: "You receive the Akradhii completion certificate; you can also attempt Meta Blueprint exams on your own." },
+      { q: "Will I get certified?", a: "You receive the Akradhii completion certificate; you can also attempt Meta orangeprint exams on your own." },
     ],
   },
   {
@@ -176,7 +176,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "ai-automation",
     name: "AI Automation",
     icon: "BrainCircuit",
-    gradient: "from-purple-600 to-violet-500",
+    gradient: "from-amber-600 to-amber-500",
     description:
       "Build AI assistants, chatbots and intelligent agents that automate support, sales and operations for real businesses.",
     learningOutcomes: [
@@ -219,7 +219,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "content-writing",
     name: "Content Writing",
     icon: "PenLine",
-    gradient: "from-sky-500 to-indigo-500",
+    gradient: "from-amber-500 to-orange-500",
     description:
       "Write content that ranks and converts — web copy, blogs, social posts and email sequences that businesses pay for.",
     learningOutcomes: [
@@ -261,7 +261,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "video-editing",
     name: "Video Editing",
     icon: "Clapperboard",
-    gradient: "from-cyan-500 to-blue-600",
+    gradient: "from-cyan-500 to-orange-600",
     description:
       "Edit reels, YouTube videos and ad creatives that stop the scroll — with captions, motion graphics and sound design.",
     learningOutcomes: [

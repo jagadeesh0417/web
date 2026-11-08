@@ -5,7 +5,7 @@ export function Progress({ value, className, indicatorClassName }: { value: numb
   return (
     <div className={cn("h-2 w-full overflow-hidden rounded-full bg-muted", className)}>
       <div
-        className={cn("h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-500 transition-all duration-500", indicatorClassName)}
+        className={cn("h-full rounded-full bg-gradient-to-r from-amber-600 to-orange-500 transition-all duration-500", indicatorClassName)}
         style={{ width: `${clamped}%` }}
       />
     </div>

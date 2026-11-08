@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -16,10 +16,12 @@ import {
   CreditCard,
   Landmark,
   Wallet,
-  UploadCloud,
   Award,
   Mail,
   Loader2,
+  Eye,
+  EyeOff,
+  LogIn,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,13 +30,13 @@ import { Input, Field } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/toast";
 import { CATEGORIES, PROGRAMS } from "@/lib/constants";
-import { applicationSchema, validateFile } from "@/lib/validators";
-import { demoCreatePendingAccount, demoMode } from "@/lib/auth";
+import { applicationSchema } from "@/lib/validators";
+import { createInternAccount, signIn } from "@/lib/auth";
 import { createEnrollment } from "@/lib/data/repository";
 import { emailTemplates, sendWorkflowEmail } from "@/lib/notifications";
 import { cn, formatCurrency } from "@/lib/utils";
 
-const steps = ["Program", "Details", "Payment", "Confirmation"];
+const steps = ["Course", "Details", "Payment", "Confirmation"];
 
 const DURATION_META: Record<number, { modules: number; projects: number; completion: string; curriculum: string[] }> = {
   4: {
@@ -66,54 +68,40 @@ const PAY_METHODS = [
 
 function Wizard() {
   const params = useSearchParams();
+  const router = useRouter();
   const { toast } = useToast();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
     category: params.get("category") ?? "",
-    program: params.get("program") ?? "",
     duration: 6,
     fullName: "",
     email: "",
     mobile: "",
     dob: "",
-    gender: "",
-    college: "",
-    course: "",
-    branch: "",
-    graduationYear: "",
-    city: "",
     state: "",
-    linkedin: "",
-    github: "",
-    resume: null as File | null,
+    college: "",
     agree: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [method, setMethod] = useState<(typeof PAY_METHODS)[number]["id"]>("upi");
   const [processing, setProcessing] = useState(false);
-  const [result, setResult] = useState<{ orderId: string; invoiceNumber: string; enrollmentId: string; studentId: string; token: string; amount: number; programTitle: string } | null>(null);
+  const [result, setResult] = useState<{ orderId: string; invoiceNumber: string; enrollmentId: string; studentId: string; amount: number; programTitle: string } | null>(null);
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  const set = (key: keyof typeof form, value: string | number | boolean | File | null) => setForm((f) => ({ ...f, [key]: value }));
+  const set = (key: keyof typeof form, value: string | number | boolean) => setForm((f) => ({ ...f, [key]: value }));
 
-  const program = PROGRAMS.find((p) => p.slug === form.program);
+  const program = PROGRAMS.find((p) => p.durationWeeks === form.duration);
   const category = CATEGORIES.find((c) => c.slug === form.category);
   const meta = DURATION_META[form.duration];
-  const price = program ? Math.round(program.price * (form.duration / program.durationWeeks) * (form.duration === 8 ? 0.95 : 1)) : 0;
-
-  useEffect(() => {
-    if (form.program && !params.get("program")) return;
-    if (params.get("duration")) {
-      const d = Number(params.get("duration"));
-      if ([4, 6, 8].includes(d)) set("duration", d);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const price = program?.price ?? 0;
 
   const validateStep0 = () => {
     const errs: Record<string, string> = {};
-    if (!form.category) errs.category = "Select an internship category";
-    if (!form.program) errs.program = "Select a duration plan";
+    if (!form.category) errs.category = "Select a course category";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -124,18 +112,18 @@ function Wizard() {
       email: form.email,
       mobile: form.mobile,
       dob: form.dob,
-      gender: form.gender,
+      gender: "",
       college: form.college,
-      course: form.course,
-      branch: form.branch,
-      graduationYear: form.graduationYear,
-      city: form.city,
+      course: category?.name ?? "",
+      branch: "",
+      graduationYear: "",
+      city: "",
       state: form.state,
-      linkedin: form.linkedin,
-      github: form.github,
-      resume: form.resume,
+      linkedin: "",
+      github: "",
+      resume: null,
       category: form.category,
-      program: form.program,
+      program: program?.slug ?? "",
       duration: form.duration,
       agree: form.agree,
     });
@@ -148,13 +136,6 @@ function Wizard() {
       setErrors(errs);
       return false;
     }
-    if (form.resume) {
-      const v = validateFile(form.resume, "pdf");
-      if (v) {
-        setErrors({ resume: v });
-        return false;
-      }
-    }
     setErrors({});
     return true;
   };
@@ -163,8 +144,25 @@ function Wizard() {
     if (!program || !category) return;
     setProcessing(true);
     await new Promise((r) => setTimeout(r, 2400));
+
+    const accountRes = await createInternAccount(form.fullName, form.email, form.dob, {
+      fullName: form.fullName,
+      mobile: form.mobile,
+      email: form.email,
+      college: form.college,
+      state: form.state,
+      dob: form.dob,
+      course: category.name,
+    });
+    if (!accountRes.ok) {
+      setProcessing(false);
+      toast("error", "Account creation failed", accountRes.error);
+      return;
+    }
+    const userId = accountRes.user?.id ?? `pending:${form.email}`;
+
     const created = createEnrollment({
-      userId: `pending:${form.email}`,
+      userId,
       categorySlug: category.slug,
       programSlug: program.slug,
       programTitle: `${category.name} — ${program.title}`,
@@ -173,15 +171,6 @@ function Wizard() {
       clientName: form.fullName,
       email: form.email,
       method,
-    });
-    const token = demoCreatePendingAccount({
-      email: form.email,
-      name: form.fullName,
-      mobile: form.mobile,
-      enrollmentDbId: created.enrollment.id,
-      studentId: created.enrollment.studentId,
-      categorySlug: category.slug,
-      programSlug: program.slug,
     });
     const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
     const t = emailTemplates();
@@ -214,7 +203,7 @@ function Wizard() {
     });
     await sendWorkflowEmail({
       to: form.email,
-      subject: "Welcome to Akradhii",
+      subject: "Welcome to Akradhii — login with your date of birth",
       template: "welcome",
       html: t.welcome(form.fullName, {
         programTitle: created.enrollment.programTitle,
@@ -226,13 +215,31 @@ function Wizard() {
       invoiceNumber: created.enrollment.invoiceNumber,
       enrollmentId: created.enrollment.enrollmentId,
       studentId: created.enrollment.studentId,
-      token,
       amount: price,
       programTitle: created.enrollment.programTitle,
     });
+    setLoginForm({ email: form.email, password: "" });
     setProcessing(false);
     setStep(3);
-    toast("success", "Payment successful!", "Enrollment created. Check your email to activate your account.");
+    toast("success", "Payment successful!", "Your account is ready. Login with your email and date of birth.");
+  };
+
+  const handleLogin = async () => {
+    setLoginError("");
+    if (!loginForm.email.trim() || !loginForm.password.trim()) {
+      setLoginError("Enter your email and date of birth.");
+      return;
+    }
+    setLoggingIn(true);
+    const res = await signIn(loginForm.email.trim(), loginForm.password, true);
+    setLoggingIn(false);
+    if (!res.ok) {
+      setLoginError("Incorrect email or date of birth. Please try again.");
+      return;
+    }
+    toast("success", "Welcome back!", `Signed in as ${res.user?.name ?? loginForm.email}`);
+    router.push("/student");
+    router.refresh();
   };
 
   return (
@@ -240,7 +247,7 @@ function Wizard() {
       <div className="text-center">
         <Badge variant="primary" className="mb-3">Internship application</Badge>
         <h1 className="text-3xl font-bold sm:text-4xl">Apply for your internship</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Pick your track, complete the form, pay securely — then create your password to begin.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Pick your course, share a few details, pay securely — then log in with your date of birth to begin.</p>
       </div>
 
       <div className="mx-auto mt-8 max-w-2xl">
@@ -251,7 +258,7 @@ function Wizard() {
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors",
                   i < step && "bg-success text-white",
-                  i === step && "bg-gradient-to-r from-violet-600 to-indigo-600 text-white",
+                  i === step && "bg-gradient-to-r from-amber-600 to-orange-600 text-white",
                   i > step && "bg-muted text-muted-foreground",
                 )}
               >
@@ -267,39 +274,26 @@ function Wizard() {
       <Card className="mt-8 p-6 sm:p-8">
         {step === 0 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold">1 · Choose your internship</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Category" error={errors.category}>
-                <select
-                  value={form.category}
-                  onChange={(e) => set("category", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Select category</option>
-                  {CATEGORIES.map((c) => (
-                    <option key={c.id} value={c.slug}>{c.name}</option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Plan" error={errors.program}>
-                <select
-                  value={form.program}
-                  onChange={(e) => set("program", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Select plan</option>
-                  {PROGRAMS.map((p) => (
-                    <option key={p.id} value={p.slug}>{p.title} — {p.durationWeeks} weeks</option>
-                  ))}
-                </select>
-              </Field>
-            </div>
+            <h2 className="text-lg font-semibold">1 · Choose your course</h2>
+            <Field label="Course" error={errors.category}>
+              <select
+                value={form.category}
+                onChange={(e) => set("category", e.target.value)}
+                className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
+              >
+                <option value="">Select a course</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c.id} value={c.slug}>{c.name}</option>
+                ))}
+              </select>
+            </Field>
 
-            {program && (
+            <div>
+              <p className="mb-2 text-sm font-medium">Duration</p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {[4, 6, 8].map((d) => {
                   const m = DURATION_META[d];
-                  const p = Math.round(program.price * (d / program.durationWeeks) * (d === 8 ? 0.95 : 1));
+                  const p = PROGRAMS.find((pr) => pr.durationWeeks === d);
                   const selected = form.duration === d;
                   return (
                     <button
@@ -314,7 +308,8 @@ function Wizard() {
                         <span className="font-bold">{d} Weeks</span>
                         {selected && <CheckCircle2 className="h-4 w-4 text-brand-500" />}
                       </div>
-                      <p className="mt-1 text-lg font-extrabold">{formatCurrency(p)}</p>
+                      {p && <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{p.title}</p>}
+                      <p className="mt-1 text-lg font-extrabold">{formatCurrency(p?.price ?? 0)}</p>
                       <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
                         <li className="flex items-center gap-1.5"><LayoutGrid className="h-3 w-3" /> {m.modules} course modules</li>
                         <li className="flex items-center gap-1.5"><Package className="h-3 w-3" /> {m.projects} projects</li>
@@ -325,9 +320,9 @@ function Wizard() {
                   );
                 })}
               </div>
-            )}
+            </div>
 
-            {program && meta && (
+            {meta && (
               <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
                 <p className="font-semibold">{form.duration}-week curriculum</p>
                 <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
@@ -361,61 +356,23 @@ function Wizard() {
               <Field label="Mobile number" error={errors.mobile}>
                 <Input value={form.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="+91 98765 43210" />
               </Field>
-              <Field label="Date of birth" error={errors.dob}>
-                <Input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />
-              </Field>
-              <Field label="Gender (optional)">
-                <select
-                  value={form.gender}
-                  onChange={(e) => set("gender", e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
-                >
-                  <option value="">Prefer not to say</option>
-                  <option>Female</option>
-                  <option>Male</option>
-                  <option>Other</option>
-                </select>
+              <Field label="State" error={errors.state}>
+                <Input value={form.state} onChange={(e) => set("state", e.target.value)} placeholder="Telangana" />
               </Field>
               <Field label="College / University" error={errors.college}>
                 <Input value={form.college} onChange={(e) => set("college", e.target.value)} placeholder="College name" />
               </Field>
-              <Field label="Degree / Course" error={errors.course}>
-                <Input value={form.course} onChange={(e) => set("course", e.target.value)} placeholder="B.Tech CSE, MBA…" />
-              </Field>
-              <Field label="Branch" error={errors.branch}>
-                <Input value={form.branch} onChange={(e) => set("branch", e.target.value)} placeholder="Computer Science" />
-              </Field>
-              <Field label="Graduation year" error={errors.graduationYear}>
-                <Input value={form.graduationYear} onChange={(e) => set("graduationYear", e.target.value)} placeholder="2027" />
-              </Field>
-              <Field label="City" error={errors.city}>
-                <Input value={form.city} onChange={(e) => set("city", e.target.value)} placeholder="Hyderabad" />
-              </Field>
-              <Field label="State" error={errors.state}>
-                <Input value={form.state} onChange={(e) => set("state", e.target.value)} placeholder="Telangana" />
-              </Field>
-              <Field label="LinkedIn (optional)" error={errors.linkedin}>
-                <Input value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="linkedin.com/in/you" />
-              </Field>
-              <Field label="GitHub (optional)" error={errors.github}>
-                <Input value={form.github} onChange={(e) => set("github", e.target.value)} placeholder="github.com/you" />
+              <Field label="Date of birth" error={errors.dob} hint="Used as your login password">
+                <Input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />
               </Field>
             </div>
-
-            <FileDrop
-              label="Resume (PDF) *"
-              accept=".pdf"
-              file={form.resume}
-              error={errors.resume}
-              onSelect={(f) => set("resume", f)}
-            />
 
             <label className="flex cursor-pointer items-start gap-2.5 rounded-xl border border-border bg-muted/30 p-3.5 text-sm">
               <input
                 type="checkbox"
                 checked={form.agree}
                 onChange={(e) => set("agree", e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-violet-600"
+                className="mt-0.5 h-4 w-4 accent-amber-600"
               />
               <span className="text-muted-foreground">
                 I agree to the <Link href="/terms" className="text-brand-500 underline">Terms &amp; Conditions</Link> and{" "}
@@ -492,7 +449,7 @@ function Wizard() {
 
               <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
                 <Lock className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                Secured by 256-bit TLS. In production, payments are processed by Razorpay (UPI, cards, net banking, wallets) with webhook-driven confirmation — this demo simulates the same flow end-to-end.
+                Secured by 256-bit TLS. Payments are processed by Razorpay (UPI, cards, net banking, wallets) with webhook-driven confirmation — this demo simulates the same flow end-to-end.
               </p>
             </div>
 
@@ -532,7 +489,7 @@ function Wizard() {
               </div>
               <h2 className="mt-4 text-2xl font-bold">Payment successful!</h2>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                Welcome to <strong className="text-foreground">{result.programTitle}</strong>. Your enrollment is confirmed — here are your details.
+                Welcome to <strong className="text-foreground">{result.programTitle}</strong>. Your account is ready — here are your details.
               </p>
             </div>
 
@@ -562,28 +519,46 @@ function Wizard() {
                 </ul>
               </div>
 
-              <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
-                <p className="font-semibold">Next step: create your password</p>
-                <p className="mt-1 text-muted-foreground">
-                  We sent you a <strong>verification link</strong> to <span className="font-medium text-foreground">{form.email}</span>.
-                  Click it to open the <strong>Create Password</strong> page and activate your dashboard.
+              <div className="rounded-2xl border border-brand-500/40 bg-gradient-to-b from-brand-600/5 to-transparent p-5">
+                <p className="flex items-center gap-2 text-base font-bold">
+                  <LogIn className="h-4 w-4 text-brand-500" /> Login to your course
                 </p>
-                {demoMode() && (
-                  <div className="mt-3 rounded-lg border border-dashed border-brand-500/40 bg-background p-3">
-                    <p className="text-xs text-muted-foreground">Demo mode — no real email is sent. Open your verification link:</p>
-                    <Link
-                      href={`/create-password?token=${result.token}`}
-                      className="mt-1 block truncate font-mono text-xs text-brand-500 underline"
-                    >
-                      /create-password?token={result.token}
-                    </Link>
-                  </div>
-                )}
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Your username is your <strong className="text-foreground">email</strong> and your password is your{" "}
+                  <strong className="text-foreground">date of birth</strong> (e.g. 2004-05-14). No email verification needed.
+                </p>
+                <div className="mt-4 space-y-3">
+                  <Field label="Email (username)">
+                    <Input type="email" value={loginForm.email} onChange={(e) => setLoginForm((f) => ({ ...f, email: e.target.value }))} placeholder="you@example.com" />
+                  </Field>
+                  <Field label="Password (date of birth)">
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={loginForm.password}
+                        onChange={(e) => setLoginForm((f) => ({ ...f, password: e.target.value }))}
+                        placeholder="2004-05-14"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((s) => !s)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </Field>
+                  {loginError && <p className="text-xs font-medium text-destructive">{loginError}</p>}
+                  <Button variant="gradient" className="w-full" onClick={handleLogin} loading={loggingIn}>
+                    {loggingIn ? <Loader2 className="h-4 w-4 animate-spin" /> : <><LogIn className="h-4 w-4" /> Login to your course</>}
+                  </Button>
+                </div>
               </div>
 
               <div className="flex flex-col items-center gap-2 pt-2">
                 <Link href="/login">
-                  <Button variant="outline">Go to login</Button>
+                  <Button variant="outline">Go to login page</Button>
                 </Link>
                 <Link href="/internships" className="text-xs text-muted-foreground hover:text-foreground">Back to internships</Link>
               </div>
@@ -591,31 +566,6 @@ function Wizard() {
           </div>
         )}
       </Card>
-    </div>
-  );
-}
-
-function FileDrop({ label, accept, file, error, onSelect }: { label: string; accept: string; file: File | null; error?: string; onSelect: (f: File | null) => void }) {
-  return (
-    <div>
-      <p className="mb-1.5 text-sm font-medium">{label}</p>
-      <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/30 p-6 text-center transition-colors hover:border-brand-500/60">
-        {file ? (
-          <>
-            <CheckCircle2 className="h-8 w-8 text-success" />
-            <span className="text-sm font-medium">{file.name}</span>
-            <span className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB — click to replace</span>
-          </>
-        ) : (
-          <>
-            <UploadCloud className="h-8 w-8 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">Click to upload</span>
-            <span className="text-xs text-muted-foreground">{accept} · max 10 MB</span>
-          </>
-        )}
-        <input type="file" accept={accept} className="hidden" onChange={(e) => onSelect(e.target.files?.[0] ?? null)} />
-      </label>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
   );
 }

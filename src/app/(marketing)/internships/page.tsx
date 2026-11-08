@@ -28,7 +28,7 @@ export default function InternshipsPage() {
           <GraduationCap className="h-3 w-3" /> Internships at Akradhii
         </Badge>
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Real projects. Real mentors. <span className="text-gradient">Verifiable results.</span>
+          Learn Practical Skills. <span className="text-gradient">Build Your Future.</span>
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
           Choose your duration, complete your profile, and get dashboard access after approval.
@@ -41,7 +41,7 @@ export default function InternshipsPage() {
           <Reveal key={p.id} delay={i * 0.08}>
             <Card className={`relative flex h-full flex-col p-6 ${p.featured ? "border-brand-500/60 shadow-xl shadow-brand-600/10" : ""}`}>
               {p.featured && (
-                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-1 text-xs font-bold text-white">
+                <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 px-3 py-1 text-xs font-bold text-white">
                   Most popular
                 </span>
               )}

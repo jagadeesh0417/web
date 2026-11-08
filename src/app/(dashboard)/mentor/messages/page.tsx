@@ -92,7 +92,7 @@ export default function MentorMessagesPage() {
                 const mine = m.fromId === user.id;
                 return (
                   <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm ${mine ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-br-sm" : "bg-muted rounded-bl-sm"}`}>
+                    <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm ${mine ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-br-sm" : "bg-muted rounded-bl-sm"}`}>
                       <p className="whitespace-pre-wrap">{m.body}</p>
                       <p className={`mt-1 text-[10px] ${mine ? "text-white/70" : "text-muted-foreground"}`}>{timeAgo(m.createdAt)}</p>
                     </div>
@@ -103,7 +103,7 @@ export default function MentorMessagesPage() {
 
             <div className="flex items-center gap-2 border-t border-border p-3">
               <Input placeholder={`Message ${internNames[activePeer] ?? "intern"}…`} value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSend()} />
-              <button onClick={handleSend} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:opacity-90" aria-label="Send">
+              <button onClick={handleSend} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:opacity-90" aria-label="Send">
                 <Send className="h-4 w-4" />
               </button>
             </div>

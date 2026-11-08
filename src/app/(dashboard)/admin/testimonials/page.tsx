@@ -45,7 +45,7 @@ export default function AdminTestimonialsPage() {
       quote: form.quote.trim(),
       rating: Math.min(5, Math.max(1, Number(form.rating) || 5)),
       initials: form.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase(),
-      gradient: "from-violet-600 to-indigo-600",
+      gradient: "from-amber-600 to-orange-600",
     };
     saveTestimonial(t);
     setItems(getTestimonials());

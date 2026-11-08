@@ -91,7 +91,7 @@ export default function MentorSessionsPage() {
         {sessions.map((s) => (
           <Card key={s.id}>
             <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-600 to-cyan-500 text-white">
                 <Video className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">

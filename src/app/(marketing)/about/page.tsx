@@ -36,7 +36,7 @@ export default function AboutPage() {
       <Reveal className="mx-auto max-w-3xl text-center">
         <Badge variant="primary" className="mb-4">About Akradhii</Badge>
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          A digital growth studio with a <span className="text-gradient">mission</span>
+          Your Partner for Sustainable Business Growth
         </h1>
         <p className="mt-5 text-lg text-muted-foreground">
           Akradhii exists to help ambitious businesses grow with technology — and to close the skills gap by
@@ -58,7 +58,7 @@ export default function AboutPage() {
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {values.map((v) => (
             <Card key={v.title} className="p-6">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-600 to-orange-600 text-white">
                 <v.icon className="h-5 w-5" />
               </div>
               <h3 className="mt-4 font-semibold">{v.title}</h3>

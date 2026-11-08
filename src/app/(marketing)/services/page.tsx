@@ -11,8 +11,8 @@ const icons: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export const metadata = {
-  title: "Services",
-  description: "Website development, Meta Ads, automation, CRM, AI, SEO and branding — Akradhii's full service stack.",
+  title: "Services | Website Development, Digital Marketing & AI Automation",
+  description: "Explore Akradhii services: website development, digital marketing, AI automation, CRM, SEO, Meta Ads and branding.",
 };
 
 export default function ServicesPage() {
@@ -33,7 +33,7 @@ export default function ServicesPage() {
           return (
             <Reveal key={s.id}>
               <div id={s.id} className={`flex flex-col items-start gap-8 rounded-3xl border border-border bg-card p-8 lg:flex-row lg:items-center lg:p-12 ${flip ? "lg:flex-row-reverse" : ""}`}>
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-xl shadow-violet-600/25">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-600 to-orange-600 text-white shadow-xl shadow-amber-600/25">
                   <Icon className="h-9 w-9" />
                 </div>
                 <div className="flex-1">
@@ -57,12 +57,12 @@ export default function ServicesPage() {
       </div>
 
       <Reveal className="mt-20 text-center">
-        <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-white">
+        <Card className="bg-gradient-to-br from-amber-700 to-orange-700 p-10 text-white">
           <h2 className="text-2xl font-bold sm:text-3xl">Need a custom combination?</h2>
           <p className="mx-auto mt-3 max-w-xl text-white/80">
             Most of our engagements bundle two or more services. Tell us your goals and we&apos;ll architect the stack.
           </p>
-          <Button size="lg" className="mt-6 bg-white text-violet-700 hover:bg-white/90">
+          <Button size="lg" className="mt-6 bg-white text-amber-700 hover:bg-white/90">
             <Link href="/contact" className="flex items-center gap-2">Start the conversation <ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </Card>

@@ -15,7 +15,7 @@ export default function PortfolioPage() {
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <Reveal className="mx-auto max-w-2xl text-center">
         <Badge variant="primary" className="mb-4">Our work</Badge>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Work that moves numbers</h1>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Real Projects. Real Results.</h1>
         <p className="mt-4 text-muted-foreground">
           Every project ships with a measurable outcome. Here&apos;s a snapshot.
         </p>

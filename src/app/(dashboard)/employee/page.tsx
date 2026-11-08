@@ -43,9 +43,9 @@ export default function EmployeeDashboard() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Open tasks" value={String(openTasks)} delta={-2} deltaLabel="vs yesterday" icon={CheckSquare} gradient="from-violet-600 to-indigo-600" />
+        <StatCard title="Open tasks" value={String(openTasks)} delta={-2} deltaLabel="vs yesterday" icon={CheckSquare} gradient="from-amber-600 to-orange-600" />
         <StatCard title="Hours logged" value={`${hoursThisWeek}h`} delta={8} deltaLabel="vs last week" icon={Clock} gradient="from-amber-500 to-orange-600" />
-        <StatCard title="Active projects" value={String(projects.length)} delta={0} deltaLabel="assigned to you" icon={FolderKanban} gradient="from-blue-600 to-cyan-500" />
+        <StatCard title="Active projects" value={String(projects.length)} delta={0} deltaLabel="assigned to you" icon={FolderKanban} gradient="from-orange-600 to-cyan-500" />
         <StatCard title="Completion rate" value="87%" delta={3} deltaLabel="this sprint" icon={ArrowUpRight} gradient="from-emerald-600 to-teal-500" />
       </div>
 

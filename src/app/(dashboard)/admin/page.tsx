@@ -40,14 +40,14 @@ export default function AdminDashboard() {
   const revenue = payments.filter((p) => p.status === "succeeded").reduce((a, p) => a + p.amount, 0);
 
   const stats = [
-    { title: "Total users", value: String(analytics.totalUsers), delta: 18, icon: Users, gradient: "from-violet-600 to-indigo-600" },
-    { title: "Total clients", value: String(analytics.totalClients), delta: 6, icon: Briefcase, gradient: "from-blue-600 to-cyan-500" },
+    { title: "Total users", value: String(analytics.totalUsers), delta: 18, icon: Users, gradient: "from-amber-600 to-orange-600" },
+    { title: "Total clients", value: String(analytics.totalClients), delta: 6, icon: Briefcase, gradient: "from-orange-600 to-cyan-500" },
     { title: "Total interns", value: String(analytics.totalInterns), delta: 22, icon: GraduationCap, gradient: "from-emerald-600 to-teal-500" },
     { title: "Active internships", value: String(analytics.activeInternships), delta: 2, icon: BookOpen, gradient: "from-fuchsia-600 to-pink-600" },
     { title: "Applications", value: String(applications.length), delta: 9, icon: FileStack, gradient: "from-amber-500 to-orange-600" },
-    { title: "Certificates issued", value: String(certificates.length), delta: 12, icon: Award, gradient: "from-purple-600 to-violet-500" },
+    { title: "Certificates issued", value: String(certificates.length), delta: 12, icon: Award, gradient: "from-amber-600 to-amber-500" },
     { title: "Revenue", value: formatCurrency(revenue), delta: 24, icon: IndianRupee, gradient: "from-emerald-500 to-green-600" },
-    { title: "Conversion rate", value: `${analytics.conversionRate}%`, delta: 1.2, icon: Percent, gradient: "from-sky-500 to-blue-600" },
+    { title: "Conversion rate", value: `${analytics.conversionRate}%`, delta: 1.2, icon: Percent, gradient: "from-amber-500 to-orange-600" },
   ];
 
   return (

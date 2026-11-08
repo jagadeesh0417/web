@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "Akradhii",
-  tagline: "Digital Growth Studio",
+  tagline: "Digital Growth Agency",
   description:
-    "Akradhii is a premium digital agency for website design & development, Meta Ads, business automation, CRM, AI automation, SEO and branding — plus structured internship programs that build real careers.",
-  url: "https://akradhii.com",
+    "Akradhii is a premium digital agency for website development, digital marketing, AI automation, CRM solutions, SEO and branding — plus structured internship programs that build real careers.",
+  url: "https://www.akradhii.com",
   email: "hello@akradhii.com",
   phone: "+91 98765 43210",
   address: "HITEC City, Hyderabad, Telangana 500081, India",
@@ -26,6 +26,7 @@ export const services = [
       "High-converting, lightning-fast websites and web apps engineered for growth — from landing pages to full-scale platforms.",
     icon: "Code2",
     features: ["Landing pages", "Business websites", "Web applications", "E-commerce", "Performance optimization"],
+    pricing: { basic: 19999, premium: 59999 },
   },
   {
     id: "meta-ads",
@@ -34,6 +35,7 @@ export const services = [
       "Full-funnel Facebook & Instagram ad campaigns built on creative strategy, precise targeting and relentless optimization.",
     icon: "Megaphone",
     features: ["Campaign strategy", "Creative production", "Audience research", "Retargeting", "Monthly reporting"],
+    pricing: { basic: 9999, premium: 49999 },
   },
   {
     id: "automation",
@@ -42,6 +44,7 @@ export const services = [
       "Eliminate repetitive work with workflows that connect your tools, qualify leads and close deals on autopilot.",
     icon: "Workflow",
     features: ["Workflow design", "Tool integration", "Lead nurturing", "Reporting pipelines", "SOP automation"],
+    pricing: { basic: 14999, premium: 49999 },
   },
   {
     id: "crm",
@@ -50,6 +53,7 @@ export const services = [
       "A single source of truth for your sales pipeline — set up, customized and adopted across your team.",
     icon: "Database",
     features: ["CRM setup", "Pipeline design", "Migration", "Sales analytics", "Team training"],
+    pricing: { basic: 19999, premium: 79999 },
   },
   {
     id: "ai-automation",
@@ -58,6 +62,7 @@ export const services = [
       "Custom AI assistants, chatbots and intelligent workflows that handle support, sales and operations at scale.",
     icon: "BrainCircuit",
     features: ["AI chatbots", "Custom GPT agents", "Document AI", "Voice assistants", "AI content pipelines"],
+    pricing: { basic: 19999, premium: 74999 },
   },
   {
     id: "seo",
@@ -66,6 +71,7 @@ export const services = [
       "Technical SEO, content strategy and authority building that compounds your organic visibility month after month.",
     icon: "Search",
     features: ["Technical audits", "Keyword strategy", "Content roadmaps", "Link building", "Local SEO"],
+    pricing: { basic: 9999, premium: 29999 },
   },
   {
     id: "branding",
@@ -74,6 +80,7 @@ export const services = [
       "Distinctive brand identities — strategy, logo, visual language and guidelines that make you unforgettable.",
     icon: "Palette",
     features: ["Brand strategy", "Logo & identity", "Visual systems", "Brand guidelines", "Packaging"],
+    pricing: { basic: 24999, premium: 99999 },
   },
 ] as const;
 

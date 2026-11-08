@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Mail, MapPin, Phone, Send, CheckCircle2 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
@@ -11,10 +12,36 @@ import { Input, Textarea, Field } from "@/components/ui/input";
 import { Reveal } from "@/components/marketing/reveal";
 import { useToast } from "@/components/ui/toast";
 
-export default function ContactPage() {
+const TOPICS = [
+  "Website Design & Development",
+  "Meta Ads",
+  "Business Automation",
+  "CRM Solutions",
+  "AI Automation",
+  "SEO",
+  "Branding",
+  "Internship program",
+  "Something else",
+];
+
+const TOPIC_BY_SERVICE: Record<string, string> = {
+  "web-development": "Website Design & Development",
+  "meta-ads": "Meta Ads",
+  automation: "Business Automation",
+  crm: "CRM Solutions",
+  "ai-automation": "AI Automation",
+  seo: "SEO",
+  branding: "Branding",
+};
+
+function ContactForm() {
   const { toast } = useToast();
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+  const [topic, setTopic] = useState<string>(
+    TOPIC_BY_SERVICE[searchParams.get("service") ?? ""] ?? TOPICS[0],
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +54,64 @@ export default function ContactPage() {
     }, 900);
   };
 
+  return (
+    <Card className="p-6 sm:p-8">
+      {sent ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <CheckCircle2 className="h-16 w-16 text-success" />
+          <h2 className="mt-4 text-2xl font-bold">Message sent!</h2>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Thanks for reaching out. Our team will respond within 24 hours.
+          </p>
+          <Button variant="outline" className="mt-6" onClick={() => setSent(false)}>
+            Send another message
+          </Button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Full name" htmlFor="name">
+              <Input id="name" name="name" required placeholder="Your name" />
+            </Field>
+            <Field label="Email" htmlFor="email">
+              <Input id="email" name="email" type="email" required placeholder="you@company.com" />
+            </Field>
+          </div>
+          <Field label="I'm interested in" htmlFor="topic">
+            <select
+              id="topic"
+              name="topic"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
+            >
+              {TOPICS.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Budget range" htmlFor="budget">
+            <select id="budget" name="budget" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30">
+              <option>Under ₹50,000</option>
+              <option>₹50,000 – ₹2,00,000</option>
+              <option>₹2,00,000 – ₹10,00,000</option>
+              <option>₹10,00,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </Field>
+          <Field label="Project details" htmlFor="message">
+            <Textarea id="message" name="message" required placeholder="Tell us about your project, timeline and goals..." className="min-h-[140px]" />
+          </Field>
+          <Button type="submit" variant="gradient" size="lg" loading={submitting} className="w-full sm:w-auto">
+            <Send className="h-4 w-4" /> Send message
+          </Button>
+        </form>
+      )}
+    </Card>
+  );
+}
+
+export default function ContactPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <Reveal className="mx-auto max-w-2xl text-center">
@@ -73,59 +158,9 @@ export default function ContactPage() {
         </Reveal>
 
         <Reveal delay={0.1} className="lg:col-span-3">
-          <Card className="p-6 sm:p-8">
-            {sent ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <CheckCircle2 className="h-16 w-16 text-success" />
-                <h2 className="mt-4 text-2xl font-bold">Message sent!</h2>
-                <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                  Thanks for reaching out. Our team will respond within 24 hours.
-                </p>
-                <Button variant="outline" className="mt-6" onClick={() => setSent(false)}>
-                  Send another message
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field label="Full name" htmlFor="name">
-                    <Input id="name" name="name" required placeholder="Your name" />
-                  </Field>
-                  <Field label="Email" htmlFor="email">
-                    <Input id="email" name="email" type="email" required placeholder="you@company.com" />
-                  </Field>
-                </div>
-                <Field label="I'm interested in" htmlFor="topic">
-                  <select id="topic" name="topic" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30">
-                    <option>Website Design & Development</option>
-                    <option>Meta Ads</option>
-                    <option>Business Automation</option>
-                    <option>CRM Solutions</option>
-                    <option>AI Automation</option>
-                    <option>SEO</option>
-                    <option>Branding</option>
-                    <option>Internship program</option>
-                    <option>Something else</option>
-                  </select>
-                </Field>
-                <Field label="Budget range" htmlFor="budget">
-                  <select id="budget" name="budget" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30">
-                    <option>Under ₹50,000</option>
-                    <option>₹50,000 – ₹2,00,000</option>
-                    <option>₹2,00,000 – ₹10,00,000</option>
-                    <option>₹10,00,000+</option>
-                    <option>Not sure yet</option>
-                  </select>
-                </Field>
-                <Field label="Project details" htmlFor="message">
-                  <Textarea id="message" name="message" required placeholder="Tell us about your project, timeline and goals..." className="min-h-[140px]" />
-                </Field>
-                <Button type="submit" variant="gradient" size="lg" loading={submitting} className="w-full sm:w-auto">
-                  <Send className="h-4 w-4" /> Send message
-                </Button>
-              </form>
-            )}
-          </Card>
+          <Suspense fallback={<Card className="p-6 sm:p-8" />}>
+            <ContactForm />
+          </Suspense>
         </Reveal>
       </div>
     </div>

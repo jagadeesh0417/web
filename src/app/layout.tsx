@@ -19,19 +19,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
+    default: "Akradhii | Website Development, Digital Marketing & AI Automation",
+    template: `%s | Akradhii`,
   },
-  description: siteConfig.description,
+  description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions to help businesses build, automate and grow.",
   keywords: [
-    "digital agency",
-    "website development",
-    "meta ads",
-    "AI automation",
-    "CRM",
-    "SEO",
-    "branding",
-    "internship",
+    "website development company in Hyderabad",
+    "digital marketing agency in Hyderabad",
+    "AI automation agency in India",
+    "CRM development company",
+    "business automation services",
+    "SEO services in Hyderabad",
+    "Meta Ads agency",
   ],
   openGraph: {
     type: "website",
@@ -44,8 +43,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1020" },
+    { media: "(prefers-color-scheme: light)", color: "#090A0D" },
+    { media: "(prefers-color-scheme: dark)", color: "#090A0D" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -57,11 +56,31 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ak_theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('ak_theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}`,
           }}
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Akradhii",
+              url: "https://www.akradhii.com",
+              logo: "https://www.akradhii.com/favicon.ico",
+              description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Hyderabad",
+                addressRegion: "Telangana",
+                addressCountry: "IN",
+              },
+              sameAs: Object.values(siteConfig.socials),
+            }),
+          }}
+        />
         <ThemeProvider>
           <ToastProvider>
             <DialogProvider>{children}</DialogProvider>
