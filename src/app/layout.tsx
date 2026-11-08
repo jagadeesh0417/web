@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions to help businesses build, automate and grow.",
     url: "https://www.akradhii.com",
     siteName: siteConfig.name,
-    images: [{ url: "https://www.akradhii.com/favicon.ico", width: 256, height: 256, alt: "Akradhii" }],
+    images: [{ url: "https://www.akradhii.com/logo.png", width: 806, height: 806, alt: "Akradhii AR logo" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               "@type": "Organization",
               name: "Akradhii",
               url: "https://www.akradhii.com",
-              logo: "https://www.akradhii.com/favicon.ico",
+              logo: "https://www.akradhii.com/logo.png",
               description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions.",
               address: {
                 "@type": "PostalAddress",

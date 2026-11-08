@@ -158,7 +158,7 @@ body {
 .aurora-blob {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(70px);
+  filter: blur(45px);
   pointer-events: none;
   animation: aurora-drift 16s ease-in-out infinite;
 }
@@ -331,3 +331,37 @@ body {
     border-radius: 0;
   }
 }
+
+.reveal-visible { animation: fade-up .6s ease both; }
+.hero-visual { position: relative; isolation: isolate; width: 100%; aspect-ratio: 1.25; display: grid; place-items: center; }
+.hero-visual::before { content: ""; position: absolute; inset: 5%; z-index: -1; background: radial-gradient(ellipse, #a34a1c45, transparent 65%); }
+.hero-orbit { position: absolute; width: 92%; height: 55%; border: 1px solid #d6a24a55; border-radius: 50%; transform: rotate(-24deg); }
+.hero-orbit-two { width: 80%; height: 46%; border-color: #f5821640; transform: rotate(27deg); }
+.hero-laptop { width: 85%; position: relative; animation: float-y 8s ease-in-out infinite; }
+.hero-screen { padding: 3%; border: 2px solid #8d7254; border-bottom: 8px solid #272527; border-radius: 15px 15px 5px 5px; background: linear-gradient(145deg,#25221f,#0e0f12); box-shadow: 0 25px 50px #0009, 0 0 35px #f5821626; }
+.hero-screen-bar { display: flex; gap: 5px; padding: 0 0 8px; }
+.hero-screen-bar span { width: 5px; height: 5px; background: #a96d39; border-radius: 50%; }
+.hero-dashboard { display: flex; aspect-ratio: 1.9; border: 1px solid #463326; border-radius: 5px; background: #101114; overflow: hidden; }
+.hero-sidebar { width: 13%; padding: 5% 3%; border-right: 1px solid #30261f; display: flex; flex-direction: column; gap: 12%; }
+.hero-sidebar i, .hero-dashboard-heading b, .hero-dashboard-heading i, .hero-floating i { display: block; height: 5px; border-radius: 10px; background: #76553b; }
+.hero-sidebar i:first-child { background: #f58216; }
+.hero-dashboard-content { flex: 1; padding: 4%; }
+.hero-dashboard-heading { display: flex; justify-content: space-between; align-items: center; }
+.hero-dashboard-heading b { width: 34%; background: #d6a24a; }
+.hero-dashboard-heading i { width: 15%; }
+.hero-dashboard-tiles { display: flex; gap: 3%; margin-top: 5%; height: 19%; }
+.hero-dashboard-tiles span { flex: 1; border: 1px solid #493528; border-radius: 5px; background: linear-gradient(135deg,#2a2019,#171719); }
+.hero-chart { height: 40%; margin-top: 4%; border: 1px solid #34271f; background: repeating-linear-gradient(to bottom,transparent 0 24%,#ffffff0a 25%); }
+.hero-chart svg { width: 100%; height: 100%; }
+.hero-dashboard-bottom { height: 14%; display: flex; gap: 4%; align-items: end; margin-top: 3%; }
+.hero-dashboard-bottom span { flex: 1; height: 45%; background: #a85a23; border-radius: 2px 2px 0 0; }
+.hero-dashboard-bottom span:nth-child(2n) { height: 80%; background: #d6a24a; }
+.hero-laptop-base { height: 12px; margin: 0 -5%; background: linear-gradient(#837565,#292a2b 55%,#151618); border-radius: 1px 1px 50% 50%; }
+.hero-floating { position: absolute; display: flex; align-items: center; gap: 10px; width: 25%; padding: 12px; border: 1px solid #76502f; border-radius: 12px; background: #18191ff2; box-shadow: 0 10px 30px #0008; }
+.hero-floating-top { right: 0; top: 18%; }
+.hero-floating-bottom { left: 0; bottom: 16%; }
+.hero-floating > span:last-child { flex: 1; display: grid; gap: 7px; }
+.hero-floating i:last-child { width: 65%; background: #54443a; }
+.hero-floating-icon, .hero-pulse { color: #f4bd53; font-size: 22px; }
+.hero-pulse { width: 15px; height: 15px; border: 3px solid #f58216; border-radius: 50%; }
+@media (max-width: 640px) { .aurora-blob { animation: none; filter: blur(25px); } .hero-floating { padding: 8px; } }

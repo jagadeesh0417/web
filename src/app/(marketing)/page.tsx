@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
+import { HeroVisual } from "@/components/marketing/hero-visual";
 import { Avatar } from "@/components/ui/avatar";
 
 const icons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -78,40 +79,7 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={0.15} className="relative">
-              <div className="relative mx-auto max-w-md rounded-3xl border border-border bg-card/60 p-6 shadow-2xl shadow-orange-600/10 backdrop-blur">
-                <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-amber-500/20 via-transparent to-orange-600/20" />
-                <div className="relative space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-amber-700 text-sm font-black text-white">
-                      A
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">Akradhii Growth Dashboard</p>
-                      <p className="text-xs text-muted-foreground">Illustrative preview</p>
-                    </div>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-background/60 p-4">
-                    <div className="flex items-end gap-2">
-                      {[30, 45, 38, 60, 52, 75, 68, 90].map((h, i) => (
-                        <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-orange-600 to-amber-400" style={{ height: h + "px" }} />
-                      ))}
-                    </div>
-                    <p className="mt-3 text-xs text-muted-foreground">Monthly growth trend (illustrative)</p>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    {[
-                      { label: "Leads", value: "128" },
-                      { label: "Conversion", value: "4.2%" },
-                      { label: "Revenue", value: "Rs 12.4L" },
-                    ].map((m) => (
-                      <div key={m.label} className="rounded-xl border border-border bg-background/40 p-3">
-                        <p className="text-lg font-bold text-amber-400">{m.value}</p>
-                        <p className="text-[10px] text-muted-foreground">{m.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <HeroVisual />
             </Reveal>
           </div>
 
