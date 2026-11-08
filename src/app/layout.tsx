@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions to help businesses build, automate and grow.",
     url: "https://www.akradhii.com",
     siteName: siteConfig.name,
-    images: [{ url: "https://www.akradhii.com/logo.png", width: 806, height: 806, alt: "Akradhii AR logo" }],
+    images: [{ url: "https://www.akradhii.com/logo.png", width: 1024, height: 1024, alt: "Akradhii AR logo" }],
   },
   twitter: {
     card: "summary_large_image",
