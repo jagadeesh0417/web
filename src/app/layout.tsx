@@ -34,10 +34,16 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
-    description: siteConfig.description,
-    url: siteConfig.url,
+    title: "Akradhii | Website Development, Digital Marketing & AI Automation",
+    description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions to help businesses build, automate and grow.",
+    url: "https://www.akradhii.com",
     siteName: siteConfig.name,
+    images: [{ url: "https://www.akradhii.com/favicon.ico", width: 256, height: 256, alt: "Akradhii" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Akradhii | Website Development, Digital Marketing & AI Automation",
+    description: "Akradhii provides website development, digital marketing, AI automation and CRM solutions to help businesses build, automate and grow.",
   },
 };
 
