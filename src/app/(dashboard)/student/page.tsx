@@ -58,7 +58,7 @@ export default function StudentDashboard() {
   return (
     <DashboardShell>
       <PageHeader
-        title={`Hey, ${user.name.split(" ")[0]} 👋`}
+        title={`Hey, ${user.name.split(" ")[0]} `}
         description={p.enrollment.programTitle}
         actions={
           <Badge variant="success" className="gap-1.5">

@@ -110,7 +110,7 @@ export default function MentorReviewPage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Files</p>
                     <div className="mt-1.5 space-y-1">
                       {selected.files.map((f) => (
-                        <p key={f.name} className="text-sm">📎 {f.name} ({(f.size / 1024).toFixed(0)} KB)</p>
+                        <p key={f.name} className="text-sm"> {f.name} ({(f.size / 1024).toFixed(0)} KB)</p>
                       ))}
                     </div>
                   </div>

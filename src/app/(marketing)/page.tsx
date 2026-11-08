@@ -9,6 +9,7 @@ import {
   Search,
   Palette,
   CheckCircle2,
+  Check,
   Star,
   GraduationCap,
   Quote,
@@ -138,8 +139,8 @@ export default function HomePage() {
               "Reliable & Scalable Support",
             ].map((b) => (
               <div key={b} className="flex items-center gap-3 rounded-xl border border-border bg-card/60 px-4 py-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 via-orange-500 to-amber-700 text-xs font-black text-white">
-                  ✓
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 via-orange-500 to-amber-700 text-white">
+                  <Check className="h-4 w-4" />
                 </span>
                 <span className="text-sm font-medium">{b}</span>
               </div>
