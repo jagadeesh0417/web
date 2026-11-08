@@ -3,7 +3,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function Logo({ className, href = "/", size = "md" }: { className?: string; href?: string; size?: "sm" | "md" | "lg" }) {
-  const cls = size === "lg" ? "h-11 w-11" : size === "sm" ? "h-7 w-7" : "h-9 w-9";
+  const cls = size === "lg" ? "h-[88px] w-[88px]" : size === "sm" ? "h-14 w-14" : "h-[72px] w-[72px]";
   const text = size === "lg" ? "text-2xl" : size === "sm" ? "text-base" : "text-xl";
   return (
     <Link href={href} className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Akradhii home">
