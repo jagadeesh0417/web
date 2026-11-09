@@ -287,7 +287,7 @@ export default function HomePage() {
           <div>
             <Badge variant="primary" className="mb-3">Our work</Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Selected projects</h2>
-            <p className="mt-3 text-muted-foreground">Selected work we&apos;ve created for businesses and brands — with real numbers.</p>
+            <p className="mt-3 text-muted-foreground">Client-approved case studies are being prepared for publication.</p>
           </div>
           <Button variant="outline">
             <Link href="/portfolio" className="flex items-center gap-2">View all projects <ArrowRight className="h-4 w-4" /></Link>
