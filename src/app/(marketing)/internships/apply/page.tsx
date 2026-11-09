@@ -7,11 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Clock,
-  LayoutGrid,
   Lock,
-  Package,
-  Award,
   UploadCloud,
   Loader2,
   Mail,
@@ -31,36 +27,15 @@ import { cn, formatCurrency } from "@/lib/utils";
 
 const steps = ["Program", "Details", "Review", "Payment", "Confirmation"];
 
-const DURATION_META: Record<number, { modules: number; projects: number; completion: string; curriculum: string[] }> = {
-  4: {
-    modules: 4,
-    projects: 2,
-    completion: "4 weeks",
-    curriculum: ["2 recorded video lessons per week", "4 weekly PDF note packs", "2 project builds", "1 final assessment"],
-  },
-  6: {
-    modules: 6,
-    projects: 3,
-    completion: "6 weeks",
-    curriculum: ["2-3 recorded video lessons per week", "6 weekly PDF note packs", "3 project builds", "1 final assessment + 1 capstone"],
-  },
-  8: {
-    modules: 8,
-    projects: 4,
-    completion: "8 weeks",
-    curriculum: ["3 recorded video lessons per week", "8 weekly PDF note packs", "4 project builds", "1 capstone + portfolio review"],
-  },
-};
-
 function Wizard() {
   const params = useSearchParams();
   const { toast } = useToast();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
-    category: params.get("category") ?? "",
-    program: params.get("program") ?? "",
-    duration: 6,
+    category: CATEGORIES.find((c) => c.slug === (params.get("track") ?? params.get("category")))?.slug ?? "",
+    program: PROGRAMS.find((p) => p.slug === params.get("program"))?.slug ?? "",
+    duration: Number.parseInt(PROGRAMS.find((p) => p.slug === params.get("program"))?.duration ?? "6", 10),
     fullName: "",
     email: "",
     confirmEmail: "",
@@ -94,27 +69,20 @@ function Wizard() {
 
   const program = PROGRAMS.find((p) => p.slug === form.program);
   const category = CATEGORIES.find((c) => c.slug === form.category);
-  const meta = DURATION_META[form.duration];
 
   useEffect(() => {
-    if (form.program && !params.get("program")) return;
-    if (params.get("duration")) {
-      const d = Number(params.get("duration"));
-      if ([4, 6, 8].includes(d)) set("duration", d);
-    }
     // Read referral code from cookie
     const cookies = document.cookie.split(";").map((c) => c.trim());
     const refCookie = cookies.find((c) => c.startsWith("ak_ref="));
     if (refCookie) {
       setReferralCode(refCookie.split("=")[1] ?? "");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const validateStep0 = () => {
     const errs: Record<string, string> = {};
-    if (!form.category) errs.category = "Select an internship category";
-    if (!form.program) errs.program = "Select a duration plan";
+    if (!category) errs.category = "Select an internship category";
+    if (!program) errs.program = "Select a duration plan";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -194,7 +162,7 @@ function Wizard() {
 
       const data = await res.json();
       if (!data.ok) {
-        setErrors(data.errors ?? { general: "Failed to submit application. Please try again." });
+        setErrors({ ...data.errors, general: data.error ?? "Failed to submit application. Please check your details or contact support." });
         setProcessing(false);
         return;
       }
@@ -286,49 +254,20 @@ function Wizard() {
                 <CustomSelect
                   options={PROGRAMS.map((p) => ({ value: p.slug, label: `${p.title} — ${p.duration}` }))}
                   value={form.program}
-                  onChange={(v) => set("program", v)}
+                  onChange={(v) => {
+                    const selected = PROGRAMS.find((p) => p.slug === v);
+                    setForm((current) => ({ ...current, program: v, duration: selected ? Number.parseInt(selected.duration, 10) : 6 }));
+                  }}
                   placeholder="Select plan"
                 />
               </Field>
             </div>
 
             {program && (
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[4, 6, 8].map((d) => {
-                  const m = DURATION_META[d];
-                   const p = program.price;
-                  const selected = form.duration === d;
-                  return (
-                    <button
-                      key={d}
-                      onClick={() => set("duration", d)}
-                      className={cn(
-                        "rounded-2xl border p-4 text-left transition-all",
-                        selected ? "border-brand-500 bg-brand-600/5 ring-2 ring-brand-500/30" : "border-border hover:border-brand-500/40",
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold">{d} Weeks</span>
-                        {selected && <CheckCircle2 className="h-4 w-4 text-brand-500" />}
-                      </div>
-                      <p className="mt-1 text-lg font-extrabold">{formatCurrency(p)}</p>
-                      <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-                        <li className="flex items-center gap-1.5"><LayoutGrid className="h-3 w-3" /> {m.modules} course modules</li>
-                        <li className="flex items-center gap-1.5"><Package className="h-3 w-3" /> {m.projects} projects</li>
-                        <li className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {m.completion}</li>
-                        <li className="flex items-center gap-1.5"><Award className="h-3 w-3" /> Verified certificate</li>
-                      </ul>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {program && meta && (
               <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
-                <p className="font-semibold">{form.duration}-week curriculum</p>
+                <p className="font-semibold">{program.title} · {program.duration} · {formatCurrency(program.price)}</p>
                 <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                  {meta.curriculum.map((c) => (
+                  {program.features.map((c) => (
                     <li key={c} className="flex items-start gap-2 text-muted-foreground">
                       <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" /> {c}
                     </li>
@@ -441,6 +380,7 @@ function Wizard() {
         {step === 2 && program && category && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold">3 · Review your application</h2>
+            {errors.general && <p role="alert" className="rounded-xl border border-destructive/40 p-3 text-sm text-destructive">{errors.general}</p>}
 
             <div className="rounded-2xl border border-border bg-muted/20 p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Selected Internship</p>

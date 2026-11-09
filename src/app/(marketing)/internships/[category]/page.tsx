@@ -76,7 +76,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <p className="mt-4 max-w-2xl text-white/85">{category.description}</p>
         <div className="mt-8 flex flex-wrap items-center gap-4">
           <Button className="bg-white text-slate-900 hover:bg-white/90">
-            <Link href={`/internships/apply?category=${category.slug}`}>Apply now</Link>
+            <Link href={`/internships/apply?track=${category.slug}&program=professional`}>Apply now</Link>
           </Button>
           <span className="text-sm text-white/75">Free to apply · Reviewed within 2-3 days</span>
         </div>
@@ -125,7 +125,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                 <div className="flex items-center gap-3">
                   <Badge variant="default">{p.duration}</Badge>
                   <Button variant="outline" size="sm">
-                    <Link href={`/internships/apply?category=${category.slug}&program=${p.slug}`}>Choose</Link>
+                    <Link href={`/internships/apply?track=${category.slug}&program=${p.slug}`}>Choose</Link>
                   </Button>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
       <Reveal className="mt-14 text-center">
         <Button variant="gradient" size="lg">
-          <Link href={`/internships/apply?category=${category.slug}`}>Apply for {category.name}</Link>
+          <Link href={`/internships/apply?track=${category.slug}&program=professional`}>Apply for {category.name}</Link>
         </Button>
       </Reveal>
     </div>

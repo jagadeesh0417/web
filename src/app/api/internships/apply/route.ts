@@ -57,6 +57,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, errors: { programSlug: "Program not found." } }, { status: 404 });
     }
 
+    if (data.duration !== Number.parseInt(program.duration, 10)) {
+      return NextResponse.json({ ok: false, errors: { duration: "Duration does not match the selected plan." } }, { status: 400 });
+    }
+
     const year = new Date().getFullYear();
     const applicationId = `INT-${year}-${randomId(8).toUpperCase()}`;
     const orderId = `ORD-${year}-${randomId(8).toUpperCase()}`;
@@ -112,7 +116,7 @@ export async function POST(request: NextRequest) {
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(storePath, JSON.stringify(apps, null, 2));
     } catch {
-      // storage failure — continue anyway for demo
+      return NextResponse.json({ ok: false, error: "Application storage is unavailable. Please contact support." }, { status: 503 });
     }
 
     return NextResponse.json({
