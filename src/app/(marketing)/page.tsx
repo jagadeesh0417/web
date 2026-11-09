@@ -11,7 +11,6 @@ import {
   Palette,
   CheckCircle2,
   Sparkles,
-  Star,
   GraduationCap,
   Plus,
   Minus,
@@ -20,15 +19,13 @@ import {
   Zap,
   Award,
 } from "lucide-react";
-import { services, stats, partners, siteConfig } from "@/config/site";
+import { services, stats, partners } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
-import { testimonials } from "@/lib/data/sample-data";
 import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
-import { Avatar } from "@/components/ui/avatar";
 
 const icons: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2, Megaphone, Workflow, Database, BrainCircuit, Search, Palette,
@@ -331,34 +328,6 @@ export default function HomePage() {
               </Link>
             </Reveal>
           ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="border-y border-border bg-card/40">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Loved by clients and interns</h2>
-          </Reveal>
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {testimonials.slice(0, 6).map((t, i) => (
-              <Reveal key={t.id} delay={i * 0.05}>
-                <Card className="h-full p-6">
-                  <div className="flex gap-0.5 text-warning">
-                    {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
-                    <Avatar name={t.name} />
-                    <div>
-                      <p className="text-sm font-semibold">{t.name}</p>
-                      <p className="text-xs text-muted-foreground">{t.role} · {t.company}</p>
-                    </div>
-                  </div>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 

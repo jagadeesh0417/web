@@ -115,24 +115,6 @@ export default function MarketingCourseDetailPage() {
     0,
   );
 
-  const testimonials = [
-    {
-      name: "Priya Sharma",
-      role: "Frontend Developer",
-      text: "The structured curriculum and mentor feedback made a huge difference. I landed my first dev job within a month of completing the course.",
-    },
-    {
-      name: "Rahul Verma",
-      role: "UI/UX Designer",
-      text: "Hands-on projects and real-world assignments — this is how learning should work. The certificate added real credibility to my portfolio.",
-    },
-    {
-      name: "Ananya Patel",
-      role: "Full Stack Developer",
-      text: "Progressive unlocking kept me motivated. The mentor reviews were detailed and helped me improve every week.",
-    },
-  ];
-
   const relatedCourses = course.modules.length > 0 ? [] : [];
 
   return (
@@ -314,43 +296,6 @@ export default function MarketingCourseDetailPage() {
                 </CardContent>
               </Card>
             </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              What our students say
-            </h2>
-            <p className="mt-3 text-muted-foreground">
-              Real feedback from students who completed our courses.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.06}>
-                <Card className="h-full p-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-xs font-bold text-white">
-                      {t.name
-                        .split(" ")
-                        .map((p) => p[0])
-                        .join("")}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">{t.name}</p>
-                      <p className="text-xs text-muted-foreground">{t.role}</p>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                    &ldquo;{t.text}&rdquo;
-                  </p>
-                </Card>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>

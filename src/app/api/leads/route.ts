@@ -14,6 +14,7 @@ import {
 } from "@/lib/leads/store";
 import { sendWhatsAppText } from "@/lib/leads/whatsapp";
 import type { LeadFormType, WebsiteLead, LeadFields } from "@/lib/leads/types";
+import { requireAdminApi } from "@/lib/auth/api-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -243,31 +244,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  // Admin listing — allow when demo session is admin OR ADMIN_LEADS_SECRET header matches
+  // Admin listing — a verified admin session or explicitly configured secret.
   const secret = process.env.ADMIN_LEADS_SECRET?.trim();
   const headerSecret = request.headers.get("x-admin-secret")?.trim();
-  const demoCookie = request.cookies.get("ak_demo_session")?.value;
-  let isAdmin = false;
-
-  if (secret && headerSecret && secret === headerSecret) isAdmin = true;
-
-  if (demoCookie) {
-    try {
-      const data = JSON.parse(decodeURIComponent(demoCookie)) as { role?: string };
-      if (data.role === "admin" || data.role === "super_admin") isAdmin = true;
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // In local/demo without secrets, still allow GET so admin dashboard works in demo mode
-  const supabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  );
-  if (!supabaseConfigured && !secret) isAdmin = true;
-
-  if (!isAdmin) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!(secret && headerSecret && secret === headerSecret)) {
+    const auth = await requireAdminApi(request);
+    if ("error" in auth) return auth.error;
   }
 
   const leads = await listLeads();

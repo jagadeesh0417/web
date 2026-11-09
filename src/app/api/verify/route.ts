@@ -20,6 +20,9 @@ function rateOk(ip: string, limit = 30, windowMs = 10 * 60 * 1000): boolean {
 }
 
 export async function GET(request: Request) {
+  // The legacy repository is seeded with demonstration certificates, not an
+  // authoritative persistent registry. Never verify those records in production.
+  if (process.env.NODE_ENV === "production") return NextResponse.json({ ok: false, error: "Certificate verification is temporarily unavailable." }, { status: 503 });
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||

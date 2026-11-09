@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getCertificateById, revokeCertificate } from "@/lib/data/repository";
 import { auditLog } from "@/lib/data/server-store";
+import { requireAdminApi } from "@/lib/auth/api-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,6 +15,8 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdminApi(request);
+  if ("error" in auth) return auth.error;
   const { id } = await params;
   const certId = decodeURIComponent(id);
 
@@ -40,7 +43,7 @@ export async function POST(
     return NextResponse.json({ ok: false, error: "Failed to revoke certificate" }, { status: 500 });
   }
 
-  auditLog("revoke", "certificate", `Revoked ${certId}${reason ? `: ${reason}` : ""}`, undefined, certId);
+  auditLog("revoke", "certificate", `Revoked ${certId}${reason ? `: ${reason}` : ""}`, auth.user.id, certId);
 
   return NextResponse.json({ ok: true, certificate: revoked });
 }

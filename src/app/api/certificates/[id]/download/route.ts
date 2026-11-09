@@ -10,6 +10,7 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (process.env.NODE_ENV === "production") return NextResponse.json({ ok: false, error: "Certificate downloads are temporarily unavailable." }, { status: 503 });
   const { id } = await params;
   const certId = decodeURIComponent(id);
 
@@ -17,6 +18,7 @@ export async function GET(
   if (!cert) {
     return NextResponse.json({ ok: false, error: "Certificate not found" }, { status: 404 });
   }
+  if (cert.status === "revoked") return NextResponse.json({ ok: false, error: "Certificate has been revoked" }, { status: 403 });
 
   const company = companySettingsStore.get() ?? {
     id: "company_default",
