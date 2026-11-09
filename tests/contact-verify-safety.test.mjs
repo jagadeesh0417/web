@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import { readFile } from "node:fs/promises";
+import ts from "typescript";
 
 test("verification does not trust local certificates during an API outage", async () => {
   const source = await readFile("src/app/verify/page.tsx", "utf8");
@@ -26,4 +27,15 @@ test("lead persistence does not fall back to ephemeral disk or memory", async ()
   assert.match(source, /await records\.insertOne/);
   assert.doesNotMatch(source, /writeFile|\/tmp|leads\.json/);
   assert.match(source, /throw error/);
+});
+
+test("authentication redirects accept only known internal account paths", async () => {
+  const source = await readFile("src/lib/auth/redirect.ts", "utf8");
+  const js = ts.transpile(source, { module: ts.ModuleKind.ESNext });
+  const { safeAuthRedirect } = await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
+  assert.equal(safeAuthRedirect("/student/assignments"), "/student/assignments");
+  for (const value of ["//evil.example", "https://evil.example", "/\\evil.example", "/admin?next=https://evil.example", "/unknown"]) {
+    assert.equal(safeAuthRedirect(value), "/dashboard");
+  }
+  assert.equal(safeAuthRedirect(null, "/login"), "/login");
 });

@@ -52,9 +52,9 @@ export const Label = forwardRef<HTMLLabelElement, LabelHTMLAttributes<HTMLLabelE
 );
 Label.displayName = "Label";
 
-export function FieldError({ message }: { message?: string }) {
+export function FieldError({ message, id }: { message?: string; id?: string }) {
   if (!message) return null;
-  return <p className="mt-1 text-xs text-destructive">{message}</p>;
+  return <p id={id} className="mt-1 text-xs text-destructive">{message}</p>;
 }
 
 export function Field({ label, error, hint, children, htmlFor }: { label: string; error?: string; hint?: string; children: React.ReactNode; htmlFor?: string }) {
@@ -63,7 +63,7 @@ export function Field({ label, error, hint, children, htmlFor }: { label: string
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
-      <FieldError message={error} />
+      <FieldError id={htmlFor ? `${htmlFor}-error` : undefined} message={error} />
     </div>
   );
 }

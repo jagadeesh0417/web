@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { generateId } from "@/lib/utils";
-import { emailSchema } from "@/lib/validators";
+import { contactFormSchema, emailSchema } from "@/lib/validators";
 import { buildWhatsAppMessage, extractPrimaryFields } from "@/lib/leads/format";
 import { isValidPhone, normalizePhone, formatPhoneDisplay } from "@/lib/leads/phone";
 import {
@@ -152,6 +152,11 @@ export async function POST(request: NextRequest) {
     undefined;
 
   const fields = sanitizeFields(data.fields);
+  if (data.formType === "contact" && !contactFormSchema.safeParse({
+    name: fields.name, email: fields.email, phone: fields.phone ?? "", topic: fields.topic, message: fields.message,
+  }).success) {
+    return NextResponse.json({ ok: false, error: "Please check the form and try again." }, { status: 400 });
+  }
   const validationError = requireContactBasics(data.formType, fields);
   if (validationError) {
     return NextResponse.json({ ok: false, error: validationError }, { status: 400 });

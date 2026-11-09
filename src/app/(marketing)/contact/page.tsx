@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Clock, ExternalLink, Mail, MapPin, MessageCircle, Phone, Send, Calendar, CheckCircle2, X, AlertTriangle } from "lucide-react";
+import { Clock, Mail, MapPin, MessageCircle, Phone, Send, Calendar, CheckCircle2, X, AlertTriangle } from "lucide-react";
 import { siteConfig, services } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,31 +11,13 @@ import { Input, Textarea, Field } from "@/components/ui/input";
 import { Reveal } from "@/components/marketing/reveal";
 import { useToast } from "@/components/ui/toast";
 import { submitLead } from "@/lib/leads/client";
-import { emailSchema, nameSchema, phoneSchema } from "@/lib/validators";
+import { contactFormSchema } from "@/lib/validators";
 
 function validateField(name: string, value: string): string | undefined {
-  switch (name) {
-    case "name":
-      if (!value.trim()) return "Full name is required.";
-      if (!nameSchema.safeParse(value).success) return "Name must be at least 2 characters.";
-      return undefined;
-    case "email":
-      if (!value.trim()) return "Email is required.";
-      if (!emailSchema.safeParse(value).success) return "Please enter a valid email address.";
-      return undefined;
-    case "phone":
-      if (value.trim() && !phoneSchema.safeParse(value).success) return "Please enter a valid 10-digit Indian phone number.";
-      return undefined;
-    case "topic":
-      if (!value) return "Please select a service.";
-      return undefined;
-    case "message":
-      if (!value.trim()) return "Project details are required.";
-      if (value.trim().length < 20) return "Please provide at least 20 characters.";
-      return undefined;
-    default:
-      return undefined;
-  }
+  const field = contactFormSchema.shape[name as keyof typeof contactFormSchema.shape];
+  if (!field) return undefined;
+  const result = field.safeParse(value);
+  return result.success ? undefined : result.error.issues[0]?.message;
 }
 
 export default function ContactPage() {
@@ -46,8 +28,29 @@ export default function ContactPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [serviceQuery, setServiceQuery] = useState("");
+  const [hoursStatus, setHoursStatus] = useState("");
 
-  const waHref = `https://wa.me/${siteConfig.whatsapp}`;
+  useEffect(() => {
+    setServiceQuery(new URLSearchParams(window.location.search).get("service")?.slice(0, 200) ?? "");
+    const updateHours = () => {
+      const ist = new Date(Date.now() + 330 * 60_000);
+      const day = ist.getUTCDay();
+      const minutes = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+      if (day !== 0 && minutes >= 600 && minutes < 1140) {
+        setHoursStatus("Open now");
+      } else {
+        const next = day === 0 || (day === 6 && minutes >= 1140) ? "Monday" : minutes < 600 ? "today" : "tomorrow";
+        setHoursStatus(`Closed · opens ${next} at 10:00 AM IST`);
+      }
+    };
+    updateHours();
+    const timer = window.setInterval(updateHours, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const waText = serviceQuery ? `Hello, I would like to discuss ${serviceQuery}.` : "Hello, I would like to discuss a project.";
+  const waHref = `https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(waText)}`;
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -89,7 +92,10 @@ export default function ContactPage() {
     if (topicErr) nextErrors.topic = topicErr;
     if (messageErr) nextErrors.message = messageErr;
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    if (Object.keys(nextErrors).length > 0) {
+      formEl.querySelector<HTMLElement>(`[name="${Object.keys(nextErrors)[0]}"]`)?.focus();
+      return;
+    }
 
     setSubmitting(true);
     const result = await submitLead({
@@ -124,10 +130,8 @@ export default function ContactPage() {
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <span className="text-sm text-muted-foreground">Prefer to talk first?</span>
-              <a href="https://calendly.com/akradhii" target="_blank" rel="noreferrer">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" /> Book a 15-min call <ExternalLink className="h-3 w-3" />
-                </Button>
+              <a className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm hover:text-brand-400" href={`mailto:${siteConfig.email}?subject=${encodeURIComponent("Request a discovery call")}&body=${encodeURIComponent("Hello, I would like to arrange a call. My preferred times are: ")}`}>
+                <Calendar className="h-4 w-4" /> Request a discovery call
               </a>
             </div>
           </Reveal>
@@ -139,6 +143,7 @@ export default function ContactPage() {
           <Reveal className="lg:col-span-2">
             <Card className="h-full p-6">
               <h2 className="text-lg font-semibold">Reach us directly</h2>
+              {hoursStatus && <p className="mt-2 text-sm text-muted-foreground">{hoursStatus}</p>}
               <div className="mt-6 space-y-5">
                 {[
                   { icon: Mail, label: "Email", value: siteConfig.email, href: `mailto:${siteConfig.email}` },
@@ -186,11 +191,11 @@ export default function ContactPage() {
           <Reveal delay={0.1} className="lg:col-span-3">
             <Card className="p-6 sm:p-8">
               {sent ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div role="status" className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/15">
                     <CheckCircle2 className="h-10 w-10 text-success" />
                   </div>
-                  <h2 className="mt-5 text-2xl font-bold">Message sent!</h2>
+                    <h2 className="mt-5 text-2xl font-bold">Message received!</h2>
                   <p className="mt-2 max-w-sm text-sm text-muted-foreground">
                     Thanks for reaching out. We&apos;ll be in touch.
                   </p>
@@ -206,13 +211,13 @@ export default function ContactPage() {
                   </div>
 
                   {serverError && (
-                    <div className="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-4 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div role="alert" className="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-4 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
                       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                       <div className="flex-1">
                         <p className="font-medium text-destructive">{serverError}</p>
                         <p className="mt-1 text-muted-foreground">Please try WhatsApp or email <a href={`mailto:${siteConfig.email}`} className="font-medium text-brand-400 hover:underline">{siteConfig.email}</a>.</p>
                       </div>
-                      <button type="button" onClick={() => setServerError(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:text-foreground">
+                      <button type="button" aria-label="Dismiss error" onClick={() => setServerError(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:text-foreground">
                         <X className="h-4 w-4" />
                       </button>
                     </div>
@@ -220,22 +225,23 @@ export default function ContactPage() {
 
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Full name" htmlFor="name" error={errors.name}>
-                      <Input id="name" name="name" required autoComplete="name" placeholder="Your name" onBlur={handleBlur} />
+                      <Input id="name" name="name" required autoComplete="name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-error" : undefined} placeholder="Your name" onBlur={handleBlur} />
                     </Field>
                     <Field label="Email" htmlFor="email" error={errors.email}>
-                      <Input id="email" name="email" type="email" required autoComplete="email" placeholder="you@company.com" onBlur={handleBlur} />
+                      <Input id="email" name="email" type="email" inputMode="email" required autoComplete="email" aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} placeholder="you@company.com" onBlur={handleBlur} />
                     </Field>
                   </div>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Phone" htmlFor="phone" error={errors.phone}>
-                      <Input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="+91 98485 79053" onBlur={handleBlur} />
+                      <Input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" aria-invalid={!!errors.phone} aria-describedby={errors.phone ? "phone-error" : undefined} placeholder="+91 98485 79053" onBlur={handleBlur} />
                     </Field>
                     <Field label="Company (optional)" htmlFor="company">
                       <Input id="company" name="company" autoComplete="organization" placeholder="Your company" />
                     </Field>
                   </div>
                   <Field label="I'm interested in" htmlFor="topic" error={errors.topic}>
-                    <select id="topic" name="topic" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Website Design & Development" onBlur={handleBlur}>
+                    <select id="topic" name="topic" required aria-invalid={!!errors.topic} aria-describedby={errors.topic ? "topic-error" : undefined} className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="" onBlur={handleBlur}>
+                      <option value="">Select a service</option>
                       {services.map((s) => (
                         <option key={s.id}>{s.title}</option>
                       ))}
@@ -250,7 +256,7 @@ export default function ContactPage() {
                     <Input id="timeline" name="timeline" placeholder="When would you like to start?" />
                   </Field>
                   <Field label="Project details" htmlFor="message" error={errors.message}>
-                    <Textarea id="message" name="message" required placeholder="Tell us about your project, timeline and goals..." className="min-h-[140px]" onBlur={handleBlur} />
+                    <Textarea id="message" name="message" required aria-invalid={!!errors.message} aria-describedby={errors.message ? "message-error" : undefined} placeholder="Tell us about your project, timeline and goals..." className="min-h-[140px]" onBlur={handleBlur} />
                   </Field>
                   <p className="text-xs text-muted-foreground">By submitting, you acknowledge our <Link href="/privacy" className="text-brand-400 underline">Privacy Policy</Link>.</p>
                   <Button type="submit" variant="gradient" size="lg" loading={submitting} disabled={submitting} className="w-full sm:w-auto">

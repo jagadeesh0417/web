@@ -36,6 +36,14 @@ export const leadContactSchema = z.object({
   message: z.string().trim().max(4000).optional(),
 });
 
+export const contactFormSchema = z.object({
+  name: nameSchema,
+  email: emailSchema,
+  phone: phoneSchema.or(z.literal("")),
+  topic: z.string().trim().min(1, "Please select a service.").max(200),
+  message: z.string().trim().min(20, "Please provide at least 20 characters.").max(4000, "Message is too long."),
+});
+
 export const otpSchema = z.string().trim().regex(/^[0-9]{6}$/, "OTP must be 6 digits");
 
 export const signupSchema = z.object({
