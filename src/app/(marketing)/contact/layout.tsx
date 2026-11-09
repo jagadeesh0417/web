@@ -32,5 +32,35 @@ export const metadata: Metadata = {
 };
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  const business = {
+    "@type": "LocalBusiness",
+    "@id": `${siteConfig.url}/contact#business`,
+    name: siteConfig.name,
+    url: siteConfig.url,
+    telephone: siteConfig.phone,
+    email: siteConfig.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "HITEC City",
+      addressLocality: siteConfig.city,
+      addressRegion: siteConfig.region,
+      postalCode: "500081",
+      addressCountry: "IN",
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "10:00",
+      closes: "19:00",
+    },
+    sameAs: Object.values(siteConfig.socials),
+  };
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "ContactPage", "@id": `${siteConfig.url}/contact#page`, url: `${siteConfig.url}/contact`, name: "Contact Akradhii", about: { "@id": business["@id"] } },
+      business,
+    ],
+  };
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />{children}</>;
 }

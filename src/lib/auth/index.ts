@@ -119,8 +119,7 @@ export async function signIn(email: string, password: string, remember: boolean)
   const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    if (error.message.toLowerCase().includes("email")) return { ok: false, error: "No account found with this email" };
-    return { ok: false, error: "Incorrect password" };
+    return { ok: false, error: "Invalid email or password" };
   }
   const meta = data.user.user_metadata ?? {};
   const role = (meta.role as Role) ?? "user";

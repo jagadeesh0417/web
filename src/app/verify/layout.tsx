@@ -26,5 +26,6 @@ export const metadata: Metadata = {
 };
 
 export default function VerifyLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  const schema = { "@context": "https://schema.org", "@type": "WebPage", name: "Verify an Akradhii certificate", url: `${siteConfig.url}/verify`, description: "Verify an Akradhii internship certificate." };
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />{children}</>;
 }

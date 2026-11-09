@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { CertificateView } from "@/components/certificate/certificate-view";
 import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/marketing/reveal";
-import { getCertificateById } from "@/lib/data/repository";
 import { formatDate } from "@/lib/utils";
 import type { Certificate } from "@/lib/types";
 
@@ -107,24 +106,15 @@ function VerifyInner() {
       if (res.ok && data.ok && data.certificate) {
         setCert(toViewModel(data.certificate));
         setResult("found");
+      } else if (res.status === 404) {
+        setResult("not_found");
+      } else if (res.status === 429) {
+        setError("Too many requests. Please try again later.");
       } else {
-        // Demo fallback: certificates issued in-browser live in localStorage
-        const local = getCertificateById(id);
-        if (local) {
-          setCert(local);
-          setResult("found");
-        } else {
-          setResult("not_found");
-        }
+        setError("Verification is temporarily unavailable. Please try again later.");
       }
     } catch {
-      const local = getCertificateById(id);
-      if (local) {
-        setCert(local);
-        setResult("found");
-      } else {
-        setResult("not_found");
-      }
+      setError("Verification is temporarily unavailable. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -188,7 +178,7 @@ function VerifyInner() {
                 )}
               </Button>
             </form>
-            {error && <p className="mt-2 text-center text-xs text-destructive">{error}</p>}
+            {error && <p role="alert" className="mt-2 text-center text-xs text-destructive">{error}</p>}
           </Reveal>
         </div>
       </section>

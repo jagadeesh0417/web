@@ -177,13 +177,9 @@ export default function ContactPage() {
                 </p>
               </div>
             </Card>
-            <div className="mt-6 overflow-hidden rounded-xl border border-border">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.2!2d78.38!3d17.44!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae3a4e1c5e3e3e3e!2sHITEC%20City%2C%20Hyderabad%2C%20Telangana%20500081!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-                width="100%" height="300" style={{ border: 0 }} allowFullScreen loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade" title="Akradhii office location" className="w-full"
-              />
-            </div>
+              <div className="mt-6 rounded-xl border border-border p-4">
+                <a className="text-sm font-medium text-brand-400 hover:underline" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.address)}`} target="_blank" rel="noreferrer">Get directions on Google Maps <span className="sr-only">(opens in a new tab)</span></a>
+              </div>
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-3">
