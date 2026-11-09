@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, GraduationCap, ChevronDown } from "lucide-react";
-import { CATEGORY_BY_SLUG, PROGRAMS } from "@/lib/constants";
+import { CATEGORIES, CATEGORY_BY_SLUG, PROGRAMS } from "@/lib/constants";
+import { formatCurrency } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +32,7 @@ export async function generateMetadata({
       type: "article",
       images: [
         {
-          url: `${siteConfig.url}/og-default.svg`,
+          url: `${siteConfig.url}/internships/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${category.name} Internship`,
@@ -40,7 +41,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      images: [`${siteConfig.url}/og-default.svg`],
+      images: [`${siteConfig.url}/internships/${slug}/opengraph-image`],
     },
     alternates: { canonical: `${siteConfig.url}/internships/${slug}` },
   };
@@ -120,6 +121,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               <div key={p.id} className="flex items-center justify-between rounded-xl border border-border p-4">
                 <div>
                   <p className="text-sm font-semibold">{p.title}</p>
+                  <p className="text-sm font-bold">{formatCurrency(p.price)}</p>
                   <p className="text-xs text-muted-foreground">{p.features.slice(0, 2).join(" · ")}…</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -131,6 +133,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               </div>
             ))}
           </div>
+          <p className="mt-4 text-sm text-muted-foreground">For refund details, read the <Link className="underline" href="/terms">terms</Link> or contact support.</p>
         </Card>
 
           <Card className="w-full p-6 lg:w-80">
@@ -140,6 +143,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </p>
           </Card>
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold">Related tracks</h2>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+          {CATEGORIES.filter((c) => c.slug !== slug).slice(0, 3).map((c) => <li key={c.slug}><Link className="block rounded-xl border border-border p-4 hover:border-brand-500 focus-visible:ring-2 focus-visible:ring-brand-500" href={`/internships/${c.slug}`}>{c.name}</Link></li>)}
+        </ul>
+      </section>
 
       <div className="mx-auto mt-12 max-w-3xl">
         <h2 className="text-center text-2xl font-bold">FAQ</h2>
