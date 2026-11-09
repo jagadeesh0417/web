@@ -7,16 +7,7 @@ import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 import { Reveal } from "@/components/marketing/reveal";
-
-const mentors = {
-  m1: { name: "Sneha Kulkarni", role: "Senior Web Engineer" },
-  m2: { name: "Rahul Iyer", role: "Design Lead" },
-  m3: { name: "Priya Sharma", role: "Performance Marketer" },
-  m4: { name: "Arjun Reddy", role: "Founder & Growth Strategist" },
-  m5: { name: "Teja Verma", role: "Head of Delivery" },
-} as const;
 
 export async function generateStaticParams() {
   return Object.keys(CATEGORY_BY_SLUG).map((category) => ({ category }));
@@ -60,10 +51,19 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) notFound();
 
-  const mentor = mentors[category.mentorId as keyof typeof mentors];
+  const url = `${siteConfig.url}/internships/${slug}`;
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Course", name: `${category.name} Internship`, description: category.description, provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, offers: PROGRAMS.map((p) => ({ "@type": "Offer", price: p.price, priceCurrency: "INR", url: `${siteConfig.url}/internships/apply?track=${slug}&program=${p.slug}` })) },
+      { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Internships", item: `${siteConfig.url}/internships` }, { "@type": "ListItem", position: 2, name: category.name, item: url }] },
+      { "@type": "FAQPage", mainEntity: category.faqs.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })) },
+    ],
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       <Button variant="ghost" size="sm" className="mb-6">
         <Link href="/internships" className="flex items-center gap-2">
           <ArrowLeft className="h-4 w-4" /> All programs
@@ -78,7 +78,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           <Button className="bg-white text-slate-900 hover:bg-white/90">
             <Link href={`/internships/apply?track=${category.slug}&program=professional`}>Apply now</Link>
           </Button>
-          <span className="text-sm text-white/75">Free to apply · Reviewed within 2-3 days</span>
+          <span className="text-sm text-white/75">4, 6 or 8 weeks · Certificate included</span>
         </div>
       </div>
 
@@ -133,21 +133,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         </Card>
 
-        {mentor && (
           <Card className="w-full p-6 lg:w-80">
-            <h2 className="font-semibold">Your mentor</h2>
-            <div className="mt-4 flex items-center gap-3">
-              <Avatar name={mentor.name} className="h-14 w-14 text-base" />
-              <div>
-                <p className="font-semibold">{mentor.name}</p>
-                <p className="text-xs text-muted-foreground">{mentor.role}</p>
-              </div>
-            </div>
+            <h2 className="font-semibold">Mentor support</h2>
             <p className="mt-4 text-sm text-muted-foreground">
-              Leads live sessions, reviews your assignments and gives you direct feedback throughout the program.
+              Mentor details will be confirmed for your batch. Contact support for more information.
             </p>
           </Card>
-        )}
       </div>
 
       <div className="mx-auto mt-12 max-w-3xl">

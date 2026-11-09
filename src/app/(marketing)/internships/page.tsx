@@ -6,7 +6,6 @@ import {
   BarChart2,
   BookOpen,
   Bot,
-  Brush,
   Check,
   CheckCircle2,
   ClipboardCheck,
@@ -32,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
 import { formatCurrency } from "@/lib/utils";
+import { internshipFaq } from "@/lib/data/internship-faq";
 
 export const metadata: Metadata = {
   title: "Internships",
@@ -78,16 +78,16 @@ const trackIcons: Record<string, React.ElementType> = {
 };
 
 const comparisonFeatures = [
-  { label: "Duration", foundation: "4 Weeks", professional: "6 Weeks", industry: "8 Weeks" },
-  { label: "Live sessions", foundation: "4", professional: "6", industry: "Full" },
-  { label: "Assignments", foundation: "4", professional: "8", industry: "—" },
+  { label: "Duration", foundation: PROGRAMS[0].duration, professional: PROGRAMS[1].duration, industry: PROGRAMS[2].duration },
+  { label: "Live sessions", foundation: "4", professional: "6", industry: "Contact support" },
+  { label: "Assignments", foundation: "4", professional: "8", industry: "Contact support" },
   { label: "Projects", foundation: "1 mini", professional: "2", industry: "Client-based" },
   { label: "Weekly assessments", foundation: false, professional: true, industry: true },
   { label: "Performance report", foundation: false, professional: true, industry: true },
   { label: "Letter of recommendation", foundation: false, professional: false, industry: "✓ (performance)" },
   { label: "Placement assistance", foundation: false, professional: false, industry: "✓ (if offered)" },
   { label: "Certificate", foundation: true, professional: true, industry: true },
-  { label: "Price", foundation: "₹149", professional: "₹199", industry: "₹299" },
+  { label: "Price", foundation: formatCurrency(PROGRAMS[0].price), professional: formatCurrency(PROGRAMS[1].price), industry: formatCurrency(PROGRAMS[2].price) },
 ];
 
 const learningFlow = [
@@ -99,13 +99,21 @@ const learningFlow = [
   { step: "06", title: "Complete weekly tasks", text: "Build assignments and mini-projects each week.", icon: ClipboardCheck },
   { step: "07", title: "Submit work", text: "Share Drive, GitHub, Figma or Canva links for mentor review.", icon: Send },
   { step: "08", title: "Unlock next module", text: "Finish lessons and get assignments approved to progress.", icon: Lock },
-  { step: "09", title: "Final assessment", text: "Pass the assessment (70%+, limited attempts) when eligible.", icon: ClipboardCheck },
+  { step: "09", title: "Final assessment", text: "Complete the final assessment according to your plan's criteria.", icon: ClipboardCheck },
   { step: "10", title: "Certificate", text: "Receive a QR-verifiable certificate of completion.", icon: Award },
 ];
 
 export default function InternshipsPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "ItemList", itemListElement: PROGRAMS.map((p, i) => ({ "@type": "ListItem", position: i + 1, item: { "@type": "Course", name: p.title, description: p.description, provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, offers: { "@type": "Offer", price: p.price, priceCurrency: "INR", url: `${siteConfig.url}/internships/apply?program=${p.slug}` } } })) },
+      { "@type": "FAQPage", mainEntity: internshipFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+    ],
+  };
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="absolute inset-0 bg-glow" />
@@ -346,13 +354,7 @@ export default function InternshipsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Frequently asked questions</h2>
         </Reveal>
         <div className="mt-8 space-y-3">
-          {[
-            { q: "Is the internship paid?", a: "It is a project-based learning internship. You invest in the program and receive mentorship, projects, a portfolio trail and a verifiable certificate." },
-            { q: "How do modules unlock?", a: "Complete the week’s lessons and get that week’s assignment approved. The next module unlocks automatically in your dashboard." },
-            { q: "How do I get the certificate?", a: "Finish required lessons, get assignments approved, pass the final assessment (70%+), then issue or download from the Certificate page. Anyone can verify it via QR or /verify." },
-            { q: "Can I switch tracks?", a: "Talk to support early in the program. Switches depend on seat availability and progress." },
-            { q: "Where do I apply?", a: "Use Apply now — the wizard captures profile details, program, duration and payment, then activates your student account." },
-          ].map((f) => (
+            {internshipFaq.map((f) => (
             <details key={f.q} className="group rounded-xl border border-border bg-card p-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-medium">
                 {f.q}
@@ -362,6 +364,7 @@ export default function InternshipsPage() {
             </details>
           ))}
         </div>
+        <p className="mt-5 text-sm text-muted-foreground">Read our <Link className="underline" href="/terms">terms</Link> or <Link className="underline" href="/contact">contact support</Link> for policy details.</p>
       </section>
 
       {/* Verify certificate */}
