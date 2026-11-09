@@ -15,7 +15,6 @@ import {
   getServiceBySlug,
 } from "@/config/services-detail";
 import { siteConfig } from "@/config/site";
-import { portfolioItems } from "@/lib/data/sample-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -116,7 +115,6 @@ export default async function ServiceDetailPage({ params }: Props) {
   if (!service) notFound();
 
   const related = getRelatedServices(service.slug);
-  const projects = portfolioItems.filter((p) => p.service === service.portfolioService).slice(0, 3);
 
   return (
     <div>
@@ -318,50 +316,6 @@ export default async function ServiceDetailPage({ params }: Props) {
             </Reveal>
           </div>
         </div>
-      </section>
-
-      {/* Portfolio */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Relevant work</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Selected projects related to {service.title.toLowerCase()}.
-            </p>
-          </div>
-          <Link href="/services" className="text-sm font-medium text-brand-400 hover:underline">
-            View all work →
-          </Link>
-        </Reveal>
-
-        {projects.length > 0 ? (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p, i) => (
-              <Reveal key={p.id} delay={i * 0.05}>
-                <Link href={`/portfolio/${p.slug}`}>
-                  <Card className="group h-full overflow-hidden transition-all hover:-translate-y-0.5 hover:border-brand-500/40">
-                    <div className={`h-28 bg-gradient-to-br ${p.gradient}`} />
-                    <div className="p-5">
-                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{p.service}</p>
-                      <h3 className="mt-1 font-semibold group-hover:text-brand-300">{p.title}</h3>
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.summary}</p>
-                    </div>
-                  </Card>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        ) : (
-          <Reveal className="mt-8">
-            <Card className="border-dashed p-8 text-center text-sm text-muted-foreground">
-              Case studies for this service are being prepared.{" "}
-              <Link href="/contact" className="font-medium text-brand-400 hover:underline">
-                Ask us for relevant examples
-              </Link>
-              .
-            </Card>
-          </Reveal>
-        )}
       </section>
 
       {/* FAQ */}

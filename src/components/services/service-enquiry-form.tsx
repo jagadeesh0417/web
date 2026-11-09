@@ -165,7 +165,7 @@ export function ServiceEnquiryForm({
       </div>
 
       <Field label="Budget range" htmlFor={`budget-${serviceSlug}`}>
-        <select id={`budget-${serviceSlug}`} name="budget" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Not sure yet">
+        <select id={`budget-${serviceSlug}`} name="budget" className="flex h-10 w-full rounded-lg border border-input bg-[#18191f] px-3 py-2 text-sm text-[#f7f4ef] outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Not sure yet">
           <option>Under ₹50,000</option>
           <option>₹50,000 – ₹2,00,000</option>
           <option>₹2,00,000 – ₹10,00,000</option>
