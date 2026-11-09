@@ -61,7 +61,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "Work on client-based projects with full mentorship, portfolio building and a letter of recommendation based on your performance.",
     duration: "8 Weeks",
-    price: 249,
+    price: 299,
     featured: false,
     features: [
       "Full mentorship",

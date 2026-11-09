@@ -17,6 +17,8 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/internships", label: "Internships" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/resources", label: "Resources" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
@@ -57,13 +59,14 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        <nav className="hidden items-center gap-0.5 xl:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 xl:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
+              aria-current={isActive(l.href) ? "page" : undefined}
               className={cn(
-                "rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                "nav-link relative rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
                 isActive(l.href) ? "text-foreground" : "text-muted-foreground",
               )}
             >
@@ -72,7 +75,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           {ready && user ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => router.push(homeForRole(user.role))}>
@@ -100,18 +103,20 @@ export function Navbar() {
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border bg-card xl:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+        <div id="mobile-navigation" className="animate-fade-up border-t border-border bg-card text-card-foreground xl:hidden">
+          <nav aria-label="Mobile navigation" className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
+                aria-current={isActive(l.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-lg px-3 py-2.5 text-sm font-medium",

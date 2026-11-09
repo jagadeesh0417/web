@@ -29,11 +29,6 @@ import { CATEGORIES, PROGRAMS } from "@/lib/constants";
 import { applicationSchema, validateFile } from "@/lib/validators";
 import { cn, formatCurrency } from "@/lib/utils";
 
-function parseDurationWeeks(d: string): number {
-  const match = d.match(/(\d+)/);
-  return match ? parseInt(match[1], 10) : 4;
-}
-
 const steps = ["Program", "Details", "Review", "Payment", "Confirmation"];
 
 const DURATION_META: Record<number, { modules: number; projects: number; completion: string; curriculum: string[] }> = {
@@ -89,7 +84,7 @@ function Wizard() {
   const [paymentStep, setPaymentStep] = useState<"idle" | "processing" | "verifying" | "done" | "failed">("idle");
   const [applicationId, setApplicationId] = useState("");
   const [orderId, setOrderId] = useState("");
-  const [enrollmentResult, setEnrollmentResult] = useState<{
+  const [enrollmentResult] = useState<{
     enrollmentId: string;
     studentId: string;
     invoiceNumber: string;
@@ -232,33 +227,9 @@ function Wizard() {
         return;
       }
 
-      setPaymentStep("verifying");
-
-      const verifyRes = await fetch("/api/internships/payment/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          applicationId,
-          orderId: createData.orderId,
-          paymentMethod: "upi",
-        }),
-      });
-      const verifyData = await verifyRes.json();
-
-      if (!verifyData.ok) {
-        setPaymentStep("failed");
-        toast("error", "Payment verification failed", verifyData.error ?? "Please contact support.");
-        return;
-      }
-
-      setEnrollmentResult({
-        enrollmentId: verifyData.enrollmentId,
-        studentId: verifyData.studentId,
-        invoiceNumber: verifyData.invoiceNumber,
-      });
-      setPaymentStep("done");
-      setStep(4);
-      toast("success", "Enrollment Successful", "Your internship enrollment has been confirmed.");
+      // Never confirm an order without an authenticated provider payment response.
+      setPaymentStep("failed");
+      toast("error", "Checkout unavailable", "Payment confirmation is not configured. Please contact support.");
     } catch {
       setPaymentStep("failed");
       toast("error", "Something went wrong", "Please try again or contact support.");
@@ -325,7 +296,7 @@ function Wizard() {
               <div className="grid gap-3 sm:grid-cols-3">
                 {[4, 6, 8].map((d) => {
                   const m = DURATION_META[d];
-                   const p = Math.round(program.price * (d / parseDurationWeeks(program.duration)) * (d === 8 ? 0.95 : 1));
+                   const p = program.price;
                   const selected = form.duration === d;
                   return (
                     <button
@@ -509,9 +480,9 @@ function Wizard() {
             <div className="rounded-2xl border border-brand-500/30 bg-brand-600/5 p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Payment Summary</p>
               <div className="mt-3 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(program.price)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Taxes</span><span className="text-success">Included</span></div>
-                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(program.price)}</span></div>
               </div>
             </div>
 
@@ -545,7 +516,7 @@ function Wizard() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Amount</p>
-                  <p className="text-2xl font-extrabold">{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</p>
+                  <p className="text-2xl font-extrabold">{formatCurrency(program.price)}</p>
                 </div>
               </div>
             </div>
@@ -554,12 +525,12 @@ function Wizard() {
               <>
                 <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
                   <Lock className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                  Secured by 256-bit TLS. In production, payments are processed by Razorpay with webhook-driven confirmation — this demo simulates the same flow end-to-end.
+                  Online checkout is currently unavailable. Your application does not activate an enrollment or collect a payment.
                 </p>
                 <div className="flex justify-between pt-2">
                   <Button variant="ghost" onClick={() => setStep(2)}><ArrowLeft className="h-4 w-4" /> Back</Button>
                   <Button variant="gradient" onClick={handlePayment}>
-                    Pay {formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))} securely
+                    Pay {formatCurrency(program.price)} securely
                   </Button>
                 </div>
               </>

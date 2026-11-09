@@ -1140,8 +1140,8 @@ export const payments: Payment[] = [
   { id: "pay_1", orderId: `order_${randomId(8)}`, clientName: "NovaPay Fintech", email: "vikram@novapay.in", amount: 225000, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Website — milestone 1", createdAt: daysAgo(28) },
   { id: "pay_2", orderId: `order_${randomId(8)}`, clientName: "Zenith Skincare", email: "zara@zenith.shop", amount: 180000, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Meta Ads — monthly retainer", createdAt: daysAgo(20) },
   { id: "pay_3", orderId: `order_${randomId(8)}`, clientName: "CloudPeak", email: "rohit@cloudpeak.io", amount: 130000, currency: "INR", provider: "stripe", status: "succeeded", plan: "Automation — milestone 2", createdAt: daysAgo(15) },
-  { id: "pay_4", orderId: `order_${randomId(8)}`, clientName: "Ananya Gupta", email: "student@akradhii.com", amount: 3499, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Professional Internship — Web Dev", method: "upi", invoiceNumber: "INV-2026-0008", enrollmentId: "AKR-ENR-2026-0001", studentId: "AKR-STU-2026-0001", userId: "u_student", categorySlug: "web-development", programSlug: "professional", durationWeeks: 6, createdAt: daysAgo(39) },
-  { id: "pay_5", orderId: `order_${randomId(8)}`, clientName: "Karthik Rao", email: "karthik@example.com", amount: 1999, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Foundation Internship — UI/UX", method: "card", invoiceNumber: "INV-2026-0012", enrollmentId: "AKR-ENR-2026-0002", studentId: "AKR-STU-2026-0002", userId: "u_student2", categorySlug: "ui-ux-design", programSlug: "foundation", durationWeeks: 4, createdAt: daysAgo(24) },
+  { id: "pay_4", orderId: `order_${randomId(8)}`, clientName: "Ananya Gupta", email: "student@akradhii.com", amount: 199, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Professional Internship — Web Dev", method: "upi", invoiceNumber: "INV-2026-0008", enrollmentId: "AKR-ENR-2026-0001", studentId: "AKR-STU-2026-0001", userId: "u_student", categorySlug: "web-development", programSlug: "professional", durationWeeks: 6, createdAt: daysAgo(39) },
+  { id: "pay_5", orderId: `order_${randomId(8)}`, clientName: "Karthik Rao", email: "karthik@example.com", amount: 149, currency: "INR", provider: "razorpay", status: "succeeded", plan: "Foundation Internship — UI/UX", method: "card", invoiceNumber: "INV-2026-0012", enrollmentId: "AKR-ENR-2026-0002", studentId: "AKR-STU-2026-0002", userId: "u_student2", categorySlug: "ui-ux-design", programSlug: "foundation", durationWeeks: 4, createdAt: daysAgo(24) },
   { id: "pay_6", orderId: `order_${randomId(8)}`, clientName: "Zenith Skincare", email: "zara@zenith.shop", amount: 180000, currency: "INR", provider: "razorpay", status: "pending", plan: "Meta Ads — retainer month 2", createdAt: daysAgo(2) },
 ];
 
@@ -1204,7 +1204,7 @@ export const enrollments: Enrollment[] = [
     programSlug: "professional",
     programTitle: "Web Development — Professional Internship",
     durationWeeks: 6,
-    price: 3499,
+    price: 199,
     paymentId: "pay_4",
     invoiceNumber: "INV-2026-0008",
     status: "active",
@@ -1220,7 +1220,7 @@ export const enrollments: Enrollment[] = [
     programSlug: "foundation",
     programTitle: "UI/UX Design — Foundation Internship",
     durationWeeks: 4,
-    price: 1999,
+    price: 149,
     paymentId: "pay_5",
     invoiceNumber: "INV-2026-0012",
     status: "active",

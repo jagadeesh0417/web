@@ -32,6 +32,7 @@ export function Footer() {
             {[
               { href: "/about", label: "About us" },
               { href: "/services", label: "Services" },
+              { href: "/portfolio", label: "Portfolio" },
               { href: "/contact", label: "Contact" },
             ].map((l) => (
               <li key={l.href}>
@@ -64,6 +65,7 @@ export function Footer() {
           <ul className="space-y-2.5">
             {[
               { href: "/internships", label: "Internships" },
+              { href: "/resources", label: "Resources" },
               { href: "/internships/apply", label: "Apply now" },
               { href: "/verify", label: "Verify certificate" },
             ].map((l) => (

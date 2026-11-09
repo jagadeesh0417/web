@@ -1,393 +1,98 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Building2,
-  CheckCircle2,
-  Code2,
-  Compass,
-  Eye,
-  GraduationCap,
-  HeartHandshake,
-  Layers,
-  Lightbulb,
-  Megaphone,
-  Palette,
-  Rocket,
-  Shield,
-  Sparkles,
-  Target,
-  Users,
-} from "lucide-react";
-import { siteConfig, services, partners } from "@/config/site";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, ArrowUpRight, Bot, Braces, ChartNoAxesCombined, Compass, GraduationCap, Layers3, Megaphone, Palette, ScanSearch } from "lucide-react";
+import { servicesHub } from "@/config/services-detail";
 import { Reveal } from "@/components/marketing/reveal";
-import { BlogListing } from "@/components/marketing/blog-listing";
-import { blogPosts } from "@/lib/data/sample-data";
 
+const url = "https://www.akradhii.com";
 export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "The story, mission, vision and values behind Akradhii — a digital growth studio and internship platform based in Hyderabad.",
-  keywords: [
-    "about akradhii",
-    "digital growth studio hyderabad",
-    "internship program india",
-    "digital agency hyderabad",
-  ],
-  openGraph: {
-    title: "About Us",
-    description: "Story, mission and values of Akradhii Digital Growth Studio.",
-    url: `${siteConfig.url}/about`,
-    images: [
-      {
-        url: `${siteConfig.url}/og-default.svg`,
-        width: 1200,
-        height: 630,
-        alt: "About Akradhii",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: [`${siteConfig.url}/og-default.svg`],
-  },
-  alternates: { canonical: `${siteConfig.url}/about` },
+  title: "About Akradhii | Digital Services & Learning",
+  description: "Meet Akradhii, a digital growth studio and learning platform bringing together practical technology, creative services and skill development.",
+  alternates: { canonical: `${url}/about` },
+  openGraph: { title: "About Akradhii", description: "Digital services and learning, connected by practical thinking.", url: `${url}/about`, images: [{ url: `${url}/og-default.svg`, alt: "Akradhii digital growth studio" }] },
 };
 
 const values = [
-  { icon: Lightbulb, title: "Innovation", text: "We adopt modern tools and methods when they solve real problems — not for trend-chasing." },
-  { icon: Shield, title: "Transparency", text: "Clear scope, honest timelines and reporting you can take to your leadership team." },
-  { icon: Target, title: "Quality", text: "Craft in design, code and campaigns. We ship work we would put our name on." },
-  { icon: HeartHandshake, title: "Client focus", text: "We operate like partners: invested in outcomes, not just tickets closed." },
-  { icon: Sparkles, title: "Continuous learning", text: "Our internship arm keeps the team sharp and creates paths for new talent." },
-  { icon: Rocket, title: "Reliability", text: "Milestones, communication and support you can plan around." },
+  ["Innovation", "Choose modern tools when they solve a real problem, not simply because they are new."],
+  ["Transparency", "Discuss scope, constraints and progress clearly so decisions are informed."],
+  ["Quality", "Review the details, test the experience and build for maintainability."],
+  ["Client focus", "Begin with the people and business goals behind each brief."],
+  ["Continuous learning", "Apply feedback and keep developing skills as technology changes."],
+  ["Reliability", "Work towards agreed milestones and communicate when plans need to change."],
 ];
-
-const differentiators = [
-  {
-    title: "Delivery + talent under one roof",
-    text: "Client work and structured internships share the same standards — real projects, real feedback, verifiable certificates.",
-  },
-  {
-    title: "Full-funnel thinking",
-    text: "Website, ads, CRM and automation are designed to work together instead of as disconnected vendor silos.",
-  },
-  {
-    title: "Practical process",
-    text: "Discovery, milestones and demos keep stakeholders aligned without drowning them in process theatre.",
-  },
-];
-
-const approach = [
-  { title: "Discover", text: "Goals, constraints, audience and success metrics before any build begins." },
-  { title: "Design the system", text: "Architecture, messaging and process — not just screens or ad sets." },
-  { title: "Ship in milestones", text: "Visible progress, demos and feedback loops instead of big-bang delivery." },
-  { title: "Measure & improve", text: "Analytics, iteration and support so the work keeps compounding." },
-];
-
-const audiences = [
-  "Startups launching or rebuilding their digital presence",
-  "Small and mid-size businesses generating leads online",
-  "E-commerce and D2C brands scaling acquisition",
-  "Service businesses and professional firms",
-  "Education and training organizations",
-  "Teams that want both delivery and internship talent pipelines",
-];
-
 const capabilities = [
-  "Next.js / React web apps",
-  "Meta Ads & creative testing",
-  "CRM setup & pipelines",
-  "Workflow automation",
-  "AI assistants & RAG",
-  "Technical SEO",
-  "Brand systems",
-  "Internship LMS & certificates",
+  { icon: Braces, title: "Development", text: "Websites, applications and commerce experiences designed around business needs." },
+  { icon: Megaphone, title: "Marketing", text: "Campaigns, content and search strategies that connect brands with their audiences." },
+  { icon: Bot, title: "AI & automation", text: "Practical workflows that reduce repetitive work and connect business tools." },
+  { icon: Palette, title: "Design", text: "Brand identity and interfaces that make complex ideas easier to understand." },
+  { icon: ChartNoAxesCombined, title: "Analytics", text: "Measurement and CRM insights to support more informed decisions." },
+  { icon: GraduationCap, title: "Learning technology", text: "Structured digital learning experiences, progress and assessment." },
 ];
-
-const publishedPosts = blogPosts
-  .filter((post) => post.published)
-  .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+const stages = [
+  ["Discovery", "Understand your goals, audience and constraints."], ["Strategy", "Define the direction and priorities together."],
+  ["Planning", "Agree on scope, milestones and responsibilities."], ["Design", "Shape the experience, content and visual system."],
+  ["Development", "Build the solution in manageable stages."], ["Testing", "Review functionality, accessibility and quality."],
+  ["Launch", "Prepare the handover and release."], ["Support", "Discuss improvements and ongoing needs."],
+];
+const linkStyle = "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400 motion-reduce:transform-none";
 
 export default function AboutPage() {
-  return (
-    <div>
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 bg-grid opacity-40" />
-        <div className="absolute inset-0 bg-glow" />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <Badge variant="primary" className="mb-4">
-              <Building2 className="h-3 w-3" /> About us
-            </Badge>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-              A digital growth studio — and more
-            </h1>
-            <p className="mt-5 text-lg text-muted-foreground">
-              Akradhii is a digital growth studio in {siteConfig.city}. We help businesses ship technology that converts, and we train students through structured, project-based internships.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button variant="gradient" size="lg">
-                <Link href="/contact" className="flex items-center gap-2">
-                  Work with us <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg">
-                <Link href="/services">Explore services</Link>
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
-          <Reveal>
-            <h2 className="text-3xl font-bold tracking-tight">Our story</h2>
-            <div className="mt-5 space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                Akradhii started with a simple observation: growing companies needed reliable digital partners, while ambitious students needed real project experience — not slide decks alone.
-              </p>
-              <p>
-                We built a studio that does both. On the client side we design websites, run Meta campaigns, implement CRM and automation, and shape brands. On the education side we run internship tracks with modules, weekly work, assessments and QR-verifiable certificates.
-              </p>
-              <p>
-                Today we operate from {siteConfig.address}, working with startups, SMBs and teams who want clarity, craft and measurable progress.
-              </p>
-            </div>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Card className="p-6">
-                <Compass className="h-8 w-8 text-brand-400" />
-                <h3 className="mt-4 text-lg font-bold">Mission</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Help ambitious businesses grow with integrated digital systems — and close the skills gap by training professionals on real work.
-                </p>
-              </Card>
-              <Card className="p-6">
-                <Eye className="h-8 w-8 text-brand-400" />
-                <h3 className="mt-4 text-lg font-bold">Vision</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Become the default growth partner for modern brands in India — known for craft, transparency and career-defining internships.
-                </p>
-              </Card>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <Reveal>
-            <h2 className="text-3xl font-bold tracking-tight">What we do</h2>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              Akradhii operates as an integrated digital partner: strategy, design, engineering and growth under one roof. We solve fragmented vendor stacks, slow websites, untracked ads and manual operations — so founders and teams can focus on the product and customers.
-            </p>
-            <p className="mt-3 text-muted-foreground leading-relaxed">
-              Based in {siteConfig.city}, we work with startups, SMBs and growing brands across India and remote engagements worldwide.
-            </p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <Card className="p-6 sm:p-8">
-              <h3 className="font-semibold flex items-center gap-2">
-                <Layers className="h-4 w-4 text-brand-400" /> Core expertise
-              </h3>
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {services.map((s) => (
-                  <li key={s.id}>
-                    <Link
-                      href={`/services/${s.id}`}
-                      className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:border-brand-500/40 hover:bg-muted/40"
-                    >
-                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
-                      {s.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">Our approach</h2>
-            <p className="mt-3 text-muted-foreground">How we turn goals into measurable outcomes.</p>
-          </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {approach.map((a, i) => (
-              <Reveal key={a.title} delay={i * 0.05}>
-                <Card className="h-full p-5">
-                  <span className="text-xs font-bold text-brand-400">0{i + 1}</span>
-                  <h3 className="mt-2 font-semibold">{a.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{a.text}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold">Values we work by</h2>
-        </Reveal>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {values.map((v, i) => (
-            <Reveal key={v.title} delay={i * 0.04}>
-              <Card className="h-full p-6">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
-                  <v.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-semibold">{v.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{v.text}</p>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold">What makes us different</h2>
-          </Reveal>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {differentiators.map((d, i) => (
-              <Reveal key={d.title} delay={i * 0.05}>
-                <Card className="h-full p-6">
-                  <h3 className="font-semibold">{d.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{d.text}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <div className="flex items-center gap-2 text-brand-400">
-              <Users className="h-5 w-5" />
-              <h2 className="text-2xl font-bold">Who we serve</h2>
-            </div>
-            <ul className="mt-6 space-y-3">
-              {audiences.map((a) => (
-                <li key={a} className="flex items-start gap-2 text-sm">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                  <span>{a}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h2 className="text-2xl font-bold">Capabilities & platforms</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Representative stack — final tools are chosen per engagement.</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {capabilities.map((c) => (
-                <span key={c} className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium">
-                  {c}
-                </span>
-              ))}
-            </div>
-            <p className="mt-8 text-xs font-medium uppercase tracking-wide text-muted-foreground">Teams we&apos;ve worked with</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {partners.map((p) => (
-                <span key={p} className="rounded-full border border-border bg-muted/40 px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-brand-500/40 hover:text-foreground">
-                  {p}
-                </span>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section id="team" className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-brand-400" />
-              <h2 className="text-3xl font-bold">The team behind Akradhii</h2>
-            </div>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              A lean, hands-on team of full-stack engineers, performance marketers, product designers, and mentors — united by a shared commitment to craft and outcomes.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: Code2, label: "Full-stack engineers", text: "Building fast, accessible web experiences from prototype to production." },
-              { icon: Megaphone, label: "Performance marketers", text: "Driving qualified traffic and measurable ROI across paid and organic channels." },
-              { icon: Palette, label: "Product designers", text: "Shaping intuitive interfaces and cohesive brand systems." },
-              { icon: GraduationCap, label: "Mentors & educators", text: "Guiding interns through real projects with structured feedback." },
-            ].map((c, i) => (
-              <Reveal key={c.label} delay={i * 0.05}>
-                <Card className="h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-lg hover:shadow-brand-600/10">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/25">
-                    <c.icon className="h-5 w-5" />
-                  </div>
-                  <p className="mt-4 font-semibold">{c.label}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">{c.text}</p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal delay={0.2}>
-            <div className="mt-8 flex items-center gap-4">
-              <p className="max-w-2xl text-sm text-muted-foreground">
-                We keep the core team small and senior, scaling through specialists and structured interns as projects demand. Everyone ships; nobody is just a title.
-              </p>
-              <Button variant="outline" size="sm" className="shrink-0">
-                <Link href="#team" className="flex items-center gap-2">Meet our team</Link>
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold">Insights from the team</h2>
-          <p className="mt-3 text-muted-foreground">
-            Practical plays on growth, technology and the intern experience.
-          </p>
-          <Button variant="outline" size="sm" className="mt-4">
-            <Link href="/blog" className="flex items-center gap-2">
-              View all posts <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </Reveal>
-        <div className="mt-10">
-          <BlogListing posts={publishedPosts} />
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+  return <div className="overflow-hidden">
+    <section className="relative border-b border-white/10 bg-[#0b1020] text-white">
+      <div className="absolute inset-0 bg-grid opacity-20" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
         <Reveal>
-          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white sm:p-14">
-            <h2 className="text-2xl font-bold sm:text-3xl">Have a project in mind? Let&apos;s talk.</h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/85">
-              Tell us your goals — we&apos;ll map a practical path across services, timeline and budget.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button size="lg" className="bg-white text-violet-800 hover:bg-white/90">
-                <Link href="/contact" className="flex items-center gap-2">
-                  Contact us <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
-                <Link href="/internships">Explore internships</Link>
-              </Button>
-            </div>
-          </Card>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">About Akradhii · Digital & learning</p>
+          <h1 className="mt-6 text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">Better digital.<br /><span className="text-violet-300">Practical learning.</span></h1>
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-slate-300">We bring digital services and structured learning together: helping businesses solve practical problems while giving learners a place to build their skills.</p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link className={`${linkStyle} bg-white text-slate-950 hover:bg-violet-100`} href="/services">Explore services <ArrowRight size={16} /></Link>
+            <Link className={`${linkStyle} border border-slate-500 text-white hover:border-white`} href="/internships">Explore internships</Link>
+            <Link className={`${linkStyle} text-white underline decoration-violet-400 underline-offset-4`} href="/contact">Contact us</Link>
+          </div>
         </Reveal>
-      </section>
-    </div>
-  );
+        <Reveal delay={0.1}>
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-[#151d35] p-6 sm:p-10">
+            <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-violet-500/20 blur-3xl" aria-hidden="true" />
+            <div className="relative rounded-2xl border border-white/10 bg-[#0d1529] p-6 sm:p-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-5"><span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">The Akradhii approach</span><Layers3 className="text-violet-300" size={22} /></div>
+              <div className="space-y-1 py-8 text-3xl font-medium tracking-tight sm:text-4xl"><p>Ideas into systems.</p><p className="text-violet-300">Skills into practice.</p></div>
+              <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-6 text-sm text-slate-300"><div><span className="mb-2 block text-xs text-violet-300">01 / BUILD</span>Digital services</div><div><span className="mb-2 block text-xs text-violet-300">02 / LEARN</span>Internship learning</div></div>
+            </div>
+            <p className="relative mt-6 text-sm text-slate-400">A shared focus on useful work and continuous improvement.</p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+
+    <section className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-12 lg:gap-20 lg:px-8 lg:py-28">
+      <Reveal className="lg:col-span-5"><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">Our story</p><h2 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Good ideas deserve a practical way forward.</h2></Reveal>
+      <Reveal className="space-y-5 text-base leading-8 text-muted-foreground lg:col-span-7" delay={0.08}>
+        <p>Growing businesses often have to piece together websites, marketing, customer management and everyday operations from disconnected tools. Akradhii exists to help make those moving parts more useful together, with technology chosen for the problem at hand.</p>
+        <p>Our digital services bring strategy, design, development and growth into the same conversation. The aim is not technology for its own sake, but clear, maintainable solutions that teams can use.</p>
+        <p>Alongside this work, our learning platform reflects a commitment to developing practical skills. The two sides share a belief in learning by doing: business challenges inform the skills that matter, while continuous learning keeps our approach open to improvement.</p>
+      </Reveal>
+    </section>
+
+    <section className="border-y border-border bg-card/30"><div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-2 lg:px-8">
+      <Reveal><Compass className="text-violet-400" /><p className="mt-6 text-sm uppercase tracking-widest text-violet-400">Our mission</p><h2 className="mt-3 text-3xl font-semibold tracking-tight">Make progress practical.</h2><p className="mt-4 max-w-lg leading-7 text-muted-foreground">Help businesses grow with integrated digital solutions and support learners as they develop useful, applicable skills.</p></Reveal>
+      <Reveal delay={0.08}><ScanSearch className="text-violet-400" /><p className="mt-6 text-sm uppercase tracking-widest text-violet-400">Our vision</p><h2 className="mt-3 text-3xl font-semibold tracking-tight">Grow through clarity and craft.</h2><p className="mt-4 max-w-lg leading-7 text-muted-foreground">Be a trusted digital partner known for thoughtful work, transparent collaboration and a commitment to learning.</p></Reveal>
+    </div></section>
+
+    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28"><Reveal><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">What we do</p><h2 className="mt-4 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">Two sides. One practical mindset.</h2></Reveal>
+      <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <Reveal><div className="h-full rounded-3xl border border-border bg-card/50 p-7 sm:p-10"><span className="text-sm text-violet-400">01 / FOR BUSINESSES</span><h3 className="mt-4 text-3xl font-semibold">Akradhii Digital Services</h3><p className="mt-4 leading-7 text-muted-foreground">From websites and e-commerce to marketing, branding, AI, automation, CRM and analytics, we bring the right disciplines together around your goals. We also help teams explore the technology choices behind their projects.</p><div className="mt-8 divide-y divide-border border-y border-border">{servicesHub.map(s => <Link key={s.id} href={`/services/${s.id}`} className="flex items-center justify-between gap-4 py-3 text-sm font-medium transition-colors hover:text-violet-400"><span>{s.title}</span><ArrowUpRight size={16} /></Link>)}</div></div></Reveal>
+        <Reveal delay={0.08}><div className="h-full rounded-3xl bg-[#1d1640] p-7 text-white sm:p-10"><span className="text-sm text-violet-300">02 / FOR LEARNERS</span><h3 className="mt-4 text-3xl font-semibold">Learning & internships</h3><p className="mt-4 leading-7 text-slate-300">Our intended paid learning journey connects recorded lessons and progress tracking with an assessment and results. Certificates are dependent on successful completion, not payment alone.</p><ol className="mt-8 space-y-3">{["Enrollment", "Recorded lessons", "Learning progress", "30-minute MCQ assessment", "Results", "Certificate on successful completion"].map((step, i) => <li key={step} className="flex items-center gap-4 border-b border-white/10 pb-3 text-sm"><span className="text-violet-300">0{i+1}</span>{step}</li>)}</ol><p className="mt-6 text-sm leading-6 text-slate-300">This describes the intended workflow; availability and program details should be confirmed before enrollment. No placement or employment is promised.</p><Link href="/internships" className="mt-6 inline-flex items-center gap-2 font-semibold text-white underline underline-offset-4">Explore current programs <ArrowRight size={16} /></Link></div></Reveal>
+      </div>
+    </section>
+
+    <section className="border-y border-border bg-card/30"><div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><Reveal><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">Our expertise</p><h2 className="mt-4 text-4xl font-semibold tracking-tight">Connected capabilities.</h2></Reveal><div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">{capabilities.map((c,i) => <Reveal key={c.title} delay={i*0.04} className="h-full bg-card"><div className="h-full p-7 transition-colors hover:bg-violet-500/10"><c.icon className="text-violet-400" size={24}/><h3 className="mt-5 text-lg font-semibold">{c.title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{c.text}</p></div></Reveal>)}</div></div></section>
+
+    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28"><Reveal><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">How we work</p><h2 className="mt-4 text-4xl font-semibold tracking-tight">From first conversation to what comes next.</h2><p className="mt-4 max-w-2xl leading-7 text-muted-foreground">Every engagement is different, but a clear process helps everyone understand the next step.</p></Reveal><ol className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">{stages.map(([title,text],i) => <Reveal key={title} delay={i*0.04}><li className="border-t border-violet-500/40 pt-5"><span className="text-sm text-violet-400">0{i+1}</span><h3 className="mt-3 text-xl font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></li></Reveal>)}</ol></section>
+
+    <section className="border-y border-border bg-card/30"><div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><Reveal><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">What guides us</p><h2 className="mt-4 text-4xl font-semibold tracking-tight">Values, put to work.</h2></Reveal><div className="mt-10 grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">{values.map(([title,text],i) => <Reveal key={title} delay={i*0.04}><div className="border-t border-border py-6"><h3 className="text-lg font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></div></Reveal>)}</div></div></section>
+
+    <section id="team" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-20 sm:px-6 lg:px-8"><Reveal><p className="text-sm font-semibold uppercase tracking-widest text-violet-400">Our team</p><h2 className="mt-4 text-4xl font-semibold tracking-tight">The people behind the work.</h2><p className="mt-5 max-w-2xl leading-7 text-muted-foreground">We believe good work starts with thoughtful collaboration. Team profiles will be shared here when approved information is available.</p><Link href="/contact" className="mt-6 inline-flex items-center gap-2 font-semibold text-violet-400 hover:text-violet-300">Get in touch <ArrowRight size={16} /></Link></Reveal></section>
+    <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8"><Reveal><div className="rounded-3xl bg-[#211a43] px-7 py-12 text-white sm:p-14"><p className="text-sm uppercase tracking-widest text-violet-300">Let’s make something useful</p><h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">Have a challenge worth solving?</h2><p className="mt-4 max-w-xl leading-7 text-slate-300">Tell us what you are working on, or explore a learning path that fits your goals.</p><div className="mt-8 flex flex-wrap gap-3"><Link href="/contact" className={`${linkStyle} bg-white text-slate-950`}>Contact us <ArrowRight size={16}/></Link><Link href="/internships" className={`${linkStyle} border border-white/40 text-white hover:border-white`}>Explore internships</Link></div></div></Reveal></section>
+  </div>;
 }

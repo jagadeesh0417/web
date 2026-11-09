@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Briefcase } from "lucide-react";
-import { portfolioItems } from "@/lib/data/sample-data";
+import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
 import { siteConfig } from "@/config/site";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
 import { PortfolioGrid } from "@/components/marketing/portfolio-grid";
-
-const stats = [
-  { value: "120+", label: "Projects Delivered" },
-  { value: "30+", label: "Industries" },
-  { value: "7", label: "Service Areas" },
-];
 
 export const metadata: Metadata = {
   title: "Our Work",
@@ -54,18 +48,8 @@ export default function PortfolioPage() {
               A look at what we&apos;ve built
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Selected engagements across web, ads, automation and branding. Open a project for challenge, approach and outcomes.
+              Thoughtful digital work, shared with client permission. Our case studies are being prepared for publication.
             </p>
-            <div className="mx-auto mt-10 grid max-w-lg grid-cols-3 gap-6 text-center">
-              {stats.map((s) => (
-                <Reveal key={s.label} delay={0.15}>
-                  <div>
-                    <p className="text-3xl font-extrabold tracking-tight text-brand-400">{s.value}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
           </Reveal>
         </div>
       </section>

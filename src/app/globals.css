@@ -23,6 +23,11 @@
   --success: #4ade80;
   --warning: #fbbf24;
   --radius: 0.75rem;
+  --dropdown-background: #111827;
+  --dropdown-foreground: #f9fafb;
+  --dropdown-disabled: #9ca3af;
+  --dropdown-active: #374151;
+  --dropdown-focus: #f59e0b;
   color-scheme: dark;
 }
 
@@ -84,18 +89,47 @@ body {
   background: color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.625rem;
+  right: 0.625rem;
+  bottom: 0.2rem;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+.nav-link:hover::after, .nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
 /* Fix native select option visibility in dark mode */
 select option,
 select optgroup {
-  color: var(--foreground);
-  background-color: var(--card);
+  color: var(--dropdown-foreground);
+  background-color: var(--dropdown-background);
 }
 select option:disabled {
-  color: var(--muted-foreground);
+  color: var(--dropdown-disabled);
 }
-select:focus option:checked {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+select option:checked {
+  background-color: var(--dropdown-active);
+  color: var(--dropdown-foreground);
+}
+select:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--dropdown-focus);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .text-gradient {

@@ -20,7 +20,7 @@ export async function GET() {
       config: {
         fourWeekPrice: 149,
         sixWeekPrice: 199,
-        eightWeekPrice: 249,
+        eightWeekPrice: 299,
         referralReward: 20,
         minimumWithdrawal: 200,
       },
@@ -152,7 +152,7 @@ export async function PUT(request: NextRequest) {
       _id: "default",
       fourWeekPrice: fourWeekPrice ?? 149,
       sixWeekPrice: sixWeekPrice ?? 199,
-      eightWeekPrice: eightWeekPrice ?? 249,
+      eightWeekPrice: eightWeekPrice ?? 299,
       referralReward: referralReward ?? 20,
       minimumWithdrawal: minimumWithdrawal ?? 200,
       updatedAt: now,

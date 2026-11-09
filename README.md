@@ -6,6 +6,14 @@ Built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **S
 
 ## Quick start
 
+### Razorpay status and test setup
+
+**Checkout is disabled.** Configuring keys does not enable payments; provider verification, durable transactional enrollment, webhook processing, refunds and reconciliation are not implemented. Do not accept live payments until those are implemented and verified end to end. Existing demo invoices are sample data, not proof of payment.
+
+1. Sign in to the [Razorpay Dashboard](https://dashboard.razorpay.com/) and switch to **Test Mode**. Under **Account & Settings → API Keys**, generate a test key. Store the key ID as `RAZORPAY_KEY_ID` and `NEXT_PUBLIC_RAZORPAY_KEY_ID`, and the key secret as `RAZORPAY_KEY_SECRET` in the server's private environment. Never commit secrets.
+2. Under **Account & Settings → Webhooks**, add a webhook and generate a separate secret for `RAZORPAY_WEBHOOK_SECRET`. No webhook endpoint exists in this version: do not configure a delivery URL until an authenticated raw-body webhook handler has been implemented and deployed. When implemented, use its exact public HTTPS endpoint, select the payment and refund events it supports, and test deliveries in test mode.
+3. Restart the server and check **Admin → Payment Settings**. It reports only the presence and mode of credentials, not their validity. Never switch to live mode merely because values are present.
+
 ```bash
 npm install
 npm run dev        # http://localhost:3000
@@ -118,9 +126,9 @@ Admin UI: `/admin/leads`. Secrets never ship to the browser.
 
 | Program         | Duration | Fee      |
 | --------------- | -------- | -------- |
-| Foundation      | 4 weeks  | ₹1,999   |
-| Professional    | 6 weeks  | ₹3,499   |
-| Industry        | 8 weeks  | ₹5,499   |
+| Foundation      | 4 weeks  | ₹149     |
+| Professional    | 6 weeks  | ₹199     |
+| Industry        | 8 weeks  | ₹299     |
 
 10 categories (Web Development, Digital Marketing, AI & Data, UI/UX Design, etc.). Apply via the guided wizard at `/internships/apply` (account → profile → documents → review).
 

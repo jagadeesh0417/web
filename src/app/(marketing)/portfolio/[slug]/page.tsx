@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import { portfolioItems } from "@/lib/data/sample-data";
+import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
 import { siteConfig } from "@/config/site";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";

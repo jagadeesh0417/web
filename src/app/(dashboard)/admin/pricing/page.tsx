@@ -23,7 +23,7 @@ interface PricingConfig {
 const defaults: PricingConfig = {
   fourWeekPrice: 149,
   sixWeekPrice: 199,
-  eightWeekPrice: 249,
+  eightWeekPrice: 299,
   referralReward: 20,
   minimumWithdrawal: 200,
 };

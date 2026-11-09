@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site";
+import { resources } from "@/lib/data/resources";
 
-const BASE = "https://akradhii.vercel.app";
+const BASE = siteConfig.url;
 
 const internships = [
   "web-development",
@@ -35,6 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/internships`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/internships/apply`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/portfolio`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/resources`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/verify`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
@@ -56,5 +59,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...servicePages, ...internshipPages];
+  const resourcePages: MetadataRoute.Sitemap = resources.map((resource) => ({ url: `${BASE}/resources/${resource.slug}`, lastModified: resource.publishedAt, changeFrequency: "monthly", priority: 0.7 }));
+  return [...staticPages, ...servicePages, ...internshipPages, ...resourcePages];
 }

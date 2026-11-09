@@ -23,7 +23,7 @@ import {
 import { services, stats, partners, siteConfig } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 import { testimonials } from "@/lib/data/sample-data";
-import { portfolioItems } from "@/lib/data/sample-data";
+import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";

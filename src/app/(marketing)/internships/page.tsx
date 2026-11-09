@@ -87,7 +87,7 @@ const comparisonFeatures = [
   { label: "Letter of recommendation", foundation: false, professional: false, industry: "✓ (performance)" },
   { label: "Placement assistance", foundation: false, professional: false, industry: "✓ (if offered)" },
   { label: "Certificate", foundation: true, professional: true, industry: true },
-  { label: "Price", foundation: "₹1,999", professional: "₹3,499", industry: "₹5,499" },
+  { label: "Price", foundation: "₹149", professional: "₹199", industry: "₹299" },
 ];
 
 const learningFlow = [
