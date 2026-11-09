@@ -54,6 +54,7 @@ function Wizard() {
     agree: false,
   });
   const [referralCode, setReferralCode] = useState("");
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [processing, setProcessing] = useState(false);
   const [paymentStep, setPaymentStep] = useState<"idle" | "processing" | "verifying" | "done" | "failed">("idle");
@@ -139,8 +140,8 @@ function Wizard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          categorySlug: form.category,
-          programSlug: form.program,
+          category: form.category,
+          program: form.program,
           duration: form.duration,
           fullName: form.fullName,
           email: form.email,
@@ -156,6 +157,8 @@ function Wizard() {
           state: form.state,
           linkedin: form.linkedin,
           github: form.github,
+          agree: form.agree,
+          website,
           referralCode: referralCode || undefined,
         }),
       });
@@ -238,6 +241,10 @@ function Wizard() {
       </div>
 
       <Card className="mt-8 p-6 sm:p-8">
+        <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+          <label htmlFor="application-website">Leave this field empty</label>
+          <input id="application-website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+        </div>
         {step === 0 && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold">1 · Choose your internship</h2>

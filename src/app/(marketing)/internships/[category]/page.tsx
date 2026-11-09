@@ -75,12 +75,22 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <Badge className="border-white/30 bg-white/10 text-white">{category.name}</Badge>
         <h1 className="mt-4 max-w-2xl text-3xl font-bold sm:text-4xl">{category.name} Internship</h1>
         <p className="mt-4 max-w-2xl text-white/85">{category.description}</p>
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <Button className="bg-white text-slate-900 hover:bg-white/90">
-            <Link href={`/internships/apply?track=${category.slug}&program=professional`}>Apply now</Link>
-          </Button>
-          <span className="text-sm text-white/75">4, 6 or 8 weeks · Certificate included</span>
-        </div>
+        <form action="/internships/apply" method="get" className="mt-8">
+          <input type="hidden" name="track" value={category.slug} />
+          <fieldset>
+            <legend className="text-sm font-semibold">Choose a plan</legend>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {PROGRAMS.map((p) => (
+                <label key={p.slug} className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/50 px-3 py-2 text-sm">
+                  <input type="radio" name="program" value={p.slug} defaultChecked={p.featured} required />
+                  {p.title} · {p.duration} · {formatCurrency(p.price)}{p.featured ? " · Most popular" : ""}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <button type="submit" className="mt-5 rounded-lg bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Apply now</button>
+          <p className="mt-3 text-sm text-white/90">Certificate included · Mentor details confirmed for each batch</p>
+        </form>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">

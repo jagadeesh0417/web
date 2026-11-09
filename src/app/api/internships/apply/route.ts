@@ -2,26 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { CATEGORY_BY_SLUG, PROGRAM_BY_SLUG } from "@/lib/constants";
 import { randomId } from "@/lib/utils";
+import { applicationSchema } from "@/lib/validators";
 
-const bodySchema = z.object({
-  categorySlug: z.string().min(1),
-  programSlug: z.string().min(1),
-  duration: z.number().refine((d) => [4, 6, 8].includes(d), "Duration must be 4, 6, or 8 weeks"),
-  fullName: z.string().min(2).max(100),
-  email: z.string().email().max(254),
-  confirmEmail: z.string().email().max(254),
-  mobile: z.string().min(10).max(20),
-  dob: z.string().optional(),
-  gender: z.string().optional(),
-  college: z.string().min(1).max(200),
-  course: z.string().min(1).max(200),
-  branch: z.string().optional(),
-  graduationYear: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  linkedin: z.string().optional(),
-  github: z.string().optional(),
-  referralCode: z.string().optional(),
+const bodySchema = applicationSchema.extend({
+  confirmEmail: z.string().trim().email().max(254),
+  referralCode: z.string().trim().max(100).optional(),
+  website: z.string().max(0).optional(),
 });
 
 export const runtime = "nodejs";
@@ -47,12 +33,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, errors: { confirmEmail: "Email addresses do not match." } }, { status: 400 });
     }
 
-    const category = CATEGORY_BY_SLUG[data.categorySlug as keyof typeof CATEGORY_BY_SLUG];
+    const category = CATEGORY_BY_SLUG[data.category as keyof typeof CATEGORY_BY_SLUG];
     if (!category) {
       return NextResponse.json({ ok: false, errors: { categorySlug: "Internship category not found." } }, { status: 404 });
     }
 
-    const program = PROGRAM_BY_SLUG[data.programSlug as keyof typeof PROGRAM_BY_SLUG];
+    const program = PROGRAM_BY_SLUG[data.program as keyof typeof PROGRAM_BY_SLUG];
     if (!program) {
       return NextResponse.json({ ok: false, errors: { programSlug: "Program not found." } }, { status: 404 });
     }
@@ -71,9 +57,9 @@ export async function POST(request: NextRequest) {
       id: applicationId,
       orderId,
       status: "pending_payment" as const,
-      categorySlug: data.categorySlug,
+      categorySlug: data.category,
       categoryTitle: category.name,
-      programSlug: data.programSlug,
+      programSlug: data.program,
       programTitle: `${category.name} — ${program.title}`,
       duration: data.duration,
       amount,
@@ -94,6 +80,7 @@ export async function POST(request: NextRequest) {
         github: data.github,
       },
       referralCode: data.referralCode || undefined,
+      agreementAccepted: data.agree,
       createdAt: new Date().toISOString(),
     };
 
@@ -105,7 +92,7 @@ export async function POST(request: NextRequest) {
         apps = JSON.parse(fs.readFileSync(storePath, "utf-8"));
       }
     } catch {
-      // file doesn't exist yet
+      return NextResponse.json({ ok: false, error: "Application storage is unavailable. Please contact support." }, { status: 503 });
     }
 
     apps[applicationId] = application;
