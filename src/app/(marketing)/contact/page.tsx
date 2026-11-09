@@ -75,6 +75,7 @@ export default function ContactPage() {
     const topic = String(data.get("topic") ?? "").trim();
     const budget = String(data.get("budget") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
+    const timeline = String(data.get("timeline") ?? "").trim();
 
     const nextErrors: Record<string, string> = {};
     const nameErr = validateField("name", name);
@@ -97,7 +98,7 @@ export default function ContactPage() {
       page: "Contact",
       pagePath: "/contact",
       website: honeypot,
-      fields: { name, email, phone, company, topic, service: topic, budget, message },
+      fields: { name, email, phone, company, topic, service: topic, budget, timeline, message },
     });
     setSubmitting(false);
 
@@ -108,7 +109,7 @@ export default function ContactPage() {
 
     setSent(true);
     formRef.current?.reset();
-    toast("success", "Message Sent Successfully", "We'll get back to you within 24 hours.");
+    toast("success", "Message received", "Thank you for contacting us.");
   };
 
   return (
@@ -119,7 +120,7 @@ export default function ContactPage() {
             <Badge variant="primary" className="mb-4">Contact</Badge>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Let&apos;s build something together</h1>
             <p className="mt-4 text-muted-foreground">
-              Project enquiries, partnerships or internship questions — we reply within 24 hours on business days.
+              Project enquiries, partnerships or internship questions — we would love to hear from you.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <span className="text-sm text-muted-foreground">Prefer to talk first?</span>
@@ -191,7 +192,7 @@ export default function ContactPage() {
                   </div>
                   <h2 className="mt-5 text-2xl font-bold">Message sent!</h2>
                   <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                    Thanks for reaching out. We&apos;ll reply within 24 hours on business days.
+                    Thanks for reaching out. We&apos;ll be in touch.
                   </p>
                   <Button variant="outline" className="mt-6" onClick={() => setSent(false)}>
                     Send another message
@@ -242,18 +243,16 @@ export default function ContactPage() {
                       <option>Something else</option>
                     </select>
                   </Field>
-                  <Field label="Budget range" htmlFor="budget">
-                    <select id="budget" name="budget" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Not sure yet">
-                      <option>Under ₹50,000</option>
-                      <option>₹50,000 – ₹2,00,000</option>
-                      <option>₹2,00,000 – ₹10,00,000</option>
-                      <option>₹10,00,000+</option>
-                      <option>Not sure yet</option>
-                    </select>
+                  <Field label="Budget (optional)" htmlFor="budget">
+                    <Input id="budget" name="budget" placeholder="Share a range if you have one" />
+                  </Field>
+                  <Field label="Timeline (optional)" htmlFor="timeline">
+                    <Input id="timeline" name="timeline" placeholder="When would you like to start?" />
                   </Field>
                   <Field label="Project details" htmlFor="message" error={errors.message}>
                     <Textarea id="message" name="message" required placeholder="Tell us about your project, timeline and goals..." className="min-h-[140px]" onBlur={handleBlur} />
                   </Field>
+                  <p className="text-xs text-muted-foreground">By submitting, you acknowledge our <Link href="/privacy" className="text-brand-400 underline">Privacy Policy</Link>.</p>
                   <Button type="submit" variant="gradient" size="lg" loading={submitting} disabled={submitting} className="w-full sm:w-auto">
                     <Send className="h-4 w-4" /> {submitting ? "Sending..." : "Send message"}
                   </Button>

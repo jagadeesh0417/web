@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
 import { generateId } from "@/lib/utils";
 import { emailSchema } from "@/lib/validators";
 import { buildWhatsAppMessage, extractPrimaryFields } from "@/lib/leads/format";
 import { isValidPhone, normalizePhone, formatPhoneDisplay } from "@/lib/leads/phone";
 import {
   checkRateLimit,
-  getLeadByIdempotencyKey,
   hashIp,
   listLeads,
   saveLead,
@@ -151,18 +151,6 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-idempotency-key") ||
     undefined;
 
-  if (idemKey) {
-    const existing = await getLeadByIdempotencyKey(idemKey);
-    if (existing) {
-      return NextResponse.json({
-        ok: true,
-        leadId: existing.id,
-        whatsappStatus: existing.whatsappStatus,
-        message: "Message sent successfully",
-      });
-    }
-  }
-
   const fields = sanitizeFields(data.fields);
   const validationError = requireContactBasics(data.formType, fields);
   if (validationError) {
@@ -180,7 +168,7 @@ export async function POST(request: NextRequest) {
 
   const now = new Date().toISOString();
   const lead: WebsiteLead = {
-    id: generateId("lead"),
+    id: `lead_${randomUUID()}`,
     formType: data.formType,
     source: sanitizeString(data.source, 200),
     page: sanitizeString(data.page || data.source, 200),
@@ -212,9 +200,10 @@ export async function POST(request: NextRequest) {
 
   // Layer 1 — always persist first so WhatsApp failure never loses the lead
   try {
-    await saveLead(lead, idemKey);
+    const saved = await saveLead(lead, idemKey);
+    if (!saved.created) return NextResponse.json({ ok: true, leadId: saved.lead.id, whatsappStatus: saved.lead.whatsappStatus, message: "Message received successfully" });
   } catch (err) {
-    console.error("[leads] storage failed:", err instanceof Error ? err.message : err);
+    console.error("[leads] storage failed", err instanceof Error ? err.name : "UnknownError");
     return NextResponse.json(
       { ok: false, error: "Something went wrong. Please try again." },
       { status: 500 },
@@ -224,11 +213,15 @@ export async function POST(request: NextRequest) {
   // Layer 2 — WhatsApp notification (best effort)
   const message = buildWhatsAppMessage(lead);
   const wa = await sendWhatsAppText(message);
-  await updateLeadWhatsApp(lead.id, {
-    whatsappStatus: wa.status,
-    whatsappMessageId: wa.messageId,
-    whatsappError: wa.error,
-  });
+  try {
+    await updateLeadWhatsApp(lead.id, {
+      whatsappStatus: wa.status,
+      whatsappMessageId: wa.messageId,
+      whatsappError: wa.error,
+    });
+  } catch (err) {
+    console.error("[leads] notification status update failed", err instanceof Error ? err.name : "UnknownError");
+  }
 
   const successMessage =
     data.formType === "internship_application"
