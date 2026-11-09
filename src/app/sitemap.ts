@@ -1,21 +1,9 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { resources } from "@/lib/data/resources";
+import { CATEGORIES } from "@/lib/constants";
 
 const BASE = siteConfig.url;
-
-const internships = [
-  "web-development",
-  "ui-ux-design",
-  "meta-ads",
-  "digital-marketing",
-  "automation",
-  "ai-automation",
-  "graphic-design",
-  "content-writing",
-  "seo",
-  "video-editing",
-];
 
 const services = [
   "web-development",
@@ -52,8 +40,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const internshipPages: MetadataRoute.Sitemap = internships.map((slug) => ({
-    url: `${BASE}/internships/${slug}`,
+  const internshipPages: MetadataRoute.Sitemap = CATEGORIES.map((category) => ({
+    url: `${BASE}/internships/${category.slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,

@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Akradhii",
   tagline: "Digital Growth Studio",
   description:
-    "Akradhii is a premium digital agency for website design & development, Meta Ads, business automation, CRM, AI automation, SEO and branding — plus structured internship programs that build real careers.",
+    "Akradhii is a Hyderabad digital agency offering websites, Meta Ads, AI automation, SEO and branding, alongside structured internship programs.",
   url: "https://www.akradhii.com",
   email: "hello@akradhii.com",
   phone: "+91 98485 79053",

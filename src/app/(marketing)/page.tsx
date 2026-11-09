@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -26,6 +27,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "https://www.akradhii.com" },
+};
 
 const icons: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2, Megaphone, Workflow, Database, BrainCircuit, Search, Palette,

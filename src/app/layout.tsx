@@ -18,20 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    default: "Akradhii | Digital Agency in Hyderabad",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  keywords: [
-    "digital agency",
-    "website development",
-    "meta ads",
-    "AI automation",
-    "CRM",
-    "SEO",
-    "branding",
-    "internship",
-  ],
   openGraph: {
     type: "website",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,

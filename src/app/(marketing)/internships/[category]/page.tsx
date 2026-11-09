@@ -19,15 +19,15 @@ const mentors = {
 } as const;
 
 export async function generateStaticParams() {
-  return Object.keys(CATEGORY_BY_SLUG).map((slug) => ({ slug }));
+  return Object.keys(CATEGORY_BY_SLUG).map((category) => ({ category }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ category: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { category: slug } = await params;
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) return { title: "Internship not found" };
   return {
@@ -55,8 +55,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category: slug } = await params;
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) notFound();
 
