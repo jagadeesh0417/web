@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 const faqItems = [
   {
     q: "What services does Akradhii provide?",
-    a: "We design and develop websites, run Meta Ads campaigns, build CRM pipelines, implement AI automation, handle SEO, and create brand identities. Every engagement is tailored to the client's business goals -- no cookie-cutter solutions.",
+    a: "We design and develop websites, run Meta Ads campaigns, build CRM pipelines, implement AI automation, handle SEO, and create brand identities. Every engagement is tailored to the client's business goals — no cookie-cutter solutions.",
   },
   {
     q: "What type of websites do you build?",
@@ -50,7 +50,7 @@ const faqItems = [
   },
   {
     q: "Can you build a completely custom website?",
-    a: "Yes. From wireframes to deployment, we design and develop every project from scratch -- custom UI, custom backend logic, custom integrations. Nothing is forced into a pre-built template.",
+    a: "Yes. From wireframes to deployment, we design and develop every project from scratch — custom UI, custom backend logic, custom integrations. Nothing is forced into a pre-built template.",
   },
   {
     q: "How long does a website project take?",
@@ -58,11 +58,11 @@ const faqItems = [
   },
   {
     q: "How much does a website cost?",
-    a: "Pricing depends on requirements -- pages, features, integrations and timeline. Contact us for a scoped estimate. We keep proposals transparent with no hidden line items.",
+    a: "Pricing depends on requirements — pages, features, integrations and timeline. Contact us for a scoped estimate. We keep proposals transparent with no hidden line items.",
   },
   {
     q: "Do you redesign existing websites?",
-    a: "Absolutely. We audit the current site, identify conversion and performance gaps, then redesign with a focus on speed, UX and business outcomes -- not just visual refresh.",
+    a: "Absolutely. We audit the current site, identify conversion and performance gaps, then redesign with a focus on speed, UX and business outcomes — not just visual refresh.",
   },
   {
     q: "Do you provide support after launch?",
@@ -70,7 +70,7 @@ const faqItems = [
   },
   {
     q: "Do you work with clients outside Bengaluru?",
-    a: "Yes. We work with clients across India and internationally. Every project runs through structured communication -- Slack, Notion, weekly calls -- so location is never a blocker.",
+    a: "Yes. We work with clients across India and internationally. Every project runs through structured communication — Slack, Notion, weekly calls — so location is never a blocker.",
   },
   {
     q: "How do I start a project with Akradhii?",
@@ -121,7 +121,7 @@ const strengths = [
   {
     icon: HeartHandshake,
     title: "End-to-end ownership",
-    desc: "Strategy, design, engineering and growth under one roof -- no handoff gaps or conflicting agencies.",
+    desc: "Strategy, design, engineering and growth under one roof — no handoff gaps or conflicting agencies.",
   },
   {
     icon: Users,
@@ -136,7 +136,7 @@ const strengths = [
   {
     icon: BarChart3,
     title: "Outcome accountability",
-    desc: "Clear KPIs, transparent reporting and decisions driven by business results -- not vanity metrics.",
+    desc: "Clear KPIs, transparent reporting and decisions driven by business results — not vanity metrics.",
   },
   {
     icon: Sparkles,
@@ -161,7 +161,7 @@ export default function HomePage() {
         <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-5 pb-12 pt-12 sm:px-8 lg:grid-cols-[48%_52%] lg:px-12 lg:pt-20">
           <div className="relative z-10 animate-fade-up">
             <p className="text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">
-              -- Bengaluru digital growth studio --
+              — Bengaluru digital growth studio —
             </p>
             <h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.55rem]">
               We Build Digital Experiences That{" "}
@@ -252,7 +252,7 @@ export default function HomePage() {
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
               Akradhii is a Bengaluru-based digital growth studio working with startups, SMBs and growing brands
               across India. We combine strategy, design, development and performance marketing into a single
-              integrated workflow -- so brands don&apos;t need five agencies to get results.
+              integrated workflow — so brands don&apos;t need five agencies to get results.
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               Our team ships high-converting websites, runs data-driven Meta Ads campaigns, builds CRM pipelines,
@@ -310,12 +310,12 @@ export default function HomePage() {
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- Our services</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Our services</p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
               Complete digital solutions for modern businesses
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Seven disciplines, one integrated team -- so your brand, website and campaigns move together.
+              Seven disciplines, one integrated team — so your brand, website and campaigns move together.
             </p>
           </Reveal>
 
@@ -367,7 +367,7 @@ export default function HomePage() {
                 />
                 <h3 className="relative text-lg font-semibold">Not sure where to start?</h3>
                 <p className="mt-2 text-sm text-white/80">
-                  Tell us your goal -- we&apos;ll map the fastest path to it.
+                  Tell us your goal — we&apos;ll map the fastest path to it.
                 </p>
                 <Button className="mt-5 self-start bg-[#F4BD53] text-[#090A0D] hover:bg-[#F58216]">
                   <Link href="/contact" className="flex items-center gap-2">
@@ -403,7 +403,7 @@ export default function HomePage() {
             <div className="mt-5 h-1 w-16 rounded-full bg-gradient-to-r from-[#F4BD53] via-[#F58216] to-[#C75A19]" />
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
               Custom AI assistants, chatbots and intelligent workflows that handle support, sales and operations
-              -- reducing repetitive work and improving efficiency across your business.
+              — reducing repetitive work and improving efficiency across your business.
             </p>
             <div className="mt-6 flex flex-wrap gap-1.5">
               {["AI Chatbots", "Custom GPT agents", "Workflow automation", "Business integrations", "Lead qualification"].map(
@@ -425,7 +425,7 @@ export default function HomePage() {
             <div className="relative overflow-hidden rounded-2xl border border-[#423020] bg-[#090A0D] p-6 sm:p-10">
               <Image
                 src={serviceVisuals["ai-automation"].illustration}
-                alt="AI Automation illustration -- connected intelligent workflow nodes in Akradhii gold and orange"
+                alt="AI Automation illustration — connected intelligent workflow nodes in Akradhii gold and orange"
                 width={160}
                 height={160}
                 unoptimized
@@ -461,7 +461,7 @@ export default function HomePage() {
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- Featured work</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Featured work</p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Selected projects</h2>
             <p className="mt-3 max-w-xl text-muted-foreground">
               Client-approved case studies are prepared and published only after independent verification.
@@ -536,7 +536,7 @@ export default function HomePage() {
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- How we work</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— How we work</p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">A process built for clarity and speed</h2>
             <p className="mt-4 text-muted-foreground">
               Six intentional phases that take you from idea to impact without surprises.
@@ -547,7 +547,7 @@ export default function HomePage() {
             <div className="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border border-[#423020] bg-[#090A0D]">
               <Image
                 src={agencyArt.workflow}
-                alt="Akradhii process flow -- discovery, strategy, design, development, launch and growth in orange and gold"
+                alt="Akradhii process flow — discovery, strategy, design, development, launch and growth in orange and gold"
                 width={1200}
                 height={600}
                 unoptimized
@@ -595,10 +595,10 @@ export default function HomePage() {
       {/* Why Akradhii */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- Why Akradhii</p>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Why Akradhii</p>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Built for businesses that want results</h2>
           <p className="mt-4 text-muted-foreground">
-            Capabilities and strengths that show up in every engagement -- not just the pitch deck.
+            Capabilities and strengths that show up in every engagement — not just the pitch deck.
           </p>
         </Reveal>
 
@@ -688,7 +688,7 @@ export default function HomePage() {
       {/* Testimonials */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- Testimonials</p>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Testimonials</p>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Loved by clients and interns</h2>
           <p className="mt-4 text-muted-foreground">Real feedback from the people we work with.</p>
         </Reveal>
@@ -732,7 +732,7 @@ export default function HomePage() {
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">-- FAQ</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— FAQ</p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Frequently asked questions</h2>
             <p className="mt-4 text-muted-foreground">Everything you need to know before starting your project with us.</p>
           </Reveal>
@@ -767,7 +767,7 @@ export default function HomePage() {
             <div className="relative">
               <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">Ready to move your business forward?</h2>
               <p className="mx-auto mt-4 max-w-xl text-white/80">
-                Whether you need a growth partner for your business or a career-defining internship -- we&apos;re ready.
+                Whether you need a growth partner for your business or a career-defining internship — we&apos;re ready.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
