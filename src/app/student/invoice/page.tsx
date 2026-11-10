@@ -55,7 +55,7 @@ export default function InvoicePage() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-brand-500">Akradhii Pvt. Ltd.</p>
             <p className="mt-1 text-xs text-muted-foreground">GSTIN: 29ABCDE1234F1Z5 · CIN: U72900KA2024PTC000000</p>
-            <p className="mt-1 text-[11px] text-muted-foreground">Bengaluru, Karnataka · hello@akradhii.com</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Yelahanka, Bengaluru, Karnataka 560064 · contact@akradhii.com</p>
           </div>
           <div className="text-right">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Tax Invoice</p>

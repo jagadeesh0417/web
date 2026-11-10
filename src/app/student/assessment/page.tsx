@@ -322,7 +322,7 @@ export default function AssessmentPage() {
               <div>
                 <h3 className="font-semibold">Attempts exhausted</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  You&apos;ve used all {ASSESSMENT_RULES.maxAttempts} attempts. Contact support (hello@akradhii.com) to request a manual re-evaluation or reset.
+                  You&apos;ve used all {ASSESSMENT_RULES.maxAttempts} attempts. Contact support (contact@akradhii.com) to request a manual re-evaluation or reset.
                 </p>
               </div>
             </div>

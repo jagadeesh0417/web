@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Akradhii | Digital Agency in Hyderabad",
+    default: "Akradhii | Digital Agency in Bengaluru",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -63,19 +63,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     logo: "https://akradhii.vercel.app/logo.svg",
     image: "https://akradhii.vercel.app/og-default.svg",
     telephone: "+919848579053",
-    email: "hello@akradhii.com",
+    email: siteConfig.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "HITEC City",
-      addressLocality: "Hyderabad",
-      addressRegion: "Telangana",
-      postalCode: "500081",
+      streetAddress: "Yelahanka",
+      addressLocality: siteConfig.city,
+      addressRegion: siteConfig.region,
+      postalCode: "560064",
       addressCountry: "IN",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "17.4435",
-      longitude: "78.3772",
     },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",

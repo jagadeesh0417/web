@@ -19,7 +19,7 @@ import { ServiceIcon } from "@/components/services/service-icons";
 export const metadata: Metadata = {
   title: "Company",
   description:
-    "Akradhii is a digital growth studio in Hyderabad — websites, Meta Ads, automation, CRM, AI, SEO, branding and structured internship programs.",
+    "Akradhii is a digital growth studio in Bengaluru — websites, Meta Ads, automation, CRM, AI, SEO, branding and structured internship programs.",
   openGraph: {
   title: "Company",
     description: siteConfig.description,
@@ -145,7 +145,7 @@ export default function CompanyPage() {
                 <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-violet-700 to-indigo-700 p-5 text-white">
                   <Rocket className="h-8 w-8" />
                   <h3 className="mt-3 text-sm font-semibold">Internships & education</h3>
-                  <p className="mt-1 text-xs text-white/80">Structured programs with projects, assessment and verifiable certificates.</p>
+                  <p className="mt-1 text-xs text-white/80">Structured programs with projects, assessment and completion certificates.</p>
                 </Card>
               </Link>
             </Reveal>

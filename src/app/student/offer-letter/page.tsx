@@ -53,7 +53,7 @@ export default function OfferLetterPage() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-brand-500">Akradhii Pvt. Ltd.</p>
             <p className="mt-1 text-xs text-muted-foreground">DIGITAL MARKETING & SOFTWARE SOLUTIONS · IIT & NSDC TRAINED</p>
-            <p className="mt-1 text-[11px] text-muted-foreground">Bengaluru, Karnataka · hello@akradhii.com · +91 90000 00000</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">Yelahanka, Bengaluru, Karnataka 560064 · contact@akradhii.com · +91 90000 00000</p>
           </div>
           <div className="text-right">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Internship Offer Letter</p>
@@ -102,7 +102,7 @@ export default function OfferLetterPage() {
               <li>This is an unpaid internship for skill development; project-based learning with mentor reviews.</li>
               <li>The internship is completely self-paced. Modules unlock as you complete each week&apos;s videos and assignments.</li>
               <li>A digital certificate of completion is issued after you pass the final assessment (70% or above).</li>
-              <li>The certificate can be verified online using its unique ID by any employer.</li>
+              <li>Employers can contact support to request manual certificate verification.</li>
               <li>Program fee covers content, mentorship, assessment, certification and verification — it is non-refundable once paid.</li>
             </ol>
           </div>

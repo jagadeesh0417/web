@@ -158,12 +158,12 @@ export function CertificateView({ certificate, showActions = false }: Certificat
               <div className="rounded-xl border border-border bg-white p-2">
                 <QRCodeSVG value={verifyUrl} size={88} level="M" />
               </div>
-              <p className="text-[9px] text-muted-foreground">Scan to verify</p>
+              <p className="text-[9px] text-muted-foreground">Verification information</p>
             </div>
           </div>
 
           <p className="mt-6 border-t border-border pt-4 text-center text-[10px] text-muted-foreground">
-            Verify authenticity at {verifyUrl} · Issued by {certificate.issuedBy} on {formatDate(certificate.issuedAt)}
+            Manual verification information: {verifyUrl} · Issued by {certificate.issuedBy} on {formatDate(certificate.issuedAt)}
           </p>
         </div>
       </div>

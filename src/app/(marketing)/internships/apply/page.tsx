@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -55,6 +55,7 @@ function Wizard() {
   });
   const [referralCode, setReferralCode] = useState("");
   const [website, setWebsite] = useState("");
+  const submission = useRef<{ payload: string; key: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [processing, setProcessing] = useState(false);
   const [paymentStep, setPaymentStep] = useState<"idle" | "processing" | "verifying" | "done" | "failed">("idle");
@@ -136,10 +137,7 @@ function Wizard() {
     setErrors({});
 
     try {
-      const res = await fetch("/api/internships/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const payload = JSON.stringify({
           category: form.category,
           program: form.program,
           duration: form.duration,
@@ -160,12 +158,22 @@ function Wizard() {
           agree: form.agree,
           website,
           referralCode: referralCode || undefined,
-        }),
+        });
+      if (!submission.current || submission.current.payload !== payload) {
+        submission.current = { payload, key: crypto.randomUUID() };
+      }
+      const res = await fetch("/api/internships/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": submission.current.key },
+        body: payload,
       });
 
       const data = await res.json();
       if (!data.ok) {
-        setErrors({ ...data.errors, general: data.error ?? "Failed to submit application. Please check your details or contact support." });
+        const fieldErrors = data.errors ?? {};
+        setErrors({ ...fieldErrors, general: fieldErrors.general ?? data.error ?? "Failed to submit application. Please check your details or contact support." });
+        if (fieldErrors.category || fieldErrors.program) setStep(0);
+        else if (Object.keys(fieldErrors).some((key) => key !== "general")) setStep(1);
         setProcessing(false);
         return;
       }
@@ -315,7 +323,7 @@ function Wizard() {
               <Field label="Date of birth" htmlFor="dob" error={errors.dob}>
                 <Input id="dob" type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />
               </Field>
-              <Field label="Gender (optional)" htmlFor="gender">
+              <Field label="Gender (optional)" htmlFor="gender" error={errors.gender}>
                 <CustomSelect
                   id="gender"
                   options={[

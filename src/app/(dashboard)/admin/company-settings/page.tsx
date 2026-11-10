@@ -19,7 +19,7 @@ const defaults: CompanySettings = {
   websiteUrl: "https://akradhii.vercel.app",
   udyamNumber: "UDYAM-TS-19-0012345",
   msmeInfo: "MSME Registered Enterprise",
-  address: "HITEC City, Hyderabad, Telangana 500081, India",
+  address: "Yelahanka, Bengaluru, Karnataka 560064, India",
   authorizedSignatoryName: "Akradhii",
   authorizedSignatoryDesignation: "Director",
   certificatePrefix: "AKR",

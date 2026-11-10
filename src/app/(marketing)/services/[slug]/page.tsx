@@ -32,7 +32,7 @@ export function generateStaticParams() {
 
 const serviceKeywords: Record<string, string[]> = {
   "web-development": [
-    "website development hyderabad",
+    "website development bengaluru",
     "next.js agency india",
     "web app development",
     "landing page design",
@@ -41,17 +41,17 @@ const serviceKeywords: Record<string, string[]> = {
   "meta-ads": [
     "meta ads agency",
     "facebook ads management india",
-    "instagram ads agency hyderabad",
+    "instagram ads agency bengaluru",
     "paid advertising services",
   ],
   automation: [
     "business automation services",
     "workflow automation india",
     "process automation agency",
-    "CRM automation hyderabad",
+    "CRM automation bengaluru",
   ],
   crm: [
-    "CRM solutions hyderabad",
+    "CRM solutions bengaluru",
     "CRM setup agency india",
     "sales pipeline management",
     "CRM consulting services",
@@ -64,12 +64,12 @@ const serviceKeywords: Record<string, string[]> = {
   ],
   seo: [
     "SEO agency india",
-    "SEO services hyderabad",
+    "SEO services bengaluru",
     "technical SEO audit",
     "local SEO services",
   ],
   branding: [
-    "branding agency hyderabad",
+    "branding agency bengaluru",
     "logo design india",
     "brand identity services",
     "visual identity design",

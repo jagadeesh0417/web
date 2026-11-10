@@ -6,20 +6,19 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:integration": "node --test integration/*.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.2",
-    "@types/multer": "^2.2.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.11.0",
     "framer-motion": "^13.0.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.29.0",
     "mongodb": "^7.6.0",
-    "multer": "^2.3.0",
-    "next": "15.5.22",
+    "next": "15.5.29",
     "pdf-lib": "^1.17.1",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
@@ -39,7 +38,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.22",
+    "eslint-config-next": "15.5.29",
+    "mongodb-memory-server": "11.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

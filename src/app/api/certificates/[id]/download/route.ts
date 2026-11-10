@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCertificateById } from "@/lib/data/repository";
 import { generateCertificatePdf } from "@/lib/certificate/pdf-generator";
 import { companySettingsStore } from "@/lib/data/server-store";
+import { siteConfig } from "@/config/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,7 +29,7 @@ export async function GET(
     websiteUrl: "https://akradhii.vercel.app",
     udyamNumber: "UDYAM-TS-19-0012345",
     msmeInfo: "MSME Registered Enterprise",
-    address: "HITEC City, Hyderabad, Telangana 500081, India",
+    address: siteConfig.address,
     authorizedSignatoryName: "Akradhii",
     authorizedSignatoryDesignation: "Director",
     certificatePrefix: "AKR",

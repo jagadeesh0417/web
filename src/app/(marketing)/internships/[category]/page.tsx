@@ -27,7 +27,7 @@ export async function generateMetadata({
     description: `Join the ${category.name} internship at Akradhii. Learn ${category.skills.slice(0, 3).join(", ")} and more through project-based training.`,
     openGraph: {
       title: `${category.name} Internship`,
-      description: `Project-based ${category.name} internship with mentorship, real projects and verifiable certificates.`,
+      description: `Project-based ${category.name} internship with mentorship, projects and completion certificates.`,
       url: `${siteConfig.url}/internships/${slug}`,
       type: "article",
       images: [

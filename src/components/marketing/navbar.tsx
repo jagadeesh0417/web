@@ -55,18 +55,18 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 glass">
+    <header className="sticky top-0 z-50 border-b border-[#423020]/60 bg-[#090A0D]/95 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 xl:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               aria-current={isActive(l.href) ? "page" : undefined}
               className={cn(
-                "nav-link relative rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                "nav-link relative rounded-lg px-1.5 py-2 text-xs font-medium transition-colors hover:bg-muted xl:px-2.5 xl:text-sm",
                 isActive(l.href) ? "text-foreground" : "text-muted-foreground",
               )}
             >
@@ -75,7 +75,8 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 xl:flex">
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link href="/contact" className="hidden rounded-lg border border-[#F58216] px-3 py-2 text-xs font-semibold text-[#F7F4EF] shadow-[0_0_12px_#f5821633] transition hover:bg-[#F58216] hover:text-[#090A0D] xl:inline-flex">Get a Free Consultation →</Link>
           {ready && user ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => router.push(homeForRole(user.role))}>
@@ -99,7 +100,7 @@ export function Navbar() {
         </div>
 
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border xl:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
@@ -110,7 +111,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div id="mobile-navigation" className="animate-fade-up border-t border-border bg-card text-card-foreground xl:hidden">
+        <div id="mobile-navigation" className="animate-fade-up border-t border-border bg-card text-card-foreground lg:hidden">
           <nav aria-label="Mobile navigation" className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
             {links.map((l) => (
               <Link

@@ -67,7 +67,7 @@ export function Footer() {
               { href: "/internships", label: "Internships" },
               { href: "/resources", label: "Resources" },
               { href: "/internships/apply", label: "Apply now" },
-              { href: "/verify", label: "Verify certificate" },
+              { href: "/verify", label: "Manual certificate verification" },
             ].map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -108,7 +108,7 @@ export function Footer() {
           </p>
           <div className="flex flex-wrap justify-center gap-5">
             <Link href="/verify" className="hover:text-foreground">
-              Certificate verification
+              Manual certificate verification
             </Link>
             <Link href="/privacy" className="hover:text-foreground">
               Privacy

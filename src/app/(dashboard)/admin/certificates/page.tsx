@@ -150,7 +150,7 @@ export default function AdminCertificatesPage() {
     <DashboardShell>
       <PageHeader
         title="Certificates"
-        description="Issue and manage completion certificates. Each has a unique ID, QR code and public verification."
+        description="Issue and manage completion certificates. Manual verification is available on request."
         actions={<Button variant="gradient" size="sm" onClick={() => setIssuing(!issuing)}><Plus className="h-4 w-4" /> Issue certificate</Button>}
       />
 

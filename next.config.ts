@@ -24,11 +24,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: "/blog",
-        destination: "/about",
-        permanent: false,
-      },
-      {
         source: "/verify-certificate",
         destination: "/verify",
         permanent: false,

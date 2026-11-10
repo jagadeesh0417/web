@@ -109,7 +109,7 @@ export default function ContactPage() {
     setSubmitting(false);
 
     if (!result.ok) {
-      setServerError("Something went wrong. Please try WhatsApp or email hello@akradhii.com.");
+      setServerError(`Something went wrong. Please try WhatsApp or email ${siteConfig.email}.`);
       return;
     }
 

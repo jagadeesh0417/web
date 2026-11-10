@@ -4,10 +4,10 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Akradhii for websites, Meta Ads, automation, CRM, AI, SEO, branding or internship enquiries. Hyderabad studio.",
+    "Contact Akradhii for websites, Meta Ads, automation, CRM, AI, SEO, branding or internship enquiries. Bengaluru studio.",
   keywords: [
     "contact akradhii",
-    "hire digital agency hyderabad",
+    "hire digital agency bengaluru",
     "web development enquiry",
     "digital marketing agency contact",
   ],
@@ -41,10 +41,10 @@ export default function ContactLayout({ children }: { children: React.ReactNode 
     email: siteConfig.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "HITEC City",
+      streetAddress: "Yelahanka",
       addressLocality: siteConfig.city,
       addressRegion: siteConfig.region,
-      postalCode: "500081",
+      postalCode: "560064",
       addressCountry: "IN",
     },
     openingHoursSpecification: {

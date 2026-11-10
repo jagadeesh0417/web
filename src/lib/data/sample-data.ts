@@ -1272,7 +1272,7 @@ export const assessmentQuestions: AssessmentQuestion[] = [
   { id: "q31", question: "Which HTTP status means 'Not Found'?", options: ["200", "301", "404", "500"], answer: 2 },
   { id: "q32", question: "What is 'organic traffic'?", options: ["Paid ad visitors", "Visitors from unpaid search results", "Email subscribers", "Social media followers"], answer: 1 },
   { id: "q33", question: "Which of these is NOT a programming language?", options: ["Python", "Ruby", "Figma", "Go"], answer: 2 },
-  { id: "q34", question: "What is a QR code used for on a certificate?", options: ["Decoration", "Quick verification of authenticity", "Tracking downloads", "Print quality check"], answer: 1 },
+  { id: "q34", question: "How can a certificate be verified while online verification is unavailable?", options: ["Contact support for manual verification", "Assume all certificates are valid", "Check a public registry", "Scan a code for instant confirmation"], answer: 0 },
   { id: "q35", question: "What does 'SaaS' stand for?", options: ["Software as a Service", "Systems as Solutions", "Security and Server", "Storage as Service"], answer: 0 },
   { id: "q36", question: "Which practice protects user passwords?", options: ["Storing them in plain text", "Hashing with salt", "Sending via email", "Using short passwords"], answer: 1 },
 ];

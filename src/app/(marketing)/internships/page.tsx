@@ -34,7 +34,7 @@ import { internshipFaq } from "@/lib/data/internship-faq";
 export const metadata: Metadata = {
   title: "Internships",
   description:
-    "Build skills, ship projects and earn a verifiable certificate. 4, 6 and 8-week Akradhii internship programs across 10 tracks.",
+    "Build skills, ship projects and earn a completion certificate. 4, 6 and 8-week Akradhii internship programs across 10 tracks.",
   keywords: [
     "internship program india",
     "web development internship",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Internships",
-    description: "Structured internship programs with modules, projects, assessment and QR-verifiable certificates.",
+    description: "Structured internship programs with modules, projects, assessment and completion certificates.",
     url: `${siteConfig.url}/internships`,
     images: [
       {
@@ -97,7 +97,7 @@ const learningFlow = [
   { step: "07", title: "Submit work", text: "Share Drive, GitHub, Figma or Canva links for mentor review.", icon: Send },
   { step: "08", title: "Unlock next module", text: "Finish lessons and get assignments approved to progress.", icon: Lock },
   { step: "09", title: "Final assessment", text: "Complete the final assessment according to your plan's criteria.", icon: ClipboardCheck },
-  { step: "10", title: "Certificate", text: "Receive a QR-verifiable certificate of completion.", icon: Award },
+  { step: "10", title: "Certificate", text: "Receive a certificate of completion when eligible.", icon: Award },
 ];
 
 export default async function InternshipsPage({ searchParams }: { searchParams: Promise<{ q?: string; track?: string }> }) {
@@ -125,7 +125,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
             </Badge>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
               Build a portfolio with mentor feedback.{" "}
-              <span className="text-gradient">Earn a verifiable certificate.</span>
+              <span className="text-gradient">Earn a completion certificate.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
               For students and freshers: develop practical skills through projects, assignments and feedback. Choose from {CATEGORIES.length} tracks and {PROGRAMS.length} plans.
@@ -294,7 +294,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight">Learning journey</h2>
           <p className="mt-3 text-muted-foreground">
-            From program selection to a verified certificate — aligned with the live student dashboard.
+            From program selection to a completion certificate — aligned with the student dashboard.
           </p>
         </Reveal>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -331,7 +331,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
                   "Weekly project assignments with mentor review",
                   "Progressive unlocking when work is approved",
                   "Final assessment with clear pass criteria",
-                  "QR-verifiable certificate of completion",
+                  "Certificate of completion",
                   "Offer letter and payment invoice in the portal",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
@@ -390,21 +390,8 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
                 <h2 className="text-3xl font-bold tracking-tight">Verify your certificate</h2>
               </div>
               <p className="mt-4 text-muted-foreground leading-relaxed">
-                Every Akradhii certificate includes a unique ID and QR code. Anyone — employers, recruiters, universities — can instantly confirm it is authentic and has not been revoked.
+                Online verification is not yet available. Contact support to request manual verification.
               </p>
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Enter the certificate ID to check validity",
-                  "Scan the QR code printed on the PDF",
-                  "See issuing date, category, duration and current status",
-                  "Confirm the certificate has not been revoked",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
               <div className="mt-6">
                 <Button variant="gradient">
                   <Link href="/verify">Verify a certificate</Link>
@@ -415,17 +402,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
               <Card className="p-6 sm:p-8">
                 <h3 className="font-semibold">How verification works</h3>
                 <div className="mt-4 space-y-3">
-                  {[
-                    { step: "01", text: "Click the link on the certificate PDF or scan the QR code" },
-                    { step: "02", text: "The unique ID is sent to our verification API" },
-                    { step: "03", text: "We return the certificate status and details" },
-                    { step: "04", text: "Employers see: valid, revoked, or not found" },
-                  ].map((s) => (
-                    <div key={s.step} className="flex items-start gap-3">
-                      <span className="text-xs font-bold text-brand-400 mt-1">{s.step}</span>
-                      <p className="text-sm text-muted-foreground">{s.text}</p>
-                    </div>
-                  ))}
+                  <p className="text-sm text-muted-foreground">Email {siteConfig.supportEmail} with the certificate ID and a copy of the certificate.</p>
                 </div>
               </Card>
             </Reveal>

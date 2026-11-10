@@ -7,6 +7,7 @@ import { Input, Textarea, Field } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { submitLead } from "@/lib/leads/client";
 import { emailSchema, nameSchema, phoneSchema } from "@/lib/validators";
+import { siteConfig } from "@/config/site";
 
 function validateField(name: string, value: string): string | undefined {
   switch (name) {
@@ -134,7 +135,7 @@ export function ServiceEnquiryForm({
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
           <div className="flex-1">
             <p className="font-medium text-destructive">Something went wrong.</p>
-            <p className="mt-1 text-muted-foreground">Please try WhatsApp or email <a href="mailto:hello@akradhii.com" className="font-medium text-brand-400 hover:underline">hello@akradhii.com</a>.</p>
+            <p className="mt-1 text-muted-foreground">Please try WhatsApp or email <a href={`mailto:${siteConfig.email}`} className="font-medium text-brand-400 hover:underline">{siteConfig.email}</a>.</p>
           </div>
           <button type="button" onClick={() => setServerError(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />

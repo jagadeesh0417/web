@@ -11,7 +11,6 @@ import {
   Search,
   Palette,
   CheckCircle2,
-  Sparkles,
   GraduationCap,
   Plus,
   Minus,
@@ -20,7 +19,7 @@ import {
   Zap,
   Award,
 } from "lucide-react";
-import { services, stats, partners } from "@/config/site";
+import { services, partners } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
 import { Button } from "@/components/ui/button";
@@ -63,10 +62,10 @@ const faqItems = [
   },
   {
     q: "Do you provide support after launch?",
-    a: "Yes. We offer maintenance retainings for updates, security patches, performance monitoring and ongoing content changes. Support plans are flexible and month-to-month.",
+    a: "Yes. We offer maintenance retainers for updates, security patches, performance monitoring and ongoing content changes. Support plans are flexible and month-to-month.",
   },
   {
-    q: "Do you work with clients outside Hyderabad?",
+    q: "Do you work with clients outside Bengaluru?",
     a: "Yes. We work with clients across India and internationally. Every project runs through structured communication — Slack, Notion, weekly calls — so location is never a blocker.",
   },
   {
@@ -79,58 +78,40 @@ const values = [
   { icon: Target, title: "Results-first", desc: "Every decision ties back to measurable business outcomes — traffic, leads, revenue." },
   { icon: Users, title: "Senior-led teams", desc: "No junior handoffs. Senior strategists, designers and engineers own your project end to end." },
   { icon: Zap, title: "Speed without shortcuts", desc: "Fast iteration cycles with quality gates. We ship quickly and we ship right." },
-  { icon: Award, title: "Internship-grade quality", desc: "The same team that trains 300+ interns builds client projects — standards are non-negotiable." },
+  { icon: Award, title: "Practical learning", desc: "Structured internship programs combine learning with project work." },
 ];
 
 export default function HomePage() {
   return (
-    <>
+    <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-60" />
-        <div className="absolute inset-0 bg-glow" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-20 sm:px-6 lg:px-8 lg:pt-28">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <Badge variant="primary" className="mb-5 px-3 py-1 text-xs">
-              <Sparkles className="h-3 w-3" /> Premium Digital Growth Studio
-            </Badge>
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              We build <span className="text-gradient">growth engines</span> for ambitious brands
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Akradhii designs, develops and automates — websites, Meta Ads, CRMs, AI workflows, SEO and
-              branding — and trains the next generation of digital professionals through structured internships.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button variant="gradient" size="lg" className="w-full sm:w-auto">
-                <Link href="/contact" className="flex items-center gap-2">
-                  Start your project <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link href="/internships" className="flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4" /> Join an internship
-                </Link>
-              </Button>
+      <section className="order-1 relative overflow-hidden border-b border-[#423020]/40">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_75%_55%,rgba(197,90,25,.24),transparent_55%)]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-4 px-5 pb-9 pt-12 sm:px-8 lg:grid-cols-[46%_54%] lg:px-12 lg:pt-16">
+          <div className="relative z-10 animate-fade-up">
+            <p className="text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Digital transformation partner —</p>
+            <h1 className="mt-4 max-w-xl text-4xl font-extrabold leading-[1.03] tracking-tight sm:text-5xl lg:text-[3.55rem]">Digital Solutions That <span className="text-gradient">Grow Your Business</span></h1>
+            <p className="mt-5 max-w-lg text-sm leading-relaxed text-[#B7B4AE] sm:text-base">We build powerful websites, automate operations with AI, create strong brand identities, and support business growth through digital solutions.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/contact" className="inline-flex min-h-11 items-center gap-3 rounded-full bg-gradient-to-r from-[#F4BD53] via-[#F58216] to-[#C75A19] px-6 text-sm font-bold text-[#090A0D] shadow-lg shadow-orange-900/30 transition hover:brightness-110">Get a Free Consultation <ArrowRight className="h-4 w-4" /></Link>
+              <Link href="/portfolio" className="inline-flex min-h-11 items-center gap-3 rounded-xl border border-[#D6A24A] bg-[#111216] px-6 text-sm font-bold text-[#F7F4EF] transition hover:shadow-[0_0_18px_#f5821640]">See Our Work <ArrowRight className="h-4 w-4" /></Link>
             </div>
-          </Reveal>
-
-          <Reveal delay={0.15} className="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="rounded-2xl border border-border bg-card/60 p-5 text-center backdrop-blur">
-                <p className="text-2xl font-extrabold text-gradient sm:text-3xl">{s.value}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{s.label}</p>
-              </div>
-            ))}
-          </Reveal>
+          </div>
+          <div className="relative -mx-5 overflow-hidden sm:mx-0 lg:-mr-12">
+            <Image src="/reference-hero.webp" width={554} height={310} alt="Illustrative laptop and analytics dashboard with orange light trails" priority className="h-auto w-full rounded-lg object-cover" />
+            <span className="absolute bottom-2 right-3 rounded bg-black/80 px-2 py-1 text-[10px] text-white">Illustrative dashboard</span>
+          </div>
+          <div className="grid grid-cols-2 gap-4 border-t border-[#423020]/60 pt-6 text-xs font-medium text-[#F7F4EF] sm:grid-cols-4 lg:col-span-2">
+            {[{ icon: Zap, label: "Business Growth" }, { icon: Award, label: "Trusted & Reliable" }, { icon: Users, label: "Expert Team" }, { icon: Target, label: "Result Driven" }].map(({ icon: Icon, label }) => <div key={label} className="flex items-center gap-2"><Icon className="h-5 w-5 text-[#F4BD53]" />{label}</div>)}
+          </div>
         </div>
       </section>
 
       {/* Partners */}
-      <section className="border-y border-border bg-card/40">
+      <section className="hidden border-y border-border bg-card/40">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <p className="mb-5 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Trusted by growing brands
+            Trusted by growing brands (case studies available on request)
           </p>
           <div className="relative overflow-hidden">
             <div className="absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-card/40 to-transparent" />
@@ -148,14 +129,15 @@ export default function HomePage() {
       </section>
 
       {/* About the Company */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="order-4 mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-8 lg:grid-cols-2">
         <Reveal className="mx-auto max-w-3xl text-center">
           <Badge variant="primary" className="mb-4">About Akradhii</Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Building digital experiences that move businesses forward
           </h2>
           <p className="mt-5 text-muted-foreground leading-relaxed">
-            Akradhii is a Hyderabad-based digital growth studio working with startups, SMBs and growing brands
+            Akradhii is a Bengaluru-based digital growth studio working with startups, SMBs and growing brands
             across India. We combine strategy, design, development and performance marketing into a single
             integrated workflow — so brands don&apos;t need five agencies to get results.
           </p>
@@ -182,24 +164,27 @@ export default function HomePage() {
             </Button>
           </div>
         </Reveal>
+        <div className="relative overflow-hidden rounded-2xl border border-[#423020]"><Image src="/reference-about.webp" width={535} height={241} alt="Illustration of a dark office reception with warm gold lighting" className="h-auto w-full" /><span className="absolute bottom-2 right-2 rounded bg-black/80 px-2 py-1 text-[10px] text-white">Illustration</span></div>
+        </div>
       </section>
 
       {/* Services */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="order-2 mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Services built for growth</h2>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Our services</p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Complete Digital Solutions for Modern Businesses</h2>
           <p className="mt-4 text-muted-foreground">
             Seven disciplines, one integrated team — so your brand, website and campaigns move together.
           </p>
         </Reveal>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s, i) => {
             const Icon = icons[s.icon as keyof typeof icons] ?? Code2;
             return (
               <Reveal key={s.id} delay={i * 0.05}>
                 <Link href={`/services/${s.id}`}>
                   <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl hover:shadow-brand-600/10">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/25">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#423020] bg-[#222329] text-[#F4BD53]">
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
@@ -218,10 +203,10 @@ export default function HomePage() {
             );
           })}
           <Reveal delay={0.35}>
-            <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-violet-700 to-indigo-700 p-6 text-white">
+            <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-[#423020] to-[#18191F] p-6 text-white">
               <h3 className="text-lg font-semibold">Not sure where to start?</h3>
               <p className="mt-2 text-sm text-white/80">Tell us your goal — we&apos;ll map the fastest path to it.</p>
-              <Button className="mt-5 self-start bg-white text-violet-700 hover:bg-white/90">
+              <Button className="mt-5 self-start bg-[#F4BD53] text-[#090A0D] hover:bg-[#F58216]">
                 <Link href="/contact" className="flex items-center gap-2">Book a free audit <ArrowRight className="h-4 w-4" /></Link>
               </Button>
             </Card>
@@ -229,14 +214,21 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="order-3 mx-auto w-full max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+        <div className="grid overflow-hidden rounded-2xl border border-[#754421] bg-[#111216] md:grid-cols-2">
+          <Image src="/reference-ai.webp" width={510} height={148} alt="Illustration of a robotic hand reaching toward a human hand" className="h-full min-h-40 w-full object-cover" />
+          <div className="p-6 sm:p-8"><p className="text-xs font-bold uppercase tracking-widest text-[#F4BD53]">— AI-powered growth</p><h2 className="mt-2 text-3xl font-bold">Automate. Optimize. Scale.</h2><p className="mt-3 text-sm text-[#B7B4AE]">Explore AI assistants and workflows designed to support your business operations.</p><Link className="mt-5 inline-flex rounded-full bg-gradient-to-r from-[#F4BD53] to-[#F58216] px-5 py-3 text-sm font-bold text-[#090A0D]" href="/services/ai-automation">Explore AI Solutions <ArrowRight className="ml-2 h-4 w-4" /></Link></div>
+        </div>
+      </section>
+
       {/* Internships */}
-      <section className="border-y border-border bg-card/40">
+      <section className="order-6 border-y border-border bg-card/40">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <Reveal className="mx-auto max-w-2xl text-center">
             <Badge variant="primary" className="mb-3"><GraduationCap className="h-3 w-3" /> Internship programs</Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Learn by doing. Graduate portfolio-ready.</h2>
             <p className="mt-4 text-muted-foreground">
-              Structured programs with live mentorship, real projects and verifiable certificates.
+              Structured programs with live mentorship, real projects and completion certificates.
             </p>
           </Reveal>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
@@ -244,7 +236,7 @@ export default function HomePage() {
               <Reveal key={p.id} delay={i * 0.08}>
                 <Card className={`relative flex h-full flex-col p-6 ${p.featured ? "border-brand-500/60 shadow-xl shadow-brand-600/10" : ""}`}>
                   {p.featured && (
-                    <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-1 text-xs font-bold text-white">
+                    <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-[#F4BD53] to-[#C75A19] px-3 py-1 text-xs font-bold text-[#090A0D]">
                       Most popular
                     </span>
                   )}
@@ -284,7 +276,7 @@ export default function HomePage() {
       </section>
 
       {/* Selected Projects */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="order-5 mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <Badge variant="primary" className="mb-3">Our work</Badge>
@@ -337,7 +329,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="order-7 mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Frequently Asked Questions</h2>
           <p className="mt-4 text-muted-foreground">
@@ -347,14 +339,14 @@ export default function HomePage() {
         <div className="mx-auto mt-12 max-w-3xl space-y-3">
           {faqItems.map((item, i) => (
             <Reveal key={i} delay={i * 0.03}>
-              <FaqItem question={item.q} answer={item.a} defaultOpen={i === 0} />
+              <FaqItem question={item.q} answer={item.a} />
             </Reveal>
           ))}
         </div>
       </section>
 
       {/* Categories strip */}
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="order-8 mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Pick your track</h2>
           <p className="mt-4 text-muted-foreground">Ten specializations, each with its own mentor, curriculum and live sessions.</p>
@@ -373,9 +365,9 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+      <section className="order-9 mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-700 via-indigo-700 to-blue-700 p-10 text-center text-white sm:p-16">
+          <div className="relative overflow-hidden rounded-3xl border border-[#754421] bg-gradient-to-br from-[#423020] via-[#18191F] to-[#111216] p-10 text-center text-white sm:p-16">
             <div className="absolute inset-0 bg-grid opacity-20" />
             <div className="relative">
               <h2 className="text-3xl font-bold sm:text-4xl">Ready to grow with Akradhii?</h2>
@@ -383,7 +375,7 @@ export default function HomePage() {
                 Whether you need a growth partner for your business or a career-defining internship — we&apos;re ready.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button size="lg" className="bg-white text-violet-700 hover:bg-white/90">
+                <Button size="lg" className="bg-[#F4BD53] text-[#090A0D] hover:bg-[#F58216]">
                   <Link href="/contact" className="flex items-center gap-2">Talk to us <ArrowRight className="h-4 w-4" /></Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10">
@@ -394,13 +386,13 @@ export default function HomePage() {
           </div>
         </Reveal>
       </section>
-    </>
+    </div>
   );
 }
 
-function FaqItem({ question, answer, defaultOpen = false }: { question: string; answer: string; defaultOpen?: boolean }) {
+function FaqItem({ question, answer }: { question: string; answer: string }) {
   return (
-    <details open={defaultOpen} className="group rounded-xl border border-border bg-card/50 backdrop-blur">
+    <details className="group rounded-xl border border-border bg-card/50 backdrop-blur">
       <summary className="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold leading-snug select-none marker:hidden list-none">
         <span>{question}</span>
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border transition-colors group-open:bg-brand-500 group-open:text-white">

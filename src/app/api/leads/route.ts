@@ -6,7 +6,6 @@ import { contactFormSchema, emailSchema } from "@/lib/validators";
 import { buildWhatsAppMessage, extractPrimaryFields } from "@/lib/leads/format";
 import { isValidPhone, normalizePhone, formatPhoneDisplay } from "@/lib/leads/phone";
 import {
-  checkRateLimit,
   hashIp,
   listLeads,
   saveLead,
@@ -15,6 +14,7 @@ import {
 import { sendWhatsAppText } from "@/lib/leads/whatsapp";
 import type { LeadFormType, WebsiteLead, LeadFields } from "@/lib/leads/types";
 import { requireAdminApi } from "@/lib/auth/api-guard";
+import { allowRequest, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -45,14 +45,6 @@ const leadBodySchema = z.object({
   deviceType: z.string().max(32).optional(),
   idempotencyKey: z.string().max(80).optional(),
 });
-
-function clientIp(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown"
-  );
-}
 
 function sanitizeString(value: unknown, max = 2000): string {
   if (value === null || value === undefined) return "";
@@ -101,7 +93,11 @@ function requireContactBasics(formType: LeadFormType, fields: LeadFields): strin
 
 export async function POST(request: NextRequest) {
   const ip = clientIp(request);
-  if (!checkRateLimit(ip)) {
+  if (!ip) return NextResponse.json({ ok: false, error: "Service temporarily unavailable." }, { status: 503 });
+  let allowed: boolean;
+  try { allowed = await allowRequest("contact", ip, 8); }
+  catch { return NextResponse.json({ ok: false, error: "Service temporarily unavailable." }, { status: 503 }); }
+  if (!allowed) {
     return NextResponse.json(
       { ok: false, error: "Too many submissions. Please try again in a few minutes." },
       { status: 429 },

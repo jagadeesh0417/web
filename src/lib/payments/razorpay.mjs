@@ -1,10 +1,11 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { INTERNSHIP_PRICES } from "../internship-pricing.ts";
 
 // Amounts are in paise; callers must select a plan by identifier, not price.
 export const PLANS = Object.freeze({
-  basic: Object.freeze({ name: "Basic", amount: 14900, currency: "INR" }),
-  standard: Object.freeze({ name: "Standard", amount: 19900, currency: "INR" }),
-  premium: Object.freeze({ name: "Premium", amount: 24900, currency: "INR" }),
+  basic: Object.freeze({ name: "Basic", amount: INTERNSHIP_PRICES.foundation * 100, currency: "INR" }),
+  standard: Object.freeze({ name: "Standard", amount: INTERNSHIP_PRICES.professional * 100, currency: "INR" }),
+  premium: Object.freeze({ name: "Premium", amount: INTERNSHIP_PRICES.industry * 100, currency: "INR" }),
 });
 
 function equalHmac(secret, message, signature) {

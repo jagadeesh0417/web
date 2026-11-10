@@ -1,4 +1,5 @@
 import type { InternshipCategory, InternshipProgram } from "@/lib/types";
+import { INTERNSHIP_PRICES } from "@/lib/internship-pricing";
 
 export const PROGRAMS: InternshipProgram[] = [
   {
@@ -8,7 +9,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "A fast, focused immersion that builds your fundamentals with live mentorship, guided assignments and a mini project you can show off.",
     duration: "4 Weeks",
-    price: 149,
+    price: INTERNSHIP_PRICES.foundation,
     featured: false,
     features: [
       "4 live sessions",
@@ -34,7 +35,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "Go deeper with weekly assessments, two real projects and a performance report that proves you are job-ready.",
     duration: "6 Weeks",
-    price: 199,
+    price: INTERNSHIP_PRICES.professional,
     featured: true,
     features: [
       "6 live sessions",
@@ -61,7 +62,7 @@ export const PROGRAMS: InternshipProgram[] = [
     description:
       "Work on client-based projects with full mentorship, portfolio building and a letter of recommendation based on your performance.",
     duration: "8 Weeks",
-    price: 299,
+    price: INTERNSHIP_PRICES.industry,
     featured: false,
     features: [
       "Full mentorship",

@@ -87,7 +87,7 @@ export default function CertificatePage() {
       <DashboardShell>
         <PageHeader
           title="Your Certificate"
-          description="Proof of completion · verifiable online"
+          description="Proof of completion · manual verification on request"
         />
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <Button variant="outline" size="sm" onClick={scrollToCertificate}>
@@ -136,7 +136,7 @@ export default function CertificatePage() {
             <h2 className="mt-4 text-xl font-bold">Generating Certificate</h2>
             <div className="mt-3 space-y-1 text-sm text-muted-foreground">
               <p>Creating certificate ID…</p>
-              <p>Generating verification QR…</p>
+              <p>Generating verification information…</p>
               <p>Preparing your certificate…</p>
             </div>
           </CardContent>

@@ -514,7 +514,7 @@ function PreviewSection({ config }: { config: TemplateConfig }) {
                 <QRCodeSVG value={verifyUrl} size={88} level="M" />
               </div>
               <p className="text-[9px]" style={{ color: config.textColor }}>
-                Scan to verify
+                Verification information
               </p>
             </div>
           </div>
@@ -523,7 +523,7 @@ function PreviewSection({ config }: { config: TemplateConfig }) {
             className="mt-6 border-t pt-4 text-center text-[10px]"
             style={{ borderColor: config.textColor + "33", color: config.textColor }}
           >
-            Verify authenticity at {verifyUrl} · Issued by {siteConfig.name} on {formatDate(sampleDate)}
+            Manual verification information: {verifyUrl} · Issued by {siteConfig.name} on {formatDate(sampleDate)}
           </p>
         </div>
       </div>

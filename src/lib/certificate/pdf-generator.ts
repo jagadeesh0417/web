@@ -150,7 +150,7 @@ export async function generateCertificatePdf(
   page.drawText(sigDesig, { x: center(sigDesig, helvetica, 8), y: botY - 36, size: 8, font: helvetica, color: MUTED });
 
   // Right: QR code label
-  const qrLabel = "Scan to verify";
+  const qrLabel = "Verification information";
   page.drawText(qrLabel, { x: c4 + 30 - helvetica.widthOfTextAtSize(qrLabel, 7) / 2, y: botY, size: 7, font: helvetica, color: MUTED });
 
   // QR code

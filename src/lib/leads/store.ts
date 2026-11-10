@@ -55,20 +55,6 @@ export async function updateLeadWhatsApp(id: string, patch: {
   return (await records.findOne({ "lead.id": id }))?.lead;
 }
 
-/** Best-effort local limit; a shared distributed limiter is still required. */
-const rateBuckets = new Map<string, { count: number; resetAt: number }>();
-export function checkRateLimit(ip: string, limit = 8, windowMs = 10 * 60 * 1000): boolean {
-  const now = Date.now();
-  const bucket = rateBuckets.get(ip);
-  if (!bucket || bucket.resetAt < now) {
-    rateBuckets.set(ip, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (bucket.count >= limit) return false;
-  bucket.count += 1;
-  return true;
-}
-
 export function hashIp(ip: string): string {
   let h = 0;
   for (let i = 0; i < ip.length; i++) h = (Math.imul(31, h) + ip.charCodeAt(i)) | 0;

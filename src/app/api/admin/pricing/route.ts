@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getDb, COLLECTIONS } from "@/lib/db";
 import type { PricingConfig } from "@/lib/db/models";
 import { requireAdmin } from "@/lib/auth/guard";
+import { INTERNSHIP_PRICES_BY_DURATION } from "@/lib/internship-pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,9 +19,7 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       config: {
-        fourWeekPrice: 149,
-        sixWeekPrice: 199,
-        eightWeekPrice: 299,
+        ...INTERNSHIP_PRICES_BY_DURATION,
         referralReward: 20,
         minimumWithdrawal: 200,
       },
@@ -30,9 +29,7 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     config: {
-      fourWeekPrice: config.fourWeekPrice,
-      sixWeekPrice: config.sixWeekPrice,
-      eightWeekPrice: config.eightWeekPrice,
+      ...INTERNSHIP_PRICES_BY_DURATION,
       referralReward: config.referralReward,
       minimumWithdrawal: config.minimumWithdrawal,
       updatedAt: config.updatedAt,
@@ -67,6 +64,14 @@ export async function PUT(request: NextRequest) {
     referralReward?: number;
     minimumWithdrawal?: number;
   };
+
+  if (
+    (fourWeekPrice !== undefined && fourWeekPrice !== INTERNSHIP_PRICES_BY_DURATION.fourWeekPrice) ||
+    (sixWeekPrice !== undefined && sixWeekPrice !== INTERNSHIP_PRICES_BY_DURATION.sixWeekPrice) ||
+    (eightWeekPrice !== undefined && eightWeekPrice !== INTERNSHIP_PRICES_BY_DURATION.eightWeekPrice)
+  ) {
+    return NextResponse.json({ ok: false, error: "Program prices are managed in the internship pricing file." }, { status: 400 });
+  }
 
   if (
     fourWeekPrice !== undefined &&
@@ -150,9 +155,7 @@ export async function PUT(request: NextRequest) {
   } else {
     await pricingCol.insertOne({
       _id: "default",
-      fourWeekPrice: fourWeekPrice ?? 149,
-      sixWeekPrice: sixWeekPrice ?? 199,
-      eightWeekPrice: eightWeekPrice ?? 299,
+      ...INTERNSHIP_PRICES_BY_DURATION,
       referralReward: referralReward ?? 20,
       minimumWithdrawal: minimumWithdrawal ?? 200,
       updatedAt: now,
@@ -174,9 +177,7 @@ export async function PUT(request: NextRequest) {
   return NextResponse.json({
     ok: true,
     config: {
-      fourWeekPrice: updated?.fourWeekPrice,
-      sixWeekPrice: updated?.sixWeekPrice,
-      eightWeekPrice: updated?.eightWeekPrice,
+      ...INTERNSHIP_PRICES_BY_DURATION,
       referralReward: updated?.referralReward,
       minimumWithdrawal: updated?.minimumWithdrawal,
       updatedAt: updated?.updatedAt,

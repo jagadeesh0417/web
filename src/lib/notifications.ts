@@ -12,7 +12,8 @@ interface MailPayload {
 export async function sendEmail(payload: MailPayload): Promise<{ ok: boolean; error?: string }> {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {
-    console.info(`[akradhii:email] (demo) To: ${payload.to} — ${payload.subject}`);
+    if (process.env.NODE_ENV === "production") return { ok: false, error: "Email provider is not configured" };
+    console.info("[akradhii:email] demo delivery skipped");
     return { ok: true };
   }
   try {
@@ -87,7 +88,7 @@ export function emailTemplates() {
     assignmentFeedback: (name: string, data: { title: string; status: string; feedback: string }) =>
       layout("Assignment update", `Hi ${name},<br/><br/>Your assignment <strong>${data.title}</strong> was reviewed.<br/><br/>Status: <strong>${data.status}</strong><br/><br/>Mentor feedback:<br/><em>"${data.feedback}"</em>`),
     certificateIssued: (name: string, id: string, verifyUrl: string) =>
-      layout("Your certificate is ready", `Congratulations ${name}! Your certificate (${id}) has been issued and is available in your dashboard.<br/><br/>Anyone can verify it at ${verifyUrl}.`, { label: "Verify certificate", url: verifyUrl }),
+      layout("Your certificate is ready", `Congratulations ${name}! Your certificate (${id}) has been issued and is available in your dashboard.<br/><br/>Manual verification information: ${verifyUrl}.`, { label: "Verification information", url: verifyUrl }),
     sessionReminder: (title: string, date: string, link: string) =>
       layout("Live session reminder", `Reminder: <strong>${title}</strong> on ${date}.<br/><br/>Join here: ${link}`),
     deadline: (title: string, date: string) =>

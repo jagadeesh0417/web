@@ -6,8 +6,8 @@ import ts from "typescript";
 test("verification does not trust local certificates during an API outage", async () => {
   const source = await readFile("src/app/verify/page.tsx", "utf8");
   assert.doesNotMatch(source, /getCertificateById/);
-  assert.match(source, /Verification is temporarily unavailable/);
-  assert.match(source, /res\.status === 404/);
+  assert.match(source, /Online certificate verification is not yet available/);
+  assert.match(source, /mailto:/);
 });
 
 test("contact does not load an embedded map automatically", async () => {
