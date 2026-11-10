@@ -5,7 +5,6 @@
   transform: translate3d(0, 20px, 0);
   transition: opacity 600ms cubic-bezier(0.21, 0.47, 0.32, 0.98),
     transform 600ms cubic-bezier(0.21, 0.47, 0.32, 0.98);
-  will-change: opacity, transform;
 }
 
 .m-revealVisible {
@@ -91,13 +90,6 @@
     box-shadow 250ms cubic-bezier(0.2, 0, 0.2, 1),
     border-color 250ms cubic-bezier(0.2, 0, 0.2, 1),
     background-color 250ms cubic-bezier(0.2, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.m-hoverCard:hover {
-  transform: translate3d(0, -4px, 0);
-  border-color: color-mix(in srgb, #D6A24A 45%, var(--border, #423020));
-  box-shadow: 0 22px 45px -18px color-mix(in srgb, #F58216 35%, transparent);
 }
 
 /* Icon movement inside hover card */
@@ -105,8 +97,18 @@
   transition: transform 250ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-.m-hoverCard:hover .m-hoverCardIcon {
-  transform: translate3d(2px, -2px, 0);
+/* Hover elevation/glow only on real hover devices; keyboard focus stays visible
+   on all devices and nothing "sticks" after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .m-hoverCard:hover {
+    transform: translate3d(0, -4px, 0);
+    border-color: color-mix(in srgb, #D6A24A 45%, var(--border, #423020));
+    box-shadow: 0 22px 45px -18px color-mix(in srgb, #F58216 35%, transparent);
+  }
+
+  .m-hoverCard:hover .m-hoverCardIcon {
+    transform: translate3d(2px, -2px, 0);
+  }
 }
 
 /* Button motion (gradient hover handled by classes; this adds arrow + glow) */
@@ -115,10 +117,6 @@
   transition: transform 150ms cubic-bezier(0.2, 0, 0.2, 1),
     box-shadow 200ms cubic-bezier(0.2, 0, 0.2, 1),
     background-position 500ms cubic-bezier(0.2, 0, 0.2, 1);
-}
-
-.m-btn:hover {
-  box-shadow: 0 10px 30px -12px color-mix(in srgb, #F58216 55%, transparent);
 }
 
 .m-btn:active {
@@ -137,17 +135,24 @@
   background-position: 0% 50%;
 }
 
-.m-btnGradient:hover {
-  background-position: 100% 50%;
-}
-
 .m-btnArrow {
   transition: transform 200ms cubic-bezier(0.2, 0, 0.2, 1);
   display: inline-block;
 }
 
-.m-btn:hover .m-btnArrow {
-  transform: translateX(4px);
+/* Hover glow, gradient sweep and arrow motion only on hover-capable pointers. */
+@media (hover: hover) and (pointer: fine) {
+  .m-btn:hover {
+    box-shadow: 0 10px 30px -12px color-mix(in srgb, #F58216 55%, transparent);
+  }
+
+  .m-btnGradient:hover {
+    background-position: 100% 50%;
+  }
+
+  .m-btn:hover .m-btnArrow {
+    transform: translateX(4px);
+  }
 }
 
 /* Hero entrance sequence */
@@ -216,42 +221,77 @@
   transition: transform 180ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-.m-navUnderline:hover::after,
+/* Underline state (current page / expanded) applies on every device. */
 .m-navUnderline[data-active="true"]::after {
   transform: scaleX(1);
+}
+
+/* Hover + keyboard-focus underline only where those inputs exist. */
+@media (hover: hover) and (pointer: fine) {
+  .m-navUnderline:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+.m-navUnderline:focus-visible {
+  outline: 2px solid var(--ring, #D6A24A);
+  outline-offset: 2px;
 }
 
 /* Dropdown */
 .m-dropdown {
   opacity: 0;
+  visibility: hidden;
   transform: translate3d(0, -6px, 0) scale(0.98);
   transition: opacity 180ms cubic-bezier(0.2, 0, 0.2, 1),
-    transform 180ms cubic-bezier(0.2, 0, 0.2, 1);
+    transform 180ms cubic-bezier(0.2, 0, 0.2, 1),
+    visibility 0s linear 180ms;
   pointer-events: none;
 }
 
 .m-dropdownOpen {
   opacity: 1;
+  visibility: visible;
   transform: translate3d(0, 0, 0) scale(1);
   pointer-events: auto;
+  transition: opacity 180ms cubic-bezier(0.2, 0, 0.2, 1),
+    transform 180ms cubic-bezier(0.2, 0, 0.2, 1),
+    visibility 0s;
 }
 
-/* Mobile menu */
+/* Mobile menu. Height animates with grid-template-rows (0fr -> 1fr) instead of
+   max-height: no content clipping, no magic 100vh, no phantom space when closed,
+   and no expensive height reflow juggling. */
 .m-mobileMenu {
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
-  transform: translate3d(0, -8px, 0);
-  transition: opacity 200ms cubic-bezier(0.2, 0, 0.2, 1),
-    transform 200ms cubic-bezier(0.2, 0, 0.2, 1);
+  visibility: hidden;
   pointer-events: none;
-  max-height: 0;
+  transition: grid-template-rows 260ms cubic-bezier(0.2, 0, 0.2, 1),
+    opacity 220ms cubic-bezier(0.2, 0, 0.2, 1),
+    visibility 0s linear 260ms;
+}
+
+.m-mobileMenuInner {
+  min-height: 0;
   overflow: hidden;
+  transform: translate3d(0, -8px, 0);
+  transition: transform 260ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .m-mobileMenuOpen {
+  grid-template-rows: 1fr;
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  visibility: visible;
   pointer-events: auto;
-  max-height: 100vh;
+  transition: grid-template-rows 300ms cubic-bezier(0.2, 0, 0.2, 1),
+    opacity 220ms cubic-bezier(0.2, 0, 0.2, 1),
+    visibility 0s;
+}
+
+.m-mobileMenuOpen .m-mobileMenuInner {
+  transform: translate3d(0, 0, 0);
 }
 
 /* Workflow timeline */
@@ -259,16 +299,19 @@
   position: relative;
 }
 
-.m-timelineProgress {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, #F4BD53, #F58216);
-  transform-origin: top;
-  transition: transform 400ms cubic-bezier(0.2, 0, 0.2, 1);
-  will-change: transform;
+/* Horizontal variant: single column on mobile, `--m-cols` (set inline from the
+   step count, always defined) on md+. Replaces the old undefined custom column var. */
+.m-timelineHorizontal {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .m-timelineHorizontal {
+    grid-template-columns: repeat(var(--m-cols, 3), minmax(0, 1fr));
+  }
 }
 
 .m-timelineStep {
@@ -308,12 +351,18 @@
   .m-heroItemVisible,
   .m-timelineStep,
   .m-timelineStepInactive,
-  .m-timelineStepActive {
+  .m-timelineStepActive,
+  .m-dropdown,
+  .m-dropdownOpen,
+  .m-mobileMenu,
+  .m-mobileMenuOpen,
+  .m-mobileMenuInner {
     transform: none !important;
     transition-duration: 0.01ms !important;
   }
   .m-heroLight,
   .m-float {
     animation: none !important;
+    will-change: auto;
   }
 }

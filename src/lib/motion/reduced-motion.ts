@@ -1,31 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+import {
+  reducedMotionServerSnapshot,
+  reducedMotionSubscribe,
+  reducedMotionSnapshot,
+} from "./reduced-motion-store";
 
-const QUERY = "(prefers-reduced-motion: reduce)";
-
-/** Read the current reduced-motion preference (client only). */
-export function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
-  return window.matchMedia(QUERY).matches;
-}
-
-/** React hook returning whether the user prefers reduced motion. */
+/**
+ * React hook returning whether the user prefers reduced motion.
+ *
+ * Hydration safety: this is backed by `useSyncExternalStore`, which uses
+ * `reducedMotionServerSnapshot` (always `false`) for the server render AND the
+ * first client render, then reads the real browser preference after hydration
+ * and subscribes to changes. Server and initial-client markup therefore match,
+ * eliminating the previous `matchMedia`-during-render hydration mismatch.
+ */
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState<boolean>(() => prefersReducedMotion());
-
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
-    const mql = window.matchMedia(QUERY);
-    const handler = (event: MediaQueryListEvent) => setReduced(event.matches);
-    // Safari < 14 fallback
-    if (typeof mql.addEventListener === "function") {
-      mql.addEventListener("change", handler);
-      return () => mql.removeEventListener("change", handler);
-    }
-    mql.addListener(handler);
-    return () => mql.removeListener(handler);
-  }, []);
-
-  return reduced;
+  return useSyncExternalStore(reducedMotionSubscribe, reducedMotionSnapshot, reducedMotionServerSnapshot);
 }

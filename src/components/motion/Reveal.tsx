@@ -3,6 +3,7 @@
 import type { CSSProperties, ElementType, ReactNode } from "react";
 import { useReducedMotion } from "@/lib/motion/reduced-motion";
 import { useInView } from "@/lib/motion/use-in-view";
+import { computeRevealDelay, computeRevealShow } from "@/lib/motion/helpers";
 import styles from "./motion.module.css";
 
 export type RevealVariant = "up" | "fade" | "scale" | "left" | "right" | "heading";
@@ -56,7 +57,8 @@ export function Reveal({
 }: RevealProps) {
   const reduced = useReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>({ threshold, once, rootMargin, disabled: reduced });
-  const show = reduced || inView;
+  const show = computeRevealShow(reduced, inView);
+  const revealDelay = computeRevealDelay(reduced, delay);
 
   return (
     <Tag
@@ -64,7 +66,8 @@ export function Reveal({
       className={[variantClass[variant], show ? visibleClass[variant] : "", className]
         .filter(Boolean)
         .join(" ")}
-      style={{ transitionDelay: reduced ? "0ms" : `${delay}ms`, ...style }}
+      data-motion-state={show ? "visible" : "hidden"}
+      style={{ transitionDelay: `${revealDelay}ms`, ...style }}
     >
       {children}
     </Tag>

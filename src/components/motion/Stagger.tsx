@@ -3,6 +3,7 @@
 import type { CSSProperties, ElementType, ReactNode } from "react";
 import { useReducedMotion } from "@/lib/motion/reduced-motion";
 import { useInView } from "@/lib/motion/use-in-view";
+import { computeRevealShow, computeStaggerDelay } from "@/lib/motion/helpers";
 import { staggerStep } from "@/lib/motion/tokens";
 import styles from "./motion.module.css";
 
@@ -34,8 +35,8 @@ export function StaggerItem({
 }: StaggerItemProps) {
   const reduced = useReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>({ threshold, once, disabled: reduced });
-  const show = reduced || inView;
-  const totalDelay = reduced ? 0 : delay + index * step;
+  const show = computeRevealShow(reduced, inView);
+  const totalDelay = computeStaggerDelay(reduced, index, step, delay);
 
   return (
     <Tag
@@ -43,6 +44,7 @@ export function StaggerItem({
       className={[styles["m-staggerItem"], show ? styles["m-staggerItemVisible"] : "", className]
         .filter(Boolean)
         .join(" ")}
+      data-motion-state={show ? "visible" : "hidden"}
       style={{ transitionDelay: `${totalDelay}ms`, ...style }}
     >
       {children}
