@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Code2,
-  Megaphone,
-  Workflow,
-  Database,
-  BrainCircuit,
-  Search,
   Palette,
   CheckCircle2,
   GraduationCap,
@@ -26,6 +22,7 @@ import {
   Quote,
   MessageCircle,
   Phone,
+  Cpu,
 } from "lucide-react";
 import { services, siteConfig } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
@@ -35,21 +32,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
-import { HeroVisual } from "@/components/marketing/hero-visual";
 import { cn } from "@/lib/utils";
+import { serviceVisuals, heroArt, agencyArt, backgroundArt, decorativeArt } from "@/components/marketing/homepage-assets";
 
 export const metadata: Metadata = {
   alternates: { canonical: siteConfig.url },
-};
-
-const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-  Code2,
-  Megaphone,
-  Workflow,
-  Database,
-  BrainCircuit,
-  Search,
-  Palette,
 };
 
 const faqItems = [
@@ -215,7 +202,38 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10">
-            <HeroVisual />
+            <Image
+              src={decorativeArt.ring}
+              alt=""
+              aria-hidden="true"
+              width={400}
+              height={400}
+              unoptimized
+              className="pointer-events-none absolute -right-8 -top-8 z-0 h-36 w-36 opacity-70 sm:h-48 sm:w-48"
+            />
+            <Image
+              src={decorativeArt.sparkle}
+              alt=""
+              aria-hidden="true"
+              width={600}
+              height={400}
+              unoptimized
+              className="pointer-events-none absolute -bottom-6 -left-8 z-0 h-28 w-44 opacity-80 sm:h-36 sm:w-56"
+            />
+
+            <div className="relative z-10 aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-2xl border border-[#423020] bg-[#090A0D] shadow-2xl shadow-orange-950/30 sm:aspect-[4/3] lg:aspect-[16/9]">
+              <picture>
+                <source media="(min-width: 1024px)" srcSet={heroArt.desktop} />
+                <source media="(min-width: 640px)" srcSet={heroArt.tablet} />
+                <img
+                  src={heroArt.mobile}
+                  alt={heroArt.alt}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </picture>
+            </div>
           </div>
         </div>
       </section>
@@ -256,20 +274,35 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { title: "Strategy", desc: "Clear roadmaps tied to business goals." },
-                { title: "Design", desc: "Premium, conversion-focused interfaces." },
-                { title: "Engineering", desc: "Fast, scalable, maintainable code." },
-                { title: "Growth", desc: "SEO, ads and automation that compound." },
-              ].map((x) => (
-                <Card key={x.title} className="border-border/60 bg-card/50 p-5 transition hover:border-brand-500/40">
-                  <h3 className="font-semibold text-[#F4BD53]">{x.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{x.desc}</p>
-                </Card>
-              ))}
+            <div className="space-y-4">
+              <div className="overflow-hidden rounded-2xl border border-[#423020] bg-[#0B0C10]">
+                <Image
+                  src={agencyArt.intro}
+                  alt="Abstract composition connecting Akradhii strategy, design, engineering and growth capabilities"
+                  width={1200}
+                  height={800}
+                  unoptimized
+                  loading="lazy"
+                  decoding="async"
+                  className="h-auto w-full object-cover"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { title: "Strategy", desc: "Clear roadmaps tied to business goals." },
+                  { title: "Design", desc: "Premium, conversion-focused interfaces." },
+                  { title: "Engineering", desc: "Fast, scalable, maintainable code." },
+                  { title: "Growth", desc: "SEO, ads and automation that compound." },
+                ].map((x) => (
+                  <Card key={x.title} className="border-border/60 bg-card/50 p-5 transition hover:border-brand-500/40">
+                    <h3 className="font-semibold text-[#F4BD53]">{x.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{x.desc}</p>
+                  </Card>
+                ))}
+              </div>
             </div>
           </Reveal>
+
         </div>
       </section>
 
@@ -288,14 +321,21 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((s, i) => {
-              const Icon = icons[s.icon as keyof typeof icons] ?? Code2;
+              const visual = serviceVisuals[s.id];
               return (
                 <Reveal key={s.id} delay={i * 0.05}>
                   <Link href={`/services/${s.id}`}>
                     <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl hover:shadow-brand-600/10">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#423020] bg-[#222329] text-[#F4BD53]">
-                        <Icon className="h-5 w-5" />
-                      </div>
+                      <Image
+                        src={visual.icon}
+                        alt={visual.iconAlt}
+                        width={48}
+                        height={48}
+                        unoptimized
+                        loading="lazy"
+                        decoding="async"
+                        className="h-12 w-12 rounded-xl shadow-lg shadow-amber-900/20 transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105"
+                      />
                       <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
                       <p className="mt-2 text-sm text-muted-foreground">{s.description}</p>
                       <div className="mt-4 flex flex-wrap gap-1.5">
@@ -314,8 +354,18 @@ export default function HomePage() {
               );
             })}
             <Reveal delay={0.35}>
-              <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-[#423020] to-[#18191F] p-6 text-white">
-                <h3 className="text-lg font-semibold">Not sure where to start?</h3>
+              <Card className="relative flex h-full flex-col justify-center overflow-hidden bg-gradient-to-br from-[#423020] to-[#18191F] p-6 text-white">
+                <Image
+                  src={serviceVisuals.branding.illustration}
+                  alt=""
+                  aria-hidden="true"
+                  width={160}
+                  height={160}
+                  unoptimized
+                  loading="lazy"
+                  className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 opacity-25"
+                />
+                <h3 className="relative text-lg font-semibold">Not sure where to start?</h3>
                 <p className="mt-2 text-sm text-white/80">
                   Tell us your goal -- we&apos;ll map the fastest path to it.
                 </p>
@@ -327,6 +377,83 @@ export default function HomePage() {
               </Card>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* AI automation feature band */}
+      <section className="relative overflow-hidden border-y border-[#423020]/60 bg-[#0B0C10]">
+        <Image
+          src={backgroundArt.circuit}
+          alt=""
+          aria-hidden="true"
+          fill
+          unoptimized
+          loading="lazy"
+          sizes="100vw"
+          className="pointer-events-none opacity-40"
+        />
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <Reveal>
+            <Badge variant="primary" className="mb-4">
+              <Cpu className="h-3 w-3" /> AI Automation
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              Automate. Optimize. Scale.
+            </h2>
+            <div className="mt-5 h-1 w-16 rounded-full bg-gradient-to-r from-[#F4BD53] via-[#F58216] to-[#C75A19]" />
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              Custom AI assistants, chatbots and intelligent workflows that handle support, sales and operations
+              -- reducing repetitive work and improving efficiency across your business.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-1.5">
+              {["AI Chatbots", "Custom GPT agents", "Workflow automation", "Business integrations", "Lead qualification"].map(
+                (f) => (
+                  <Badge key={f} variant="outline">
+                    {f}
+                  </Badge>
+                ),
+              )}
+            </div>
+            <Button variant="gradient" className="mt-8">
+              <Link href="/services/ai-automation" className="flex items-center gap-2">
+                Explore AI solutions <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="relative overflow-hidden rounded-2xl border border-[#423020] bg-[#090A0D] p-6 sm:p-10">
+              <Image
+                src={serviceVisuals["ai-automation"].illustration}
+                alt="AI Automation illustration -- connected intelligent workflow nodes in Akradhii gold and orange"
+                width={160}
+                height={160}
+                unoptimized
+                loading="lazy"
+                decoding="async"
+                className="mx-auto h-40 w-40 sm:h-52 sm:w-52"
+              />
+              <div className="mt-8 grid grid-cols-3 gap-3 text-center">
+                {[
+                  { src: serviceVisuals["seo"].illustration, alt: "SEO illustration" },
+                  { src: serviceVisuals["crm"].illustration, alt: "CRM Solutions illustration" },
+                  { src: serviceVisuals["automation"].illustration, alt: "Business Automation illustration" },
+                ].map((it) => (
+                  <div key={it.src} className="rounded-xl border border-[#423020] bg-[#111216] p-3">
+                    <Image
+                      src={it.src}
+                      alt={it.alt}
+                      width={72}
+                      height={72}
+                      unoptimized
+                      loading="lazy"
+                      className="mx-auto h-14 w-14"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -414,6 +541,21 @@ export default function HomePage() {
             <p className="mt-4 text-muted-foreground">
               Six intentional phases that take you from idea to impact without surprises.
             </p>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <div className="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border border-[#423020] bg-[#090A0D]">
+              <Image
+                src={agencyArt.workflow}
+                alt="Akradhii process flow -- discovery, strategy, design, development, launch and growth in orange and gold"
+                width={1200}
+                height={600}
+                unoptimized
+                loading="lazy"
+                decoding="async"
+                className="h-auto w-full object-cover"
+              />
+            </div>
           </Reveal>
 
           <div className="relative mt-14">
@@ -610,6 +752,16 @@ export default function HomePage() {
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl border border-[#754421] bg-gradient-to-br from-[#423020] via-[#18191F] to-[#111216] p-10 text-center text-white sm:p-16">
             <div className="absolute inset-0 bg-grid opacity-20" />
+            <Image
+              src={backgroundArt.orbit}
+              alt=""
+              aria-hidden="true"
+              fill
+              unoptimized
+              loading="lazy"
+              sizes="(max-width: 1024px) 100vw, 80rem"
+              className="pointer-events-none object-cover opacity-30"
+            />
             <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[#F58216]/10 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-[#F4BD53]/10 blur-3xl" />
             <div className="relative">
