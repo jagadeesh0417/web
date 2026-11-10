@@ -189,7 +189,7 @@ export default function StudentCoursesPage() {
             placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-brand-600 focus:ring-1 focus:ring-brand-600"
           />
         </div>
       </div>
@@ -233,7 +233,7 @@ export default function StudentCoursesPage() {
                   : 0;
 
                 return (
-                  <Card key={course._id} className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet-600/10">
+                  <Card key={course._id} className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600">
                     <div className="relative h-44 overflow-hidden bg-muted">
                       {course.thumbnail ? (
                         <img
@@ -242,8 +242,8 @@ export default function StudentCoursesPage() {
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                          <BookOpen className="h-10 w-10 text-violet-400" />
+                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                          <BookOpen className="h-10 w-10 text-brand-600" />
                         </div>
                       )}
                       {p?.completed && (
@@ -304,7 +304,7 @@ export default function StudentCoursesPage() {
                 <button
                   key={cat}
                   onClick={() => setSearch(cat)}
-                  className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-0.5 text-xs font-medium capitalize text-muted-foreground cursor-pointer hover:border-violet-500/40 hover:text-foreground transition-colors"
+                  className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-0.5 text-xs font-medium capitalize text-muted-foreground cursor-pointer hover:border-brand-600 hover:text-foreground transition-colors"
                 >
                   {cat}
                 </button>
@@ -330,7 +330,7 @@ export default function StudentCoursesPage() {
                   course.modules?.reduce((acc, m) => acc + (m.lessons?.length ?? 0), 0) ?? 0;
 
                 return (
-                  <Card key={course._id} className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet-600/10">
+                  <Card key={course._id} className="group overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600">
                     <div className="relative h-44 overflow-hidden bg-muted">
                       {course.thumbnail ? (
                         <img
@@ -339,8 +339,8 @@ export default function StudentCoursesPage() {
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                          <BookOpen className="h-10 w-10 text-violet-400" />
+                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                          <BookOpen className="h-10 w-10 text-brand-600" />
                         </div>
                       )}
                     </div>

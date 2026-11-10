@@ -58,7 +58,7 @@ function AdminLoginForm() {
       <div className="w-full max-w-md">
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 shadow-2xl backdrop-blur-sm">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/25">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-600 shadow-lg shadow-brand-600">
               <ShieldCheck className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
@@ -72,7 +72,7 @@ function AdminLoginForm() {
                 <Input
                   id="admin-email"
                   type="email"
-                  className="pl-9 border-white/10 bg-white/5 text-white placeholder:text-zinc-600 focus:border-violet-500 focus:ring-violet-500/20"
+                  className="pl-9 border-white/10 bg-white/5 text-white placeholder:text-zinc-600 focus:border-brand-600 focus:ring-brand-600"
                   placeholder="admin@akradhii.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -87,7 +87,7 @@ function AdminLoginForm() {
                 <Input
                   id="admin-password"
                   type={show ? "text" : "password"}
-                  className="pl-9 pr-10 border-white/10 bg-white/5 text-white placeholder:text-zinc-600 focus:border-violet-500 focus:ring-violet-500/20"
+                  className="pl-9 pr-10 border-white/10 bg-white/5 text-white placeholder:text-zinc-600 focus:border-brand-600 focus:ring-brand-600"
                   placeholder="••••••••"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -106,7 +106,7 @@ function AdminLoginForm() {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/25"
+              className="w-full bg-gradient-to-r from-brand-600 to-brand-600 text-white hover:from-brand-600 hover:to-brand-600 shadow-lg shadow-brand-600"
               loading={loading}
             >
               Sign in as Admin

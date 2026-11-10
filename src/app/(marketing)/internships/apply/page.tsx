@@ -235,7 +235,7 @@ function Wizard() {
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors",
                   i < step && "bg-success text-white",
-                  i === step && "bg-gradient-to-r from-violet-600 to-indigo-600 text-white",
+                  i === step && "bg-gradient-to-r from-brand-600 to-brand-600 text-white",
                   i > step && "bg-muted text-muted-foreground",
                 )}
               >
@@ -376,7 +376,7 @@ function Wizard() {
                 type="checkbox"
                 checked={form.agree}
                 onChange={(e) => set("agree", e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-violet-600"
+                className="mt-0.5 h-4 w-4 accent-brand-600"
               />
               <span className="text-muted-foreground">
                 I agree to the <Link href="/terms" className="text-brand-500 underline">Terms &amp; Conditions</Link> and{" "}

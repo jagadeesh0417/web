@@ -5,7 +5,7 @@ export function Progress({ value, className, indicatorClassName }: { value: numb
   return (
     <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={clamped} className={cn("h-2 w-full overflow-hidden rounded-full bg-muted", className)}>
       <div
-        className={cn("h-full w-full origin-left rounded-full bg-gradient-to-r from-violet-600 to-indigo-500 transition-transform duration-500", indicatorClassName)}
+        className={cn("h-full w-full origin-left rounded-full bg-gradient-to-r from-brand-600 to-brand-600 transition-transform duration-500", indicatorClassName)}
         style={{ transform: `scaleX(${clamped / 100})` }}
       />
     </div>

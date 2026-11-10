@@ -25,6 +25,7 @@ const links = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<AppUser | null>(null);
   const [ready, setReady] = useState(false);
   const pathname = usePathname();
@@ -36,6 +37,13 @@ export function Navbar() {
       setUser(user);
       setReady(true);
     });
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -55,28 +63,50 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#423020]/60 bg-[#090A0D]/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-all duration-300",
+        scrolled
+          ? "border-b border-amber-500/30 bg-[#090A0D]/85 backdrop-blur-xl shadow-lg shadow-black/30"
+          : "border-b border-transparent bg-[#090A0D]/60 backdrop-blur-md",
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-300 sm:px-6 lg:px-8",
+          scrolled ? "h-14" : "h-16",
+        )}
+      >
         <Logo />
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              aria-current={isActive(l.href) ? "page" : undefined}
               className={cn(
-                "nav-link relative rounded-lg px-1.5 py-2 text-xs font-medium transition-colors hover:bg-muted xl:px-2.5 xl:text-sm",
-                isActive(l.href) ? "text-foreground" : "text-muted-foreground",
+                "group relative rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5",
+                isActive(l.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {l.label}
+              <span
+                className={cn(
+                  "absolute inset-x-3 -bottom-px h-0.5 origin-left rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600 transition-all duration-300",
+                  isActive(l.href) ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100",
+                )}
+              />
             </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Link href="/contact" className="hidden rounded-lg border border-[#F58216] px-3 py-2 text-xs font-semibold text-[#F7F4EF] shadow-[0_0_12px_#f5821633] transition hover:bg-[#F58216] hover:text-[#090A0D] xl:inline-flex">Get a Free Consultation →</Link>
+          <Link
+            href="/contact"
+            className="hidden rounded-lg border border-[#F58216] px-3 py-2 text-xs font-semibold text-[#F7F4EF] shadow-[0_0_12px_#f5821633] transition hover:bg-[#F58216] hover:text-[#090A0D] xl:inline-flex"
+          >
+            Get a Free Consultation →
+          </Link>
           {ready && user ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => router.push(homeForRole(user.role))}>
@@ -88,15 +118,13 @@ export function Navbar() {
               </Button>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-violet-500 text-violet-500 hover:bg-violet-500 hover:text-white dark:border-violet-400 dark:text-violet-400 dark:hover:bg-violet-400 dark:hover:text-white"
-              onClick={() => router.push("/login")}
-            >
+            <Button variant="outline" size="sm" onClick={() => router.push("/login")}>
               Log in
             </Button>
           )}
+          <Button variant="gradient" size="sm" onClick={() => router.push("/contact")}>
+            Book a Consultation
+          </Button>
         </div>
 
         <button
@@ -104,42 +132,39 @@ export function Navbar() {
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          aria-controls="mobile-navigation"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div id="mobile-navigation" className="animate-fade-up border-t border-border bg-card text-card-foreground lg:hidden">
-          <nav aria-label="Mobile navigation" className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+        <div className="border-t border-border bg-[#090A0D]/95 backdrop-blur-xl lg:hidden">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                aria-current={isActive(l.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "rounded-lg px-3 py-2.5 text-sm font-medium",
-                  isActive(l.href) ? "bg-muted text-foreground" : "text-muted-foreground",
+                  "rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  isActive(l.href)
+                    ? "bg-amber-500/10 text-amber-400"
+                    : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
                 )}
               >
                 {l.label}
               </Link>
             ))}
-            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center">
+            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+              <Button variant="gradient" className="w-full" onClick={() => { setOpen(false); router.push("/contact"); }}>
+                Book a Consultation
+              </Button>
               {ready && user ? (
-                <Button variant="outline" onClick={handleLogout}>
+                <Button variant="outline" className="w-full" onClick={handleLogout}>
                   <LogOut className="h-4 w-4" /> Sign out
                 </Button>
               ) : (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setOpen(false);
-                    router.push("/login");
-                  }}
-                >
+                <Button variant="ghost" className="w-full" onClick={() => { setOpen(false); router.push("/login"); }}>
                   Log in
                 </Button>
               )}

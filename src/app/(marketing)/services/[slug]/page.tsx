@@ -163,7 +163,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
             <Reveal delay={0.1}>
               <div
-                className={`relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br ${service.gradient} p-1 shadow-2xl shadow-violet-900/20`}
+                className={`relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br ${service.gradient} p-1 shadow-2xl shadow-brand-600`}
               >
                 <div className="rounded-[1.35rem] bg-card/95 p-8 sm:p-10">
                   <div
@@ -399,7 +399,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 Book a free consultation or jump straight into a quote request for {service.title}.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button size="lg" className="w-full bg-white text-violet-800 hover:bg-white/90 sm:w-auto">
+                <Button size="lg" className="w-full bg-white text-brand-600 hover:bg-white/90 sm:w-auto">
                   <a href="#enquiry" className="flex items-center gap-2">
                     Get a free consultation <ArrowRight className="h-4 w-4" />
                   </a>

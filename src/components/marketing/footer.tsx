@@ -6,7 +6,8 @@ export function Footer() {
   const waHref = `https://wa.me/${siteConfig.whatsapp}`;
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="relative border-t border-border bg-[#0B0C10]">
+      <div className="gradient-hairline absolute inset-x-0 top-0" />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-5 lg:px-8">
         <div className="space-y-4 lg:col-span-1">
           <Logo />
@@ -18,7 +19,7 @@ export function Footer() {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-xs font-medium capitalize text-muted-foreground transition-colors hover:border-brand-500 hover:text-brand-400"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-xs font-medium capitalize text-muted-foreground transition-colors hover:border-amber-500/50 hover:text-amber-400"
               >
                 {name.slice(0, 1)}
               </a>
@@ -36,7 +37,7 @@ export function Footer() {
               { href: "/contact", label: "Contact" },
             ].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-amber-400">
                   {l.label}
                 </Link>
               </li>
@@ -51,7 +52,7 @@ export function Footer() {
               <li key={s.id}>
                 <Link
                   href={`/services/${s.id}`}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-sm text-muted-foreground transition-colors hover:text-amber-400"
                 >
                   {s.title}
                 </Link>
@@ -70,7 +71,7 @@ export function Footer() {
               { href: "/verify", label: "Manual certificate verification" },
             ].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-amber-400">
                   {l.label}
                 </Link>
               </li>
@@ -83,17 +84,17 @@ export function Footer() {
           <ul className="space-y-2.5 text-sm text-muted-foreground">
             <li>{siteConfig.address}</li>
             <li>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
+              <a href={`mailto:${siteConfig.email}`} className="hover:text-amber-400">
                 {siteConfig.email}
               </a>
             </li>
             <li>
-              <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-foreground">
+              <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="hover:text-amber-400">
                 {siteConfig.phone}
               </a>
             </li>
             <li>
-              <a href={waHref} target="_blank" rel="noreferrer" className="hover:text-foreground">
+              <a href={waHref} target="_blank" rel="noreferrer" className="hover:text-amber-400">
                 WhatsApp {siteConfig.whatsappDisplay}
               </a>
             </li>
@@ -107,13 +108,13 @@ export function Footer() {
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-5">
-            <Link href="/verify" className="hover:text-foreground">
+            <Link href="/verify" className="hover:text-amber-400">
               Manual certificate verification
             </Link>
-            <Link href="/privacy" className="hover:text-foreground">
+            <Link href="/privacy" className="hover:text-amber-400">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-foreground">
+            <Link href="/terms" className="hover:text-amber-400">
               Terms
             </Link>
           </div>

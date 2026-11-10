@@ -99,7 +99,7 @@ export function CertificateView({ certificate, showActions = false }: Certificat
       <div className="certificate-sheet relative overflow-hidden rounded-2xl border-2 border-brand-500/40 bg-card">
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-brand-600/10 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-brand-600 blur-3xl" />
 
         <div className="relative p-8 sm:p-12">
           <div className="flex items-start justify-between">
@@ -109,7 +109,7 @@ export function CertificateView({ certificate, showActions = false }: Certificat
               </p>
               <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Certificate of Completion</h1>
             </div>
-            <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-xl font-black text-white sm:flex">
+            <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-600 text-xl font-black text-white sm:flex">
               {siteConfig.name.charAt(0)}
             </div>
           </div>

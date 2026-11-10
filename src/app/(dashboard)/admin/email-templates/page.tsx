@@ -330,7 +330,7 @@ export default function AdminEmailTemplatesPage() {
                   type="checkbox"
                   checked={form.active}
                   onChange={(e) => setForm({ ...form, active: e.target.checked })}
-                  className="accent-violet-600"
+                  className="accent-brand-600"
                 />
                 Active
               </label>

@@ -91,7 +91,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "web-development",
     name: "Web Development",
     icon: "Code2",
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-brand-600 to-brand-600",
     description:
       "Build production-grade websites and web apps with modern React, Next.js and TypeScript — the stack Akradhii ships for real clients.",
     learningOutcomes: [
@@ -116,7 +116,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "ui-ux-design",
     name: "UI/UX Design",
     icon: "Figma",
-    gradient: "from-fuchsia-600 to-pink-600",
+    gradient: "from-brand-600 to-pink-600",
     description:
       "Design delightful digital products — research, wireframes, high-fidelity UI and interactive prototypes in Figma.",
     learningOutcomes: [
@@ -210,7 +210,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "ai-automation",
     name: "AI Automation",
     icon: "BrainCircuit",
-    gradient: "from-purple-600 to-violet-500",
+    gradient: "from-brand-600 to-brand-600",
     description:
       "Build AI assistants, chatbots and intelligent agents that automate support, sales and operations for real businesses.",
     learningOutcomes: [
@@ -257,7 +257,7 @@ export const CATEGORIES: InternshipCategory[] = [
     slug: "content-writing",
     name: "Content Writing",
     icon: "PenLine",
-    gradient: "from-sky-500 to-indigo-500",
+    gradient: "from-sky-500 to-brand-600",
     description:
       "Write content that ranks and converts — web copy, blogs, social posts and email sequences that businesses pay for.",
     learningOutcomes: [

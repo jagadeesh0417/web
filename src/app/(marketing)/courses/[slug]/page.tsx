@@ -170,8 +170,8 @@ export default function MarketingCourseDetailPage() {
                     className="w-full object-cover"
                   />
                 ) : (
-                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                    <BookOpen className="h-16 w-16 text-violet-400" />
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                    <BookOpen className="h-16 w-16 text-brand-600" />
                   </div>
                 )}
               </div>
@@ -204,7 +204,7 @@ export default function MarketingCourseDetailPage() {
                           onClick={() => toggleModule(mod._id)}
                           className="flex w-full items-center gap-3 p-4 text-left"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600/10 text-sm font-bold text-violet-500">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-brand-600">
                             {idx + 1}
                           </span>
                           <div className="min-w-0 flex-1">
@@ -231,7 +231,7 @@ export default function MarketingCourseDetailPage() {
                                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm"
                                   >
                                     {lesson.type === "video" ? (
-                                      <PlayCircle className="h-4 w-4 shrink-0 text-violet-500" />
+                                      <PlayCircle className="h-4 w-4 shrink-0 text-brand-600" />
                                     ) : (
                                       <FileText className="h-4 w-4 shrink-0 text-sky-500" />
                                     )}
@@ -316,7 +316,7 @@ export default function MarketingCourseDetailPage() {
       <section className="border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
-            <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white">
+            <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white">
               <h2 className="text-2xl font-bold sm:text-3xl">
                 Ready to start learning?
               </h2>
@@ -327,7 +327,7 @@ export default function MarketingCourseDetailPage() {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Button
                   size="lg"
-                  className="bg-white text-violet-800 hover:bg-white/90"
+                  className="bg-white text-brand-600 hover:bg-white/90"
                 >
                   <Link href="/internships/apply" className="flex items-center gap-2">
                     Enroll now <ArrowRight className="h-4 w-4" />

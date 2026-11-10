@@ -161,7 +161,7 @@ export default function ProjectsPage() {
                       href={project.submissionLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 flex items-center gap-2 text-sm text-violet-500 hover:underline"
+                      className="mt-4 flex items-center gap-2 text-sm text-brand-600 hover:underline"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       View Submission

@@ -35,10 +35,10 @@ interface CertificateTemplate {
 
 const defaultConfig: TemplateConfig = {
   backgroundColor: "#ffffff",
-  borderColor: "#7c3aed",
+  borderColor: "#C75A19",
   titleColor: "#1a1a1a",
   textColor: "#4b5563",
-  accentColor: "#7c3aed",
+  accentColor: "#C75A19",
   organizationName: siteConfig.name,
   signatureTitle: "Founder & CEO",
 };
@@ -147,7 +147,7 @@ export default function AdminCertificateTemplatesPage() {
       onClick={() => setTab(key)}
       className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
         tab === key
-          ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/25"
+          ? "bg-gradient-to-r from-brand-600 to-brand-600 text-white shadow-lg shadow-brand-600"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       }`}
     >

@@ -147,7 +147,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <CopyLinkButton />
       </div>
 
-      <Card className="mt-8 bg-gradient-to-br from-violet-700/40 to-indigo-700/40 p-6">
+      <Card className="mt-8 bg-gradient-to-br from-brand-600 to-brand-600 p-6">
         <h2 className="text-lg font-bold">Need help putting this into practice?</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Talk to Akradhii about services or internship programs that match this topic.

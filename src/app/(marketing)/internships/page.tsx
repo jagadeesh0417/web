@@ -131,7 +131,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
               For students and freshers: develop practical skills through projects, assignments and feedback. Choose from {CATEGORIES.length} tracks and {PROGRAMS.length} plans.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/internships/apply?program=professional" className="inline-flex h-12 items-center rounded-lg bg-violet-600 px-6 font-medium text-white hover:bg-violet-700 focus-visible:ring-2 focus-visible:ring-white">Apply now</Link>
+              <Link href="/internships/apply?program=professional" className="inline-flex h-12 items-center rounded-lg bg-brand-600 px-6 font-medium text-white hover:bg-brand-600 focus-visible:ring-2 focus-visible:ring-white">Apply now</Link>
             </div>
           </Reveal>
         </div>
@@ -150,7 +150,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
             <Reveal key={p.id} delay={i * 0.08}>
               <Card className={`relative flex h-full flex-col p-6 ${p.featured ? "border-brand-500/60 shadow-xl shadow-brand-600/10" : ""}`}>
                 {p.featured && (
-                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-1 text-xs font-bold text-white">
+                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-brand-600 to-brand-600 px-3 py-1 text-xs font-bold text-white">
                     Most popular
                   </span>
                 )}
@@ -201,12 +201,12 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
             <table className="w-full min-w-[600px] text-sm">
               <caption className="sr-only">Internship plan comparison</caption>
               <thead>
-                <tr className="border-b border-border bg-gradient-to-r from-violet-700 to-indigo-700 text-white">
+                <tr className="border-b border-border bg-gradient-to-r from-brand-600 to-brand-600 text-white">
                   <th scope="col" className="px-5 py-4 text-left font-semibold">Feature</th>
                   <th scope="col" className="px-5 py-4 text-center font-semibold">Foundation</th>
                   <th scope="col" className="relative px-5 py-4 text-center font-semibold">
                     Professional
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-violet-700 shadow">Most popular</span>
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-brand-600 shadow">Most popular</span>
                   </th>
                   <th scope="col" className="px-5 py-4 text-center font-semibold">Industry</th>
                 </tr>
@@ -251,7 +251,7 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
           <form action="/internships#tracks" method="get" className="mx-auto mt-8 flex max-w-xl flex-wrap gap-2">
             <label htmlFor="track-search" className="sr-only">Search internship tracks</label>
             <input id="track-search" name="q" type="search" defaultValue={query} placeholder="Search tracks or skills" className="min-w-0 flex-1 rounded-lg border border-border bg-card px-3 py-2" />
-            <button type="submit" className="rounded-lg bg-violet-600 px-4 py-2 text-white">Search</button>
+            <button type="submit" className="rounded-lg bg-brand-600 px-4 py-2 text-white">Search</button>
             <Link href="/internships#tracks" className="rounded-lg border border-border px-4 py-2">Clear</Link>
           </form>
           <div id="tracks" className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Filter by track">
@@ -412,12 +412,12 @@ export default async function InternshipsPage({ searchParams }: { searchParams: 
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
-          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white">
+          <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white">
             <h2 className="text-2xl font-bold sm:text-3xl">Ready to start your internship?</h2>
             <p className="mx-auto mt-3 max-w-lg text-white/85">
               Pick a track and duration — applications open year-round.
             </p>
-            <Button size="lg" className="mt-6 bg-white text-violet-800 hover:bg-white/90">
+            <Button size="lg" className="mt-6 bg-white text-brand-600 hover:bg-white/90">
               <Link href="/internships/apply" className="flex items-center gap-2">
                 Apply now <ArrowRight className="h-4 w-4" />
               </Link>

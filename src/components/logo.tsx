@@ -17,8 +17,8 @@ export function Logo({ className, href = "/" }: { className?: string; href?: str
       >
         <defs>
           <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--color-violet-600, #7c3aed)" />
-            <stop offset="100%" stopColor="var(--color-indigo-600, #4f46e5)" />
+            <stop offset="0%" stopColor="#F4BD53" />
+            <stop offset="100%" stopColor="#F58216" />
           </linearGradient>
         </defs>
         <rect width="36" height="36" rx="10" fill="url(#logo-grad)" />
