@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useActiveStep } from "@/lib/motion/use-active-step";
 import { useReducedMotion } from "@/lib/motion/reduced-motion";
+import { timelineGridVars, timelineProgress } from "@/lib/motion/helpers";
 import { Reveal } from "./Reveal";
 import styles from "./motion.module.css";
 
@@ -27,12 +28,15 @@ export interface WorkflowTimelineProps {
 export function WorkflowTimeline({ steps, className, style, horizontal }: WorkflowTimelineProps) {
   const reduced = useReducedMotion();
   const { setStepRef, activeIndex } = useActiveStep(steps.length, { disabled: reduced });
-  const progress = steps.length > 1 ? Math.min(1, activeIndex / (steps.length - 1)) : 1;
+  const progress = timelineProgress(activeIndex, steps.length);
 
   if (horizontal) {
     return (
       <div className={className} style={style}>
-        <div className="relative grid gap-6 md:grid-cols-[repeat(var(--cols),minmax(0,1fr))]">
+        <div
+          className={styles["m-timelineHorizontal"]}
+          style={timelineGridVars(steps.length) as CSSProperties}
+        >
           <div className="absolute left-0 right-0 top-[0.55rem] h-[2px] bg-[var(--border)]" aria-hidden="true" />
           <div
             className="absolute left-0 top-[0.55rem] h-[2px] origin-left bg-gradient-to-r from-[#F4BD53] to-[#F58216]"

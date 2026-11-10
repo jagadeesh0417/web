@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { useReducedMotion } from "@/lib/motion/reduced-motion";
+import { computeRevealDelay } from "@/lib/motion/helpers";
 import { heroSequence } from "@/lib/motion/tokens";
 import styles from "./motion.module.css";
 
@@ -29,13 +30,14 @@ export function HeroItem({ children, step = "title", delay = 0, className, style
     return () => cancelAnimationFrame(raf);
   }, [reduced]);
 
-  const stepDelay = reduced ? 0 : (heroSequence[step] ?? 0) + delay;
+  const stepDelay = computeRevealDelay(reduced, (heroSequence[step] ?? 0) + delay);
 
   return (
     <div
       className={[styles["m-heroItem"], entered ? styles["m-heroItemVisible"] : "", className]
         .filter(Boolean)
         .join(" ")}
+      data-motion-state={entered ? "visible" : "hidden"}
       style={{ transitionDelay: `${stepDelay}ms`, ...style }}
     >
       {children}
