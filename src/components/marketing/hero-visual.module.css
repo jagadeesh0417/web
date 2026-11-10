@@ -1,0 +1,384 @@
+.visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 280px;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(245, 130, 22, 0.25), transparent 55%),
+    radial-gradient(ellipse at 30% 80%, rgba(244, 189, 83, 0.12), transparent 45%),
+    #090a0d;
+  isolation: isolate;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(245, 130, 22, 0.14), transparent 60%);
+  pointer-events: none;
+}
+
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(244, 189, 83, 0.12);
+  animation: spin 24s linear infinite;
+}
+
+.orbit1 {
+  width: 90%;
+  height: 90%;
+}
+
+.orbit2 {
+  width: 70%;
+  height: 70%;
+  animation-direction: reverse;
+  animation-duration: 18s;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.laptop {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 68%;
+  height: 46%;
+  transform: translate(-50%, -50%) perspective(900px) rotateX(18deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.laptopScreen {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #15161d, #0d0e12);
+  border: 1px solid rgba(244, 189, 83, 0.18);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 40px rgba(245, 130, 22, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.screenBar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(244, 189, 83, 0.08);
+}
+
+.screenBar span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #423020;
+}
+
+.screenBar span:first-child {
+  background: #f58216;
+}
+
+.dashboard {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 16%;
+  background: rgba(0, 0, 0, 0.25);
+  border-right: 1px solid rgba(244, 189, 83, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 8px;
+}
+
+.sidebar i {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(244, 189, 83, 0.18);
+}
+
+.sidebar i:nth-child(2) {
+  width: 60%;
+}
+
+.main {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.heading b {
+  height: 8px;
+  width: 35%;
+  border-radius: 4px;
+  background: rgba(244, 189, 83, 0.25);
+}
+
+.heading i {
+  height: 8px;
+  width: 15%;
+  border-radius: 4px;
+  background: rgba(244, 189, 83, 0.12);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tiles span {
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(245, 130, 22, 0.2), rgba(244, 189, 83, 0.08));
+  border: 1px solid rgba(244, 189, 83, 0.1);
+}
+
+.chart {
+  flex: 1;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.chart svg {
+  width: 100%;
+  height: 100%;
+}
+
+.bottom {
+  display: flex;
+  gap: 6px;
+}
+
+.bottom span {
+  height: 6px;
+  flex: 1;
+  border-radius: 3px;
+  background: rgba(244, 189, 83, 0.12);
+}
+
+.laptopBase {
+  width: 78%;
+  height: 10px;
+  background: linear-gradient(180deg, #1f2028, #111216);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.phone {
+  position: absolute;
+  right: 8%;
+  top: 22%;
+  width: 14%;
+  min-width: 48px;
+  height: 36%;
+  background: #0d0e12;
+  border: 1px solid rgba(244, 189, 83, 0.18);
+  border-radius: 1rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  padding: 6px 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: float 5s ease-in-out infinite;
+  z-index: 3;
+}
+
+.phoneBar {
+  width: 28%;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(244, 189, 83, 0.2);
+  margin: 0 auto 4px;
+}
+
+.bubble {
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.bubbleLeft {
+  align-self: flex-start;
+  width: 70%;
+  background: rgba(244, 189, 83, 0.15);
+}
+
+.bubbleRight {
+  align-self: flex-end;
+  width: 60%;
+  background: rgba(245, 130, 22, 0.2);
+}
+
+.bubble::after {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 70%;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-top: 4px;
+}
+
+.bubbleRight::after {
+  width: 55%;
+}
+
+.floating {
+  position: absolute;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(244, 189, 83, 0.18);
+  background: rgba(17, 18, 22, 0.85);
+  backdrop-filter: blur(6px);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  animation: float 6s ease-in-out infinite;
+  z-index: 4;
+}
+
+.floatingTop {
+  left: 6%;
+  top: 18%;
+  animation-delay: -2s;
+}
+
+.floatingBottom {
+  right: 10%;
+  bottom: 14%;
+  animation-delay: -4s;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f4bd53, #f58216);
+  display: grid;
+  place-items: center;
+  color: #090a0d;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pulse {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.25);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 48px;
+}
+
+.lines i {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(244, 189, 83, 0.25);
+}
+
+.lines i:nth-child(2) {
+  width: 70%;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit,
+  .phone,
+  .floating,
+  .pulse::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .visual {
+    aspect-ratio: 1 / 1;
+  }
+
+  .laptop {
+    width: 78%;
+    height: 44%;
+  }
+
+  .phone {
+    right: 4%;
+    top: 18%;
+    width: 16%;
+    height: 34%;
+  }
+
+  .floating {
+    padding: 6px 8px;
+  }
+
+  .lines {
+    width: 36px;
+  }
+}
