@@ -84,16 +84,23 @@ function Dropdown({
   isActive: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [pinned, setPinned] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         setOpen(false);
+        setPinned(false);
       }
     }
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        setPinned(false);
+        if (ref.current?.contains(document.activeElement)) triggerRef.current?.focus();
+      }
     }
     if (open) {
       document.addEventListener("mousedown", handleClick);
@@ -110,14 +117,23 @@ function Dropdown({
       ref={ref}
       className="relative hidden lg:block"
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseLeave={() => { if (!pinned && !ref.current?.contains(document.activeElement)) setOpen(false); }}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setOpen(false);
+          setPinned(false);
+        }
+      }}
     >
       <button
         type="button"
+        ref={triggerRef}
         aria-expanded={open}
-        aria-haspopup="menu"
         aria-current={isActive ? "page" : undefined}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          setOpen(!pinned);
+          setPinned(!pinned);
+        }}
         className={cn(
           "nav-link relative flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium transition-colors hover:bg-muted",
           isActive ? "text-foreground" : "text-muted-foreground",
@@ -129,9 +145,9 @@ function Dropdown({
 
       {open && (
         <div
-          role="menu"
-          className="absolute left-0 top-full z-50 mt-2 w-72 origin-top-left rounded-xl border border-border bg-[#18191F] p-2 shadow-2xl"
+          className="absolute left-0 top-full z-50 w-72 pt-2"
         >
+          <div className="origin-top-left rounded-xl border border-border bg-[#18191F] p-2 shadow-2xl">
           <div className="space-y-1">
             {items.map((item) => {
               const Icon = item.icon;
@@ -139,8 +155,7 @@ function Dropdown({
                 <Link
                   key={item.href}
                   href={item.href}
-                  role="menuitem"
-                  onClick={() => setOpen(false)}
+                  onClick={() => { setOpen(false); setPinned(false); }}
                   className="group flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-[#222329]"
                 >
                   {Icon && (
@@ -159,11 +174,12 @@ function Dropdown({
           <div className="mt-2 border-t border-border pt-2">
             <Link
               href={href}
-              onClick={() => setOpen(false)}
+              onClick={() => { setOpen(false); setPinned(false); }}
               className="flex items-center justify-between rounded-lg px-2.5 py-2 text-sm font-semibold text-[#F4BD53] transition-colors hover:bg-[#222329]"
             >
               View all {label.toLowerCase()} <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
           </div>
         </div>
       )}
@@ -326,6 +342,7 @@ export function Navbar() {
             <div>
               <button
                 type="button"
+                aria-expanded={!!mobileSections.services}
                 onClick={() => toggleMobileSection("services")}
                 className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground"
               >
@@ -359,6 +376,7 @@ export function Navbar() {
             <div>
               <button
                 type="button"
+                aria-expanded={!!mobileSections.internships}
                 onClick={() => toggleMobileSection("internships")}
                 className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground"
               >
@@ -397,6 +415,7 @@ export function Navbar() {
             <div>
               <button
                 type="button"
+                aria-expanded={!!mobileSections.resources}
                 onClick={() => toggleMobileSection("resources")}
                 className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground"
               >
