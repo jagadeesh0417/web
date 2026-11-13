@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -22,20 +23,16 @@ import {
   BarChart3,
   HeartHandshake,
   Sparkles,
-  Star,
-  Quote,
   MessageCircle,
   Phone,
 } from "lucide-react";
 import { services, siteConfig } from "@/config/site";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 import { publicPortfolio as portfolioItems } from "@/lib/data/public-portfolio";
-import { testimonials } from "@/lib/data/sample-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
-import { HeroVisual } from "@/components/marketing/hero-visual";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -215,7 +212,32 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10">
-            <HeroVisual />
+            <div className="relative overflow-hidden rounded-2xl border border-[#423020]/50 bg-[#090A0D] shadow-2xl shadow-orange-950/20">
+              <Image
+                src="/visual-assets/hero/hero-cinematic-desktop.svg"
+                alt="Akradhii cinematic hero visual"
+                width={800}
+                height={450}
+                className="hidden w-full lg:block"
+                priority
+              />
+              <Image
+                src="/visual-assets/hero/hero-cinematic-tablet.svg"
+                alt="Akradhii cinematic hero visual"
+                width={600}
+                height={450}
+                className="hidden w-full sm:block lg:hidden"
+                priority
+              />
+              <Image
+                src="/visual-assets/hero/hero-cinematic-mobile.svg"
+                alt="Akradhii cinematic hero visual"
+                width={375}
+                height={300}
+                className="block w-full sm:hidden"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -540,49 +562,6 @@ export default function HomePage() {
               </Link>
             </Button>
           </Reveal>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-2 text-xs font-bold uppercase tracking-[.16em] text-[#F4BD53]">— Testimonials</p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Loved by clients and interns</h2>
-          <p className="mt-4 text-muted-foreground">Real feedback from the people we work with.</p>
-        </Reveal>
-
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.slice(0, 6).map((t, i) => (
-            <Reveal key={t.id} delay={i * 0.05}>
-              <Card className="h-full p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-0.5 text-warning">
-                    {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} className="h-4 w-4 fill-current" />
-                    ))}
-                  </div>
-                  <Quote className="h-6 w-6 text-brand-500/20" />
-                </div>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">&ldquo;{t.quote}&rdquo;</p>
-                <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
-                  <div
-                    className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold text-white",
-                      t.gradient,
-                    )}
-                  >
-                    {t.initials}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {t.role} · {t.company}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </Reveal>
-          ))}
         </div>
       </section>
 
