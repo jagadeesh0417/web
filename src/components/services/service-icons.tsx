@@ -2,8 +2,6 @@ import {
   Bot,
   Globe,
   LayoutGrid,
-  Megaphone,
-  Palette,
   Search,
   Sparkles,
   TrendingUp,
