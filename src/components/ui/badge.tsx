@@ -8,7 +8,7 @@ const styles: Record<Variant, string> = {
   success: "bg-success/10 text-success",
   warning: "bg-warning/10 text-warning",
   destructive: "bg-destructive/10 text-destructive",
-  info: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
+  info: "bg-sky-500/10 text-sky-600 dark:text-sky-300",
   outline: "border border-border text-muted-foreground",
 };
 

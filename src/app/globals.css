@@ -4,9 +4,24 @@
 @custom-variant dark (&:where(.dark, .dark *, :root));
 
 :root {
+  /* ── Akradhii logo palette (semantic tokens) ─────────────────────────
+     Gold, amber and ember values sampled from the approved Akradhii logo.
+     Every brand utility and gradient in the application derives from these. */
+  --brand-cream: #fff9ed;
+  --brand-ivory: #fef3c7;
+  --brand-butter: #fde68a;
+  --brand-gold: #F4BD53;
+  --brand-amber: #D6A24A;
+  --brand-orange: #F58216;
+  --brand-ember: #C75A19;
+  --brand-bronze: #9E351B;
+  --brand-cocoa: #783d0d;
+  --brand-umber: #65340f;
+  --brand-ink: #381b08;
+
   --background: #090A0D;
   --background-secondary: #111216;
-  --background-light: #fff9ed;
+  --background-light: var(--brand-cream);
   --foreground: #F7F4EF;
   --text-primary: #F7F4EF;
   --text-dark: #111827;
@@ -17,16 +32,16 @@
   --muted: var(--background-secondary);
   --muted-foreground: var(--text-muted);
   --border: #423020;
-  --border-gold: #D6A24A;
+  --border-gold: var(--brand-amber);
   --input-bg: #111216;
   --input-text: #ffffff;
   --input-border: #423020;
   --input: var(--input-border);
-  --ring: #D6A24A;
-  --primary: #D6A24A;
-  --primary-hover: #F4BD53;
+  --ring: var(--brand-amber);
+  --primary: var(--brand-amber);
+  --primary-hover: var(--brand-gold);
   --primary-foreground: #090A0D;
-  --secondary: #F58216;
+  --secondary: var(--brand-orange);
   --secondary-hover: #fbbf24;
   --secondary-foreground: #111827;
   --accent: #222329;
@@ -35,7 +50,7 @@
   --destructive: var(--error);
   --success: #22c55e;
   --warning: #fbbf24;
-  --gradient-gold: linear-gradient(135deg, #F4BD53, #F58216);
+  --gradient-gold: linear-gradient(135deg, var(--brand-gold), var(--brand-orange));
   --gradient-dark: linear-gradient(135deg, #090A0D, #18191F);
   --radius: 0.75rem;
   --dropdown-bg: #18191F;
@@ -73,17 +88,23 @@
   --color-warning: var(--warning);
   --color-popover: var(--card);
   --color-popover-foreground: var(--card-foreground);
-  --color-brand-50: #fff9ed;
-  --color-brand-100: #fef3c7;
-  --color-brand-200: #fde68a;
-  --color-brand-300: #F4BD53;
-  --color-brand-400: #F4BD53;
-  --color-brand-500: #D6A24A;
-  --color-brand-600: #F58216;
-  --color-brand-700: #C75A19;
-  --color-brand-800: #783d0d;
-  --color-brand-900: #65340f;
-  --color-brand-950: #381b08;
+  /* Akradhii brand scale — derived from the semantic logo tokens in :root */
+  --color-brand-50: var(--brand-cream);
+  --color-brand-100: var(--brand-ivory);
+  --color-brand-200: var(--brand-butter);
+  --color-brand-300: var(--brand-gold);
+  --color-brand-400: var(--brand-gold);
+  --color-brand-500: var(--brand-amber);
+  --color-brand-600: var(--brand-orange);
+  --color-brand-700: var(--brand-ember);
+  --color-brand-800: var(--brand-cocoa);
+  --color-brand-900: var(--brand-umber);
+  --color-brand-950: var(--brand-ink);
+  /* Named brand utilities used by gradients, accents and focus rings */
+  --color-brand-amber: var(--brand-amber);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-ember: var(--brand-ember);
+  --color-brand-bronze: var(--brand-bronze);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 4px);
   --radius-sm: calc(var(--radius) - 8px);
@@ -103,10 +124,10 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
   background:
-    radial-gradient(1100px 550px at 85% -10%, color-mix(in srgb, #F58216 10%, transparent), transparent 60%),
-    radial-gradient(900px 500px at -10% 15%, color-mix(in srgb, #D6A24A 8%, transparent), transparent 55%),
-    radial-gradient(700px 400px at 50% 110%, color-mix(in srgb, #9E351B 6%, transparent), transparent 60%),
-    linear-gradient(145deg, #090A0D, #17120F, #090A0D);
+    radial-gradient(1100px 550px at 85% -10%, color-mix(in srgb, var(--brand-orange) 10%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 15%, color-mix(in srgb, var(--brand-amber) 8%, transparent), transparent 55%),
+    radial-gradient(700px 400px at 50% 110%, color-mix(in srgb, var(--brand-bronze) 6%, transparent), transparent 60%),
+    linear-gradient(145deg, var(--background), #17120F, var(--background));
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-inter), Arial, sans-serif;
@@ -162,25 +183,10 @@ select:focus-visible, button:focus-visible, a:focus-visible {
 }
 
 .text-gradient {
-  background: linear-gradient(90deg, #F4BD53 0%, #F58216 50%, #D6A24A 100%);
+  background: linear-gradient(90deg, var(--brand-gold) 0%, var(--brand-orange) 50%, var(--brand-amber) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.text-gradient-animated {
-  background: linear-gradient(90deg, #F4BD53 0%, #F58216 30%, #C75A19 55%, #F4BD53 100%);
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 6s linear infinite;
-}
-
-@keyframes gradient-shift {
-  to {
-    background-position: 220% center;
-  }
 }
 
 .bg-grid {
@@ -191,7 +197,7 @@ select:focus-visible, button:focus-visible, a:focus-visible {
 }
 
 .bg-glow {
-  background: radial-gradient(600px 300px at 50% 0%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%);
+  background: radial-gradient(600px 300px at 50% 0%, color-mix(in srgb, var(--brand-orange) 18%, transparent), transparent 70%);
 }
 
 .glass {
@@ -225,9 +231,9 @@ select:focus-visible, button:focus-visible, a:focus-visible {
   }
 }
 
-@keyframes marquee-x {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .animate-fade-up {
@@ -235,7 +241,7 @@ select:focus-visible, button:focus-visible, a:focus-visible {
 }
 
 .animate-marquee {
-  animation: marquee-x 32s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -246,138 +252,6 @@ select:focus-visible, button:focus-visible, a:focus-visible {
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
 .delay-400 { animation-delay: 400ms; }
-
-.bg-grid-fade {
-  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 20%, black 35%, transparent 78%);
-  mask-image: radial-gradient(ellipse 75% 65% at 50% 20%, black 35%, transparent 78%);
-}
-
-.bg-glow {
-  background: radial-gradient(600px 300px at 50% 0%, color-mix(in srgb, #F58216 18%, transparent), transparent 70%);
-}
-
-.glass {
-  background: color-mix(in srgb, var(--card) 70%, transparent);
-  backdrop-filter: blur(12px);
-}
-
-.aurora-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(45px);
-  pointer-events: none;
-  animation: aurora-drift 16s ease-in-out infinite;
-}
-
-@keyframes aurora-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(50px, -35px) scale(1.12); }
-  66% { transform: translate(-40px, 25px) scale(0.92); }
-}
-
-@keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-  animation: float-y 6s ease-in-out infinite;
-}
-
-@keyframes ping-soft {
-  0% { transform: scale(1); opacity: 0.7; }
-  80%, 100% { transform: scale(2.4); opacity: 0; }
-}
-
-.animate-ping-soft {
-  animation: ping-soft 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.marquee-hover-pause:hover .animate-marquee {
-  animation-play-state: paused;
-}
-
-@keyframes sweep-x {
-  0% { transform: translateX(-160%) skewX(-14deg); }
-  100% { transform: translateX(460%) skewX(-14deg); }
-}
-
-.animate-sweep {
-  animation: sweep-x 5s ease-in-out infinite;
-}
-
-.btn-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-shine::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 45%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  animation: sweep-x 3.6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.glow-card {
-  position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.glow-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(500px circle at 50% 0%, color-mix(in srgb, #D6A24A 10%, transparent), transparent 50%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.glow-card:hover::before {
-  opacity: 1;
-}
-
-.glow-card:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, #D6A24A 45%, var(--border));
-  box-shadow: 0 22px 45px -18px color-mix(in srgb, #F58216 35%, transparent);
-}
-
-.gradient-border {
-  border: 1px solid transparent;
-  background:
-    linear-gradient(var(--card), var(--card)) padding-box,
-    linear-gradient(135deg, #F4BD53, #F58216, #9E351B) border-box;
-}
-
-.gradient-border-animated {
-  border: 1px solid transparent;
-  background:
-    linear-gradient(var(--card), var(--card)) padding-box,
-    linear-gradient(135deg, #F4BD53, #F58216, #9E351B, #F4BD53) border-box;
-  background-size: 100% 100%, 300% 300%;
-  background-position: 0 0, 0% 50%;
-  animation: border-flow 6s linear infinite;
-}
-
-@keyframes border-flow {
-  0% { background-position: 0 0, 0% 50%; }
-  50% { background-position: 0 0, 100% 50%; }
-  100% { background-position: 0 0, 0% 50%; }
-}
-
-.gradient-hairline {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, #D6A24A 55%, transparent), transparent);
-}
-
-.reveal-visible { animation: fade-up .6s ease both; }
 
 @media print {
   body * {
