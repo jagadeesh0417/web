@@ -53,7 +53,7 @@ export default function AdminProjectsPage() {
       cell: (r) => (
         <div className="flex items-center gap-2">
           <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-500" style={{ width: `${r.progress}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-brand-600 to-brand-600" style={{ width: `${r.progress}%` }} />
           </div>
           <span className="text-xs font-semibold">{r.progress}%</span>
         </div>

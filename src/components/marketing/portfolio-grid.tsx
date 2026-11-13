@@ -40,7 +40,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-12 text-center text-sm text-muted-foreground">No projects in this category yet.</p>
+        <p className="mt-12 text-center text-sm text-muted-foreground">No approved case studies are available yet. Contact us to discuss your project.</p>
       ) : (
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {filtered.map((p) => (

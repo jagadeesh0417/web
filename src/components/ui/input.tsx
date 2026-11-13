@@ -34,10 +34,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
     <select
       ref={ref}
       className={cn(
-        "flex h-10 w-full appearance-none rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
-      style={{ colorScheme: "dark" }}
       {...props}
     >
       {children}
@@ -53,9 +52,9 @@ export const Label = forwardRef<HTMLLabelElement, LabelHTMLAttributes<HTMLLabelE
 );
 Label.displayName = "Label";
 
-export function FieldError({ message }: { message?: string }) {
+export function FieldError({ message, id }: { message?: string; id?: string }) {
   if (!message) return null;
-  return <p className="mt-1 text-xs text-destructive">{message}</p>;
+  return <p id={id} className="mt-1 text-xs text-destructive">{message}</p>;
 }
 
 export function Field({ label, error, hint, children, htmlFor }: { label: string; error?: string; hint?: string; children: React.ReactNode; htmlFor?: string }) {
@@ -64,7 +63,7 @@ export function Field({ label, error, hint, children, htmlFor }: { label: string
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
-      <FieldError message={error} />
+      <FieldError id={htmlFor ? `${htmlFor}-error` : undefined} message={error} />
     </div>
   );
 }

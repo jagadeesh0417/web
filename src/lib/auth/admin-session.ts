@@ -27,7 +27,7 @@ export async function getAdminSession(): Promise<AppUser | null> {
       const { data } = await supabase.auth.getUser();
       const user = data.user;
       if (!user) return null;
-      const role = (user.user_metadata?.role as Role) ?? "user";
+      const role = (user.app_metadata?.role as Role) ?? "user";
       if (!isAdminRole(role)) return null;
       return {
         id: user.id,
@@ -43,6 +43,7 @@ export async function getAdminSession(): Promise<AppUser | null> {
     }
   }
 
+  if (process.env.NODE_ENV === "production") return null;
   const raw = cookieStore.get("ak_demo_session")?.value ?? null;
   const session = parseDemoSession(raw);
   if (!session) return null;

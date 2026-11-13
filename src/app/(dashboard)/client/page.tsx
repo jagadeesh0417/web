@@ -42,7 +42,7 @@ export default function ClientDashboard() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Active projects" value={String(activeProjects)} delta={1} deltaLabel="this month" icon={FolderKanban} gradient="from-violet-600 to-indigo-600" />
+        <StatCard title="Active projects" value={String(activeProjects)} delta={1} deltaLabel="this month" icon={FolderKanban} gradient="from-brand-600 to-brand-600" />
         <StatCard title="Outstanding" value={formatCurrency(outstanding)} delta={12} deltaLabel="vs last month" icon={Receipt} gradient="from-amber-500 to-orange-600" />
         <StatCard title="Open tickets" value={String(tickets.filter((t) => t.status !== "resolved").length)} delta={-2} deltaLabel="vs last week" icon={LifeBuoy} gradient="from-blue-600 to-cyan-500" />
         <StatCard title="Total invested" value={formatCurrency(invoices.reduce((a, i) => a + i.amount, 0))} delta={0} deltaLabel="all time" icon={ArrowUpRight} gradient="from-emerald-600 to-teal-500" />

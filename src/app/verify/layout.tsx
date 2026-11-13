@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Verify Certificate",
   description:
-    "Verify the authenticity of an Akradhii internship certificate by entering the certificate ID or scanning the QR code.",
+    "Request manual verification of an Akradhii internship certificate from support.",
   openGraph: {
     title: "Verify Certificate",
     description: "Public certificate authenticity verification.",
@@ -26,5 +26,6 @@ export const metadata: Metadata = {
 };
 
 export default function VerifyLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  const schema = { "@context": "https://schema.org", "@type": "WebPage", name: "Verify an Akradhii certificate", url: `${siteConfig.url}/verify`, description: "Verify an Akradhii internship certificate." };
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />{children}</>;
 }

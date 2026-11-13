@@ -1,12 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
+import { randomUUID } from "node:crypto";
 import { generateId } from "@/lib/utils";
-import { emailSchema } from "@/lib/validators";
+import { contactFormSchema, emailSchema } from "@/lib/validators";
 import { buildWhatsAppMessage, extractPrimaryFields } from "@/lib/leads/format";
 import { isValidPhone, normalizePhone, formatPhoneDisplay } from "@/lib/leads/phone";
 import {
-  checkRateLimit,
-  getLeadByIdempotencyKey,
   hashIp,
   listLeads,
   saveLead,
@@ -14,6 +13,8 @@ import {
 } from "@/lib/leads/store";
 import { sendWhatsAppText } from "@/lib/leads/whatsapp";
 import type { LeadFormType, WebsiteLead, LeadFields } from "@/lib/leads/types";
+import { requireAdminApi } from "@/lib/auth/api-guard";
+import { allowRequest, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,14 +45,6 @@ const leadBodySchema = z.object({
   deviceType: z.string().max(32).optional(),
   idempotencyKey: z.string().max(80).optional(),
 });
-
-function clientIp(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown"
-  );
-}
 
 function sanitizeString(value: unknown, max = 2000): string {
   if (value === null || value === undefined) return "";
@@ -100,7 +93,11 @@ function requireContactBasics(formType: LeadFormType, fields: LeadFields): strin
 
 export async function POST(request: NextRequest) {
   const ip = clientIp(request);
-  if (!checkRateLimit(ip)) {
+  if (!ip) return NextResponse.json({ ok: false, error: "Service temporarily unavailable." }, { status: 503 });
+  let allowed: boolean;
+  try { allowed = await allowRequest("contact", ip, 8); }
+  catch { return NextResponse.json({ ok: false, error: "Service temporarily unavailable." }, { status: 503 }); }
+  if (!allowed) {
     return NextResponse.json(
       { ok: false, error: "Too many submissions. Please try again in a few minutes." },
       { status: 429 },
@@ -150,19 +147,12 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-idempotency-key") ||
     undefined;
 
-  if (idemKey) {
-    const existing = await getLeadByIdempotencyKey(idemKey);
-    if (existing) {
-      return NextResponse.json({
-        ok: true,
-        leadId: existing.id,
-        whatsappStatus: existing.whatsappStatus,
-        message: "Message sent successfully",
-      });
-    }
-  }
-
   const fields = sanitizeFields(data.fields);
+  if (data.formType === "contact" && !contactFormSchema.safeParse({
+    name: fields.name, email: fields.email, phone: fields.phone ?? "", topic: fields.topic, message: fields.message,
+  }).success) {
+    return NextResponse.json({ ok: false, error: "Please check the form and try again." }, { status: 400 });
+  }
   const validationError = requireContactBasics(data.formType, fields);
   if (validationError) {
     return NextResponse.json({ ok: false, error: validationError }, { status: 400 });
@@ -179,7 +169,7 @@ export async function POST(request: NextRequest) {
 
   const now = new Date().toISOString();
   const lead: WebsiteLead = {
-    id: generateId("lead"),
+    id: `lead_${randomUUID()}`,
     formType: data.formType,
     source: sanitizeString(data.source, 200),
     page: sanitizeString(data.page || data.source, 200),
@@ -211,9 +201,10 @@ export async function POST(request: NextRequest) {
 
   // Layer 1 — always persist first so WhatsApp failure never loses the lead
   try {
-    await saveLead(lead, idemKey);
+    const saved = await saveLead(lead, idemKey);
+    if (!saved.created) return NextResponse.json({ ok: true, leadId: saved.lead.id, whatsappStatus: saved.lead.whatsappStatus, message: "Message received successfully" });
   } catch (err) {
-    console.error("[leads] storage failed:", err instanceof Error ? err.message : err);
+    console.error("[leads] storage failed", err instanceof Error ? err.name : "UnknownError");
     return NextResponse.json(
       { ok: false, error: "Something went wrong. Please try again." },
       { status: 500 },
@@ -223,11 +214,15 @@ export async function POST(request: NextRequest) {
   // Layer 2 — WhatsApp notification (best effort)
   const message = buildWhatsAppMessage(lead);
   const wa = await sendWhatsAppText(message);
-  await updateLeadWhatsApp(lead.id, {
-    whatsappStatus: wa.status,
-    whatsappMessageId: wa.messageId,
-    whatsappError: wa.error,
-  });
+  try {
+    await updateLeadWhatsApp(lead.id, {
+      whatsappStatus: wa.status,
+      whatsappMessageId: wa.messageId,
+      whatsappError: wa.error,
+    });
+  } catch (err) {
+    console.error("[leads] notification status update failed", err instanceof Error ? err.name : "UnknownError");
+  }
 
   const successMessage =
     data.formType === "internship_application"
@@ -243,31 +238,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  // Admin listing — allow when demo session is admin OR ADMIN_LEADS_SECRET header matches
+  // Admin listing — a verified admin session or explicitly configured secret.
   const secret = process.env.ADMIN_LEADS_SECRET?.trim();
   const headerSecret = request.headers.get("x-admin-secret")?.trim();
-  const demoCookie = request.cookies.get("ak_demo_session")?.value;
-  let isAdmin = false;
-
-  if (secret && headerSecret && secret === headerSecret) isAdmin = true;
-
-  if (demoCookie) {
-    try {
-      const data = JSON.parse(decodeURIComponent(demoCookie)) as { role?: string };
-      if (data.role === "admin" || data.role === "super_admin") isAdmin = true;
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // In local/demo without secrets, still allow GET so admin dashboard works in demo mode
-  const supabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  );
-  if (!supabaseConfigured && !secret) isAdmin = true;
-
-  if (!isAdmin) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  if (!(secret && headerSecret && secret === headerSecret)) {
+    const auth = await requireAdminApi(request);
+    if ("error" in auth) return auth.error;
   }
 
   const leads = await listLeads();

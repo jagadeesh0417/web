@@ -8,6 +8,7 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (process.env.NODE_ENV === "production") return NextResponse.json({ ok: false, error: "Certificate records are temporarily unavailable." }, { status: 503 });
   const { id } = await params;
   const certId = decodeURIComponent(id);
 

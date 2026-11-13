@@ -19,7 +19,7 @@ const authorAvatars: Record<string, string> = {
 };
 
 export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+  return blogPosts.filter((p) => p.published).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -28,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = blogPosts.find((p) => p.slug === slug && p.published);
   if (!post) return { title: "Article not found" };
   return {
     title: `${post.title} Blog`,
@@ -59,7 +59,7 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = blogPosts.find((p) => p.slug === slug && p.published);
   if (!post) notFound();
 
   const related = blogPosts
@@ -147,7 +147,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <CopyLinkButton />
       </div>
 
-      <Card className="mt-8 bg-gradient-to-br from-violet-700/40 to-indigo-700/40 p-6">
+      <Card className="mt-8 bg-gradient-to-br from-brand-600 to-brand-600 p-6">
         <h2 className="text-lg font-bold">Need help putting this into practice?</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Talk to Akradhii about services or internship programs that match this topic.

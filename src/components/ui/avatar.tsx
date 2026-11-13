@@ -1,13 +1,13 @@
 import { cn, initials as toInitials } from "@/lib/utils";
 
 const gradients = [
-  "from-violet-600 to-indigo-600",
-  "from-fuchsia-600 to-pink-600",
-  "from-blue-600 to-cyan-500",
-  "from-emerald-600 to-teal-500",
+  "from-amber-600 to-orange-600",
+  "from-amber-600 to-orange-600",
+  "from-orange-600 to-amber-500",
   "from-amber-500 to-orange-600",
-  "from-purple-600 to-violet-500",
-  "from-rose-500 to-red-500",
+  "from-amber-500 to-orange-600",
+  "from-amber-600 to-amber-500",
+  "from-orange-600 to-amber-600",
 ];
 
 function gradientFor(name: string): string {

@@ -55,7 +55,7 @@ export async function requireStudentApi(
           ),
         };
       }
-      const role = (user.user_metadata?.role as Role) ?? "user";
+      const role = (user.app_metadata?.role as Role) ?? "user";
       if (!isStudentRole(role)) {
         return {
           error: NextResponse.json(
@@ -79,10 +79,11 @@ export async function requireStudentApi(
         },
       };
     } catch {
-      // Supabase failed — fall through to demo mode
+      if (process.env.NODE_ENV === "production") return { error: NextResponse.json({ error: "Authentication unavailable" }, { status: 503 }) };
     }
   }
 
+  if (process.env.NODE_ENV === "production") return { error: NextResponse.json({ error: "Authentication required" }, { status: 401 }) };
   const raw = request.cookies.get("ak_demo_session")?.value ?? null;
   const session = parseDemoSession(raw);
   if (!session) {

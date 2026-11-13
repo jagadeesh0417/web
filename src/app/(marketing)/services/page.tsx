@@ -1,154 +1,72 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Blocks, Compass, Layers3, ShieldCheck } from "lucide-react";
 import { servicesHub } from "@/config/services-detail";
 import { siteConfig } from "@/config/site";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
-import { ServiceIcon } from "@/components/services/service-icons";
-import { PortfolioGrid } from "@/components/marketing/portfolio-grid";
-import { portfolioItems } from "@/lib/data/sample-data";
+import { ServiceCatalog } from "@/components/services/service-catalog";
+import { ServiceEnquiryForm } from "@/components/services/service-enquiry-form";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Explore Akradhii services — website development, Meta Ads, automation, CRM, AI, SEO and branding. Open a dedicated page for each offering.",
-  keywords: [
-    "web design services",
-    "meta ads agency",
-    "CRM solutions hyderabad",
-    "AI automation services",
-    "SEO agency india",
-  ],
-  openGraph: {
-    title: "Services",
-    description: "Website development, Meta Ads, automation, CRM, AI, SEO and branding services.",
-    url: `${siteConfig.url}/services`,
-    images: [
-      {
-        url: `${siteConfig.url}/og-default.svg`,
-        width: 1200,
-        height: 630,
-        alt: "Akradhii Services",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: [`${siteConfig.url}/og-default.svg`],
-  },
+  title: "Digital Agency Services",
+  description: "Explore Akradhii's website development, Meta Ads, business automation, CRM, AI automation, SEO and branding services.",
+  alternates: { canonical: `${siteConfig.url}/services` },
 };
 
-const stats = [
-  { value: "120+", label: "Projects Delivered" },
-  { value: "30+", label: "Industries" },
-  { value: "7", label: "Service Areas" },
+const approach = [
+  { icon: Compass, title: "A clear direction", description: "Start with your goals, audience and constraints before choosing a solution." },
+  { icon: Layers3, title: "Built around your business", description: "Shape scope and integrations around the way your team works." },
+  { icon: Blocks, title: "Room to grow", description: "Plan the foundations, handoff and next steps with future changes in mind." },
+  { icon: ShieldCheck, title: "Support beyond launch", description: "Discuss maintenance, updates and ongoing support as part of your engagement." },
+];
+const process = ["Discovery", "Strategy", "Design", "Development", "Testing", "Launch", "Optimization"];
+const industries = ["E-commerce", "Education", "Healthcare", "Travel", "Hospitality", "Real estate", "Professional services", "Startups"];
+const questions = [
+  { q: "Can I combine services?", a: "Yes. Tell us what you are trying to achieve and we can discuss a scope that combines the relevant disciplines." },
+  { q: "How is a project scoped?", a: "We start by discussing your objectives, existing systems and priorities, then outline the proposed deliverables and milestones before work begins." },
+  { q: "Can you work with our existing tools?", a: "We can review your current website, CRM or marketing tools and discuss the integrations appropriate for your project." },
+  { q: "Is ongoing support available?", a: "Support requirements vary by project. We can discuss maintenance and ongoing work as part of your proposal." },
 ];
 
 export default function ServicesHubPage() {
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 bg-grid opacity-40" />
-        <div className="absolute inset-0 bg-glow" />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <Badge variant="primary" className="mb-4">Our services</Badge>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Everything your brand needs to grow
-            </h1>
-            <p className="mt-4 text-muted-foreground">
-              One team, seven disciplines. Browse the overview below, then open a dedicated page for process, deliverables and a service-specific enquiry.
-            </p>
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              {stats.map((s) => (
-                <div key={s.label} className="rounded-xl border border-border bg-card/60 p-4">
-                  <p className="text-2xl font-bold text-brand-400">{s.value}</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              ))}
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-[#090a0d] via-[#17120f] to-[#090a0d]">
+        <div className="absolute inset-0 bg-grid opacity-20" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-28">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-[.24em] text-amber-400">Strategy · Design · Technology · Growth</p>
+            <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">Digital services built around <span className="text-gradient">your next stage of growth.</span></h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">From a stronger digital presence to more connected operations, explore the disciplines that can help your business move forward.</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href="#catalog" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-6 font-semibold text-black transition hover:brightness-110">Explore services <ArrowRight className="h-4 w-4" /></a>
+              <a href="#consultation" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-amber-500/50 px-6 font-semibold transition hover:bg-amber-500/10">Request consultation</a>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1} className="relative mx-auto w-full max-w-md">
+            <div aria-hidden="true" className="absolute inset-4 rounded-full bg-orange-500/10 blur-3xl" />
+            <div className="relative rounded-3xl border border-amber-500/25 bg-[#18191f]/95 p-6 shadow-2xl shadow-black/40 sm:p-8">
+              <p className="text-xs uppercase tracking-[.2em] text-amber-400">A connected approach</p>
+              <div className="mt-6 space-y-3">{["Build your digital presence", "Connect your tools and workflows", "Reach and engage your audience"].map((text, i) => <div key={text} className="flex items-center gap-4 rounded-xl border border-border bg-[#111216] p-4"><span className="text-sm font-semibold text-amber-400">0{i + 1}</span><span className="text-sm font-medium">{text}</span></div>)}</div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {servicesHub.map((s, i) => (
-            <Reveal key={s.id} delay={i * 0.04}>
-              <Card className="flex h-full flex-col p-6 transition-all hover:-translate-y-0.5 hover:border-brand-500/40 hover:shadow-xl hover:shadow-brand-600/10">
-                <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.gradient} text-white shadow-lg`}
-                >
-                  <ServiceIcon name={s.icon} className="h-6 w-6" />
-                </div>
-                <h2 className="mt-5 text-lg font-bold">{s.title}</h2>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">{s.description}</p>
-                <p className="mt-3 flex items-start gap-2 text-xs font-medium text-brand-300">
-                  <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                  {s.keyBenefit}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {s.features.slice(0, 3).map((f) => (
-                    <Badge key={f} variant="outline">{f}</Badge>
-                  ))}
-                </div>
-                <Button variant="outline" className="mt-6 w-full">
-                  <Link href={`/services/${s.id}`} className="flex w-full items-center justify-center gap-2">
-                    Explore service <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
+      <section id="catalog" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-400">What we do</p><h2 className="mt-3 text-3xl font-bold sm:text-4xl">Find the right expertise</h2><p className="mt-4 text-muted-foreground">Browse our existing service areas, compare capabilities and explore the details of each engagement.</p></div>
+        <ServiceCatalog services={servicesHub} />
       </section>
 
-      <section className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <Badge variant="primary" className="mb-4">Our work</Badge>
-            <h2 className="text-3xl font-bold tracking-tight">A look at what we&apos;ve built</h2>
-            <p className="mt-3 text-muted-foreground">
-              Selected engagements across websites, campaigns, automations and brand systems.
-            </p>
-          </Reveal>
-          <div className="mt-12">
-            <PortfolioGrid items={portfolioItems} />
-          </div>
-          <Reveal className="mt-12 text-center">
-            <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-white">
-              <h2 className="text-2xl font-bold">Have a similar project?</h2>
-              <p className="mx-auto mt-3 max-w-xl text-white/80">
-                We&apos;d love to understand your goals and map out how we can help.
-              </p>
-              <Button size="lg" className="mt-6 bg-white text-violet-700 hover:bg-white/90">
-                <Link href="/contact" className="flex items-center gap-2">
-                  Start a project <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </Card>
-          </Reveal>
-        </div>
-      </section>
+      <section className="border-y border-border bg-card/30"><div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><Reveal><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-400">Why Akradhii</p><h2 className="mt-3 text-3xl font-bold sm:text-4xl">Thoughtful work, from first conversation to handoff.</h2></Reveal><div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{approach.map(({ icon: Icon, title, description }) => <div key={title} className="rounded-2xl border border-border bg-card p-6"><Icon className="h-6 w-6 text-amber-400" /><h3 className="mt-5 font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p></div>)}</div></div></section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal className="text-center">
-          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-white">
-            <h2 className="text-2xl font-bold sm:text-3xl">Need a custom combination?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/80">
-              Most engagements bundle two or more services. Tell us your goals and we&apos;ll architect the stack.
-            </p>
-            <Button size="lg" className="mt-6 bg-white text-violet-700 hover:bg-white/90">
-              <Link href="/contact" className="flex items-center gap-2">
-                Start the conversation <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </Card>
-        </Reveal>
-      </section>
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><Reveal><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-400">How we work</p><h2 className="mt-3 text-3xl font-bold sm:text-4xl">A clear path from idea to launch.</h2><p className="mt-4 max-w-2xl text-muted-foreground">The exact process depends on the engagement; these are the stages we can shape together.</p></Reveal><ol className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{process.map((step, i) => <li key={step} className="rounded-xl border border-border bg-card/60 p-5"><span className="text-sm text-amber-400">0{i + 1}</span><h3 className="mt-3 font-semibold">{step}</h3></li>)}</ol></section>
+
+      <section className="border-y border-border bg-card/30"><div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><h2 className="text-3xl font-bold">Who we can work with</h2><p className="mt-4 text-muted-foreground">Our services may be relevant to teams across these target industries.</p><ul className="mt-8 flex flex-wrap gap-3">{industries.map((industry) => <li key={industry} className="rounded-full border border-border bg-card px-4 py-2 text-sm">{industry}</li>)}</ul></div></section>
+
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"><div className="grid gap-10 lg:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-400">Questions</p><h2 className="mt-3 text-3xl font-bold">Planning your project?</h2><p className="mt-4 text-muted-foreground">Start with a few common questions, or tell us what you need.</p><Link href="/contact" className="mt-6 inline-flex items-center gap-2 font-semibold text-amber-400 hover:text-amber-300">Contact our team <ArrowRight className="h-4 w-4" /></Link></div><div className="space-y-3">{questions.map(({ q, a }) => <details key={q} className="group rounded-xl border border-border bg-card p-5"><summary className="cursor-pointer font-semibold focus-visible:outline-2 focus-visible:outline-amber-400">{q}</summary><p className="mt-3 text-sm leading-6 text-muted-foreground">{a}</p></details>)}</div></div></section>
+
+      <section id="consultation" className="mx-auto max-w-7xl scroll-mt-24 px-4 pb-20 sm:px-6 lg:px-8"><div className="grid gap-8 rounded-3xl border border-amber-500/30 bg-gradient-to-br from-[#18191f] via-[#17120f] to-[#111216] p-6 sm:p-10 lg:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-400">Start a conversation</p><h2 className="mt-4 text-3xl font-bold sm:text-4xl">Tell us what you want to build.</h2><p className="mt-4 max-w-md text-muted-foreground">Share your goals and we can discuss the services and scope that fit your project.</p><p className="mt-6 text-sm text-muted-foreground"><a className="hover:text-amber-400" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><br /><a className="hover:text-amber-400" href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>{siteConfig.phone}</a></p></div><ServiceEnquiryForm serviceTitle="General services" serviceSlug="" /></div></section>
     </div>
   );
 }

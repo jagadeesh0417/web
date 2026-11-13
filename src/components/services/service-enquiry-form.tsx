@@ -7,6 +7,7 @@ import { Input, Textarea, Field } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { submitLead } from "@/lib/leads/client";
 import { emailSchema, nameSchema, phoneSchema } from "@/lib/validators";
+import { siteConfig } from "@/config/site";
 
 function validateField(name: string, value: string): string | undefined {
   switch (name) {
@@ -134,7 +135,7 @@ export function ServiceEnquiryForm({
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
           <div className="flex-1">
             <p className="font-medium text-destructive">Something went wrong.</p>
-            <p className="mt-1 text-muted-foreground">Please try WhatsApp or email <a href="mailto:hello@akradhii.com" className="font-medium text-brand-400 hover:underline">hello@akradhii.com</a>.</p>
+            <p className="mt-1 text-muted-foreground">Please try WhatsApp or email <a href={`mailto:${siteConfig.email}`} className="font-medium text-brand-400 hover:underline">{siteConfig.email}</a>.</p>
           </div>
           <button type="button" onClick={() => setServerError(null)} className="shrink-0 rounded-lg p-1 text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
@@ -165,7 +166,7 @@ export function ServiceEnquiryForm({
       </div>
 
       <Field label="Budget range" htmlFor={`budget-${serviceSlug}`}>
-        <select id={`budget-${serviceSlug}`} name="budget" className="flex h-10 w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Not sure yet">
+        <select id={`budget-${serviceSlug}`} name="budget" className="flex h-10 w-full rounded-lg border border-input bg-[#18191f] px-3 py-2 text-sm text-[#f7f4ef] outline-none focus:border-primary focus:ring-2 focus:ring-ring/30" defaultValue="Not sure yet">
           <option>Under ₹50,000</option>
           <option>₹50,000 – ₹2,00,000</option>
           <option>₹2,00,000 – ₹10,00,000</option>

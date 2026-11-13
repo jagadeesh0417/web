@@ -19,7 +19,7 @@ import { ServiceIcon } from "@/components/services/service-icons";
 export const metadata: Metadata = {
   title: "Company",
   description:
-    "Akradhii is a digital growth studio in Hyderabad — websites, Meta Ads, automation, CRM, AI, SEO, branding and structured internship programs.",
+    "Akradhii is a digital growth studio in Bengaluru — websites, Meta Ads, automation, CRM, AI, SEO, branding and structured internship programs.",
   openGraph: {
   title: "Company",
     description: siteConfig.description,
@@ -142,10 +142,10 @@ export default function CompanyPage() {
             ))}
             <Reveal delay={0.28}>
               <Link href="/internships">
-                <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-violet-700 to-indigo-700 p-5 text-white">
+                <Card className="flex h-full flex-col justify-center bg-gradient-to-br from-brand-600 to-brand-600 p-5 text-white">
                   <Rocket className="h-8 w-8" />
                   <h3 className="mt-3 text-sm font-semibold">Internships & education</h3>
-                  <p className="mt-1 text-xs text-white/80">Structured programs with projects, assessment and verifiable certificates.</p>
+                  <p className="mt-1 text-xs text-white/80">Structured programs with projects, assessment and completion certificates.</p>
                 </Card>
               </Link>
             </Reveal>
@@ -235,13 +235,13 @@ export default function CompanyPage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
-          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white sm:p-14">
+          <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white sm:p-14">
             <h2 className="text-2xl font-bold sm:text-3xl">Have a project in mind? Let&apos;s talk.</h2>
             <p className="mx-auto mt-3 max-w-xl text-white/85">
               Tell us your goals — we&apos;ll map a practical path across services, timeline and budget.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button size="lg" className="bg-white text-violet-800 hover:bg-white/90">
+              <Button size="lg" className="bg-white text-brand-600 hover:bg-white/90">
                 <Link href="/contact" className="flex items-center gap-2">
                   Contact us <ArrowRight className="h-4 w-4" />
                 </Link>

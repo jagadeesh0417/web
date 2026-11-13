@@ -60,7 +60,7 @@ export default function AdminBlogPage() {
       readingTime: Math.max(1, Math.round(form.content.split(/\s+/).length / 200)),
       publishedAt: existing?.publishedAt ?? new Date().toISOString(),
       published: existing?.published ?? true,
-      gradient: existing?.gradient ?? "from-violet-600 to-indigo-600",
+      gradient: existing?.gradient ?? "from-brand-600 to-brand-600",
       content: form.content.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean),
     };
     saveBlogPost(post);

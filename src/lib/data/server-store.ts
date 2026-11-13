@@ -1,5 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
+import { siteConfig } from "@/config/site";
+import { INTERNSHIP_PRICES_BY_DURATION } from "@/lib/internship-pricing";
 import type {
   Announcement,
   AppUser,
@@ -359,7 +361,7 @@ export async function seedInitialData(): Promise<void> {
       websiteUrl: "https://akradhii.vercel.app",
       udyamNumber: "UDYAM-TS-19-0012345",
       msmeInfo: "MSME Registered Enterprise",
-      address: "HITEC City, Hyderabad, Telangana 500081, India",
+      address: siteConfig.address,
       authorizedSignatoryName: "Akradhii",
       authorizedSignatoryDesignation: "Director",
       certificatePrefix: "AKR",
@@ -372,9 +374,7 @@ export async function seedInitialData(): Promise<void> {
     seedIfEmpty("withdrawals", []);
     seedIfEmpty("referral-config", [{
       id: "default",
-      fourWeekPrice: 149,
-      sixWeekPrice: 199,
-      eightWeekPrice: 249,
+      ...INTERNSHIP_PRICES_BY_DURATION,
       referralReward: 20,
       minimumWithdrawal: 200,
       attributionDays: 30,
@@ -720,7 +720,7 @@ export const companySettingsStore = {
       websiteUrl: "https://akradhii.vercel.app",
       udyamNumber: "UDYAM-TS-19-0012345",
       msmeInfo: "MSME Registered Enterprise",
-      address: "HITEC City, Hyderabad, Telangana 500081, India",
+      address: siteConfig.address,
       authorizedSignatoryName: "Akradhii",
       authorizedSignatoryDesignation: "Director",
       certificatePrefix: "AKR",
@@ -766,9 +766,7 @@ export const referralConfigStore = {
     if (existing) return update<ReferralConfig>("referral-config", "default", { ...patch, updatedAt: new Date().toISOString() });
     return create<ReferralConfig>("referral-config", {
       id: "default",
-      fourWeekPrice: 149,
-      sixWeekPrice: 199,
-      eightWeekPrice: 249,
+      ...INTERNSHIP_PRICES_BY_DURATION,
       referralReward: 20,
       minimumWithdrawal: 200,
       attributionDays: 30,

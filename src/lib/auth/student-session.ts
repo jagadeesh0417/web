@@ -43,6 +43,7 @@ export async function getStudentSession(): Promise<AppUser | null> {
     }
   }
 
+  if (process.env.NODE_ENV === "production") return null;
   const raw = cookieStore.get("ak_demo_session")?.value ?? null;
   const session = parseDemoSession(raw);
   if (!session) return null;

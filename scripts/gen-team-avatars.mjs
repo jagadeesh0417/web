@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
 
 const authors = [
-  { file: "sneha", initials: "SK", color: "#7c3aed", name: "Sneha Kulkarni" },
-  { file: "priya", initials: "PS", color: "#2563eb", name: "Priya Sharma" },
+  { file: "sneha", initials: "SK", color: "#C75A19", name: "Sneha Kulkarni" },
+  { file: "priya", initials: "PS", color: "#D6A24A", name: "Priya Sharma" },
   { file: "rahul", initials: "RI", color: "#059669", name: "Rahul Iyer" },
   { file: "arjun", initials: "AR", color: "#d97706", name: "Arjun Reddy" },
 ];

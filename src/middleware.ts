@@ -9,6 +9,13 @@ const PUBLIC_PATHS = [
   "/contact",
   "/internships",
   "/portfolio",
+  "/resources",
+  "/courses",
+  "/company",
+  "/privacy",
+  "/terms",
+  "/sitemap.xml",
+  "/robots.txt",
   "/blog",
   "/verify",
   "/login",
@@ -103,7 +110,7 @@ export async function middleware(request: NextRequest) {
         url.searchParams.set("next", pathname);
         return NextResponse.redirect(url);
       }
-      const role = (user.user_metadata?.role as Role) ?? "user";
+      const role = (user.app_metadata?.role as Role) ?? "user";
       if (isAdminRoute(pathname) || isAdminApiRoute(pathname)) {
         if (role !== "admin" && role !== "super_admin") {
           return NextResponse.redirect(new URL("/", request.url));
@@ -115,11 +122,17 @@ export async function middleware(request: NextRequest) {
       }
       return response;
     } catch {
-      // Supabase auth failed — fall through to demo mode
+      // Never accept an unsigned demo session after an authentication failure.
+      if (process.env.NODE_ENV === "production") return NextResponse.json({ error: "Authentication unavailable" }, { status: 503 });
     }
   }
 
   // Demo mode
+  if (process.env.NODE_ENV === "production") {
+    if (isPublic(pathname) && !isAdminRoute(pathname) && !isAdminApiRoute(pathname)) return NextResponse.next();
+    if (isAdminApiRoute(pathname)) return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return NextResponse.redirect(new URL(isAdminRoute(pathname) ? "/admin/login" : "/login", request.url));
+  }
   const session = parseDemoSession(request.cookies.get("ak_demo_session")?.value ?? null);
 
   if (pathname === "/dashboard") {

@@ -367,7 +367,7 @@ export default function AdminUserDetailPage() {
             {activeEnrollment ? (
               <div className="space-y-4">
                 <div className="flex items-end justify-between">
-                  <span className="text-3xl font-black bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="text-3xl font-black bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                     {progressPercent}%
                   </span>
                   <span className="text-xs text-muted-foreground">
@@ -725,7 +725,7 @@ export default function AdminUserDetailPage() {
                   </div>
                 </div>
                 <div className="flex items-end justify-between">
-                  <span className="text-3xl font-black bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="text-3xl font-black bg-gradient-to-r from-brand-600 to-brand-600 bg-clip-text text-transparent">
                     {progressPercent}%
                   </span>
                   <span className="text-xs text-muted-foreground">

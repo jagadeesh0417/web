@@ -1,13 +1,13 @@
 import { writeFileSync } from "fs";
 
 const posts = [
-  { slug: "why-every-business-needs-ai-automation", title: "AI Automation in 2026", category: "AI Automation", colors: ["#7c3aed", "#4f46e5"] },
-  { slug: "meta-ads-roas-myth", title: "The ROAS Myth", category: "Meta Ads", colors: ["#2563eb", "#06b6d4"] },
-  { slug: "portfolio-that-gets-you-hired", title: "Build a Hiring Portfolio", category: "Career", colors: ["#c026d3", "#ec4899"] },
+  { slug: "why-every-business-needs-ai-automation", title: "AI Automation in 2026", category: "AI Automation", colors: ["#C75A19", "#F58216"] },
+  { slug: "meta-ads-roas-myth", title: "The ROAS Myth", category: "Meta Ads", colors: ["#D6A24A", "#06b6d4"] },
+  { slug: "portfolio-that-gets-you-hired", title: "Build a Hiring Portfolio", category: "Career", colors: ["#FF9518", "#ec4899"] },
   { slug: "crm-automation-saves-small-businesses", title: "CRM Automation Saves Hours", category: "Automation", colors: ["#059669", "#14b8a6"] },
-  { slug: "web-performance-core-vitals", title: "Core Web Vitals Guide", category: "Web Development", colors: ["#2563eb", "#4f46e5"] },
+  { slug: "web-performance-core-vitals", title: "Core Web Vitals Guide", category: "Web Development", colors: ["#D6A24A", "#F58216"] },
   { slug: "seo-strategy-2026", title: "SEO Strategy 2026", category: "SEO", colors: ["#d97706", "#ea580c"] },
-  { slug: "branding-for-startups", title: "Branding for Startups", category: "Branding", colors: ["#c026d3", "#7c3aed"] },
+  { slug: "branding-for-startups", title: "Branding for Startups", category: "Branding", colors: ["#FF9518", "#C75A19"] },
   { slug: "internship-to-career", title: "Internship to Career", category: "Career", colors: ["#059669", "#0d9488"] },
 ];
 

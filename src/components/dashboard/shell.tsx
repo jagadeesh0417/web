@@ -88,7 +88,7 @@ export function DashboardShell({ children, requiredRoles }: { children: React.Re
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   active
-                    ? "bg-gradient-to-r from-violet-600/15 to-indigo-600/10 text-brand-600 dark:text-brand-300"
+                    ? "bg-gradient-to-r from-brand-600 to-brand-600 text-brand-600 dark:text-brand-300"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
@@ -142,9 +142,12 @@ export function DashboardShell({ children, requiredRoles }: { children: React.Re
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
+              aria-expanded={dropdownOpen}
+              aria-label="Account menu"
+              onKeyDown={(event) => { if (event.key === "Escape") setDropdownOpen(false); }}
               className="flex h-10 items-center gap-2.5 rounded-full border border-border bg-card px-1.5 py-1 pr-3 hover:bg-muted transition-colors"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-[11px] font-bold text-white">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-600 text-[11px] font-bold text-white">
                 {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()}
               </span>
               <span className="hidden text-sm font-medium sm:block">{user.name}</span>
@@ -152,7 +155,7 @@ export function DashboardShell({ children, requiredRoles }: { children: React.Re
             {dropdownOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setDropdownOpen(false)} />
-                <div className="absolute right-0 z-40 mt-2 w-60 rounded-xl border border-border bg-card p-2 shadow-xl animate-fade-up">
+                <div onKeyDown={(event) => { if (event.key === "Escape") setDropdownOpen(false); }} className="absolute right-0 z-40 mt-2 w-60 rounded-xl border border-border bg-card text-card-foreground p-2 shadow-xl animate-fade-up">
                   <div className="border-b border-border px-3 pb-3 pt-2">
                     <p className="text-sm font-semibold">{user.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{user.email}</p>

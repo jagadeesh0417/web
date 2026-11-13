@@ -2,22 +2,22 @@ import { MongoClient, Db } from "mongodb";
 
 const DATABASE_NAME = "akradhii";
 
-let cachedClient: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
 let cachedDb: Db | null = null;
 
 async function connectToDatabase(): Promise<MongoClient> {
-  if (cachedClient) {
-    return cachedClient;
-  }
+  if (clientPromise) return clientPromise;
 
   const uri = process.env.MONGODB_URI;
   if (!uri) {
     throw new Error("MONGODB_URI environment variable is not defined");
   }
 
-  const client = await MongoClient.connect(uri);
-  cachedClient = client;
-  return client;
+  clientPromise = MongoClient.connect(uri).catch((error) => {
+    clientPromise = null;
+    throw error;
+  });
+  return clientPromise;
 }
 
 export async function getDb(): Promise<Db> {
@@ -26,6 +26,6 @@ export async function getDb(): Promise<Db> {
   }
 
   const client = await connectToDatabase();
-  cachedDb = client.db(DATABASE_NAME);
+  cachedDb = client.db(process.env.MONGODB_DATABASE || DATABASE_NAME);
   return cachedDb;
 }

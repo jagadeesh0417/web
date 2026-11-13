@@ -6,7 +6,7 @@ import { Reveal } from "@/components/marketing/reveal";
 const perks = [
   { icon: ShieldCheck, title: "Bank-grade security", text: "Hashed passwords, rate limits, account locking and audit logs." },
   { icon: Zap, title: "Instant dashboard", text: "You're routed straight to the dashboard for your role." },
-  { icon: Award, title: "Verifiable certificates", text: "Interns earn QR-verifiable certificates and reports." },
+  { icon: Award, title: "Completion certificates", text: "Interns can request manual certificate verification." },
   { icon: HeartHandshake, title: "Real mentorship", text: "Clients and interns get a dedicated human team." },
 ];
 
@@ -52,3 +52,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     </div>
   );
 }
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };

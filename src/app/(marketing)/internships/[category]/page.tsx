@@ -2,32 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, GraduationCap, ChevronDown } from "lucide-react";
-import { CATEGORY_BY_SLUG, PROGRAMS } from "@/lib/constants";
+import { CATEGORIES, CATEGORY_BY_SLUG, PROGRAMS } from "@/lib/constants";
+import { formatCurrency } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 import { Reveal } from "@/components/marketing/reveal";
 
-const mentors = {
-  m1: { name: "Sneha Kulkarni", role: "Senior Web Engineer" },
-  m2: { name: "Rahul Iyer", role: "Design Lead" },
-  m3: { name: "Priya Sharma", role: "Performance Marketer" },
-  m4: { name: "Arjun Reddy", role: "Founder & Growth Strategist" },
-  m5: { name: "Teja Verma", role: "Head of Delivery" },
-} as const;
-
 export async function generateStaticParams() {
-  return Object.keys(CATEGORY_BY_SLUG).map((slug) => ({ slug }));
+  return Object.keys(CATEGORY_BY_SLUG).map((category) => ({ category }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ category: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { category: slug } = await params;
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) return { title: "Internship not found" };
   return {
@@ -35,12 +27,12 @@ export async function generateMetadata({
     description: `Join the ${category.name} internship at Akradhii. Learn ${category.skills.slice(0, 3).join(", ")} and more through project-based training.`,
     openGraph: {
       title: `${category.name} Internship`,
-      description: `Project-based ${category.name} internship with mentorship, real projects and verifiable certificates.`,
+      description: `Project-based ${category.name} internship with mentorship, projects and completion certificates.`,
       url: `${siteConfig.url}/internships/${slug}`,
       type: "article",
       images: [
         {
-          url: `${siteConfig.url}/og-default.svg`,
+          url: `${siteConfig.url}/internships/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${category.name} Internship`,
@@ -49,21 +41,30 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      images: [`${siteConfig.url}/og-default.svg`],
+      images: [`${siteConfig.url}/internships/${slug}/opengraph-image`],
     },
     alternates: { canonical: `${siteConfig.url}/internships/${slug}` },
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category: slug } = await params;
   const category = CATEGORY_BY_SLUG[slug as keyof typeof CATEGORY_BY_SLUG];
   if (!category) notFound();
 
-  const mentor = mentors[category.mentorId as keyof typeof mentors];
+  const url = `${siteConfig.url}/internships/${slug}`;
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Course", name: `${category.name} Internship`, description: category.description, provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, offers: PROGRAMS.map((p) => ({ "@type": "Offer", price: p.price, priceCurrency: "INR", url: `${siteConfig.url}/internships/apply?track=${slug}&program=${p.slug}` })) },
+      { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Internships", item: `${siteConfig.url}/internships` }, { "@type": "ListItem", position: 2, name: category.name, item: url }] },
+      { "@type": "FAQPage", mainEntity: category.faqs.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })) },
+    ],
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       <Button variant="ghost" size="sm" className="mb-6">
         <Link href="/internships" className="flex items-center gap-2">
           <ArrowLeft className="h-4 w-4" /> All programs
@@ -74,12 +75,22 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <Badge className="border-white/30 bg-white/10 text-white">{category.name}</Badge>
         <h1 className="mt-4 max-w-2xl text-3xl font-bold sm:text-4xl">{category.name} Internship</h1>
         <p className="mt-4 max-w-2xl text-white/85">{category.description}</p>
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <Button className="bg-white text-slate-900 hover:bg-white/90">
-            <Link href={`/internships/apply?category=${category.slug}`}>Apply now</Link>
-          </Button>
-          <span className="text-sm text-white/75">Free to apply · Reviewed within 2-3 days</span>
-        </div>
+        <form action="/internships/apply" method="get" className="mt-8">
+          <input type="hidden" name="track" value={category.slug} />
+          <fieldset>
+            <legend className="text-sm font-semibold">Choose a plan</legend>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {PROGRAMS.map((p) => (
+                <label key={p.slug} className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/50 px-3 py-2 text-sm">
+                  <input type="radio" name="program" value={p.slug} defaultChecked={p.featured} required />
+                  {p.title} · {p.duration} · {formatCurrency(p.price)}{p.featured ? " · Most popular" : ""}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <button type="submit" className="mt-5 rounded-lg bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Apply now</button>
+          <p className="mt-3 text-sm text-white/90">Certificate included · Mentor details confirmed for each batch</p>
+        </form>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -120,35 +131,35 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
               <div key={p.id} className="flex items-center justify-between rounded-xl border border-border p-4">
                 <div>
                   <p className="text-sm font-semibold">{p.title}</p>
+                  <p className="text-sm font-bold">{formatCurrency(p.price)}</p>
                   <p className="text-xs text-muted-foreground">{p.features.slice(0, 2).join(" · ")}…</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge variant="default">{p.duration}</Badge>
                   <Button variant="outline" size="sm">
-                    <Link href={`/internships/apply?category=${category.slug}&program=${p.slug}`}>Choose</Link>
+                    <Link href={`/internships/apply?track=${category.slug}&program=${p.slug}`}>Choose</Link>
                   </Button>
                 </div>
               </div>
             ))}
           </div>
+          <p className="mt-4 text-sm text-muted-foreground">For refund details, read the <Link className="underline" href="/terms">terms</Link> or contact support.</p>
         </Card>
 
-        {mentor && (
           <Card className="w-full p-6 lg:w-80">
-            <h2 className="font-semibold">Your mentor</h2>
-            <div className="mt-4 flex items-center gap-3">
-              <Avatar name={mentor.name} className="h-14 w-14 text-base" />
-              <div>
-                <p className="font-semibold">{mentor.name}</p>
-                <p className="text-xs text-muted-foreground">{mentor.role}</p>
-              </div>
-            </div>
+            <h2 className="font-semibold">Mentor support</h2>
             <p className="mt-4 text-sm text-muted-foreground">
-              Leads live sessions, reviews your assignments and gives you direct feedback throughout the program.
+              Mentor details will be confirmed for your batch. Contact support for more information.
             </p>
           </Card>
-        )}
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold">Related tracks</h2>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+          {CATEGORIES.filter((c) => c.slug !== slug).slice(0, 3).map((c) => <li key={c.slug}><Link className="block rounded-xl border border-border p-4 hover:border-brand-500 focus-visible:ring-2 focus-visible:ring-brand-500" href={`/internships/${c.slug}`}>{c.name}</Link></li>)}
+        </ul>
+      </section>
 
       <div className="mx-auto mt-12 max-w-3xl">
         <h2 className="text-center text-2xl font-bold">FAQ</h2>
@@ -167,7 +178,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
       <Reveal className="mt-14 text-center">
         <Button variant="gradient" size="lg">
-          <Link href={`/internships/apply?category=${category.slug}`}>Apply for {category.name}</Link>
+          <Link href={`/internships/apply?track=${category.slug}&program=professional`}>Apply for {category.name}</Link>
         </Button>
       </Reveal>
     </div>

@@ -3,12 +3,13 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Lock, Mail, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Field } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { loginSchema } from "@/lib/validators";
 import { signIn, signInWithGoogle, demoMode } from "@/lib/auth";
+import { safeAuthRedirect } from "@/lib/auth/redirect";
 
 function LoginForm() {
   const router = useRouter();
@@ -19,10 +20,11 @@ function LoginForm() {
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-  const [attempts, setAttempts] = useState(0);
+  const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginError("");
     const res = loginSchema.safeParse(form);
     if (!res.success) {
       const errs: Record<string, string> = {};
@@ -35,13 +37,11 @@ function LoginForm() {
     const result = await signIn(form.email, form.password, true);
     setLoading(false);
     if (!result.ok) {
-      const count = attempts + 1;
-      setAttempts(count);
-      toast("error", count >= 5 ? "Account temporarily locked" : "Login failed", result.error);
+      setLoginError("Unable to sign in. Check your email and password and try again.");
       return;
     }
     toast("success", "Welcome back!");
-    router.push(result.redirect ?? (next ?? "/dashboard"));
+    router.push(safeAuthRedirect(result.redirect ?? next));
     router.refresh();
   };
 
@@ -75,26 +75,23 @@ function LoginForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        {loginError && <p role="alert" className="text-sm text-destructive">{loginError}</p>}
         <Field label="Email" error={errors.email} htmlFor="email">
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input id="email" type="email" className="pl-9" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} autoComplete="email" />
+            <Input id="email" type="email" className="pl-9" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} autoComplete="username" aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} />
           </div>
         </Field>
         <Field label="Password" error={errors.password} htmlFor="password">
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input id="password" type={show ? "text" : "password"} className="pl-9 pr-10" placeholder="••••••••" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} autoComplete="current-password" />
-            <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Toggle password">
+            <Input id="password" type={show ? "text" : "password"} className="pl-9 pr-10" placeholder="••••••••" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} autoComplete="current-password" aria-invalid={!!errors.password} aria-describedby={errors.password ? "password-error" : undefined} />
+            <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label={show ? "Hide password" : "Show password"} aria-pressed={show}>
               {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
         </Field>
         <div className="flex items-center justify-between text-sm">
-          <label className="flex items-center gap-2 text-muted-foreground">
-            <input type="checkbox" defaultChecked className="h-4 w-4 rounded border-border accent-brand-600" />
-            Remember me
-          </label>
           <Link href="/forgot-password" className="font-medium text-brand-500 hover:underline">
             Forgot password?
           </Link>
@@ -103,12 +100,6 @@ function LoginForm() {
           Log in
         </Button>
       </form>
-
-      {attempts > 0 && (
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-warning">
-          <ShieldCheck className="h-3.5 w-3.5" /> {5 - attempts} attempts left before your account locks temporarily.
-        </p>
-      )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}

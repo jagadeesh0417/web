@@ -76,7 +76,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
   if (!ready || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-violet-600" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-brand-600" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           collapsed ? "justify-center px-2" : "justify-between px-5",
         )}>
           {collapsed ? (
-            <Link href="/student" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-sm font-black text-white">
+            <Link href="/student" className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-600 text-sm font-black text-white">
               A
             </Link>
           ) : (
@@ -129,7 +129,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
         {!collapsed && (
           <div className="border-b border-zinc-800 px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-xs font-bold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-600 text-xs font-bold text-white">
                 {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
@@ -148,7 +148,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
         {/* Collapsed user avatar */}
         {collapsed && (
           <div className="flex justify-center border-b border-zinc-800 py-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-[10px] font-bold text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-600 text-[10px] font-bold text-white">
               {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()}
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
                   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   collapsed && "justify-center px-2",
                   active
-                    ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/10 text-violet-300"
+                    ? "bg-gradient-to-r from-brand-600 to-brand-600 text-brand-600"
                     : "text-zinc-400 hover:bg-zinc-800 hover:text-white",
                 )}
                 title={collapsed ? item.label : undefined}
@@ -249,7 +249,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               )}
             </Link>
             <div className="flex h-9 items-center gap-2 rounded-full border border-border bg-card px-1.5 py-1 pr-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-[11px] font-bold text-white">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-600 text-[11px] font-bold text-white">
                 {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()}
               </span>
               <span className="hidden text-sm font-medium sm:block">{user.name}</span>

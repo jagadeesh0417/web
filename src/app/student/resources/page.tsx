@@ -28,7 +28,7 @@ const typeColors: Record<string, string> = {
   pdf: "bg-destructive/10 text-destructive",
   document: "bg-info/10 text-info",
   link: "bg-success/10 text-success",
-  video: "bg-violet-600/10 text-violet-600",
+  video: "bg-brand-600 text-brand-600",
   default: "bg-muted text-muted-foreground",
 };
 

@@ -1,17 +1,13 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Clock,
-  LayoutGrid,
   Lock,
-  Package,
-  Award,
   UploadCloud,
   Loader2,
   Mail,
@@ -29,33 +25,7 @@ import { CATEGORIES, PROGRAMS } from "@/lib/constants";
 import { applicationSchema, validateFile } from "@/lib/validators";
 import { cn, formatCurrency } from "@/lib/utils";
 
-function parseDurationWeeks(d: string): number {
-  const match = d.match(/(\d+)/);
-  return match ? parseInt(match[1], 10) : 4;
-}
-
 const steps = ["Program", "Details", "Review", "Payment", "Confirmation"];
-
-const DURATION_META: Record<number, { modules: number; projects: number; completion: string; curriculum: string[] }> = {
-  4: {
-    modules: 4,
-    projects: 2,
-    completion: "4 weeks",
-    curriculum: ["2 recorded video lessons per week", "4 weekly PDF note packs", "2 project builds", "1 final assessment"],
-  },
-  6: {
-    modules: 6,
-    projects: 3,
-    completion: "6 weeks",
-    curriculum: ["2-3 recorded video lessons per week", "6 weekly PDF note packs", "3 project builds", "1 final assessment + 1 capstone"],
-  },
-  8: {
-    modules: 8,
-    projects: 4,
-    completion: "8 weeks",
-    curriculum: ["3 recorded video lessons per week", "8 weekly PDF note packs", "4 project builds", "1 capstone + portfolio review"],
-  },
-};
 
 function Wizard() {
   const params = useSearchParams();
@@ -63,9 +33,9 @@ function Wizard() {
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
-    category: params.get("category") ?? "",
-    program: params.get("program") ?? "",
-    duration: 6,
+    category: CATEGORIES.find((c) => c.slug === (params.get("track") ?? params.get("category")))?.slug ?? "",
+    program: PROGRAMS.find((p) => p.slug === params.get("program"))?.slug ?? "",
+    duration: Number.parseInt(PROGRAMS.find((p) => p.slug === params.get("program"))?.duration ?? "6", 10),
     fullName: "",
     email: "",
     confirmEmail: "",
@@ -84,12 +54,14 @@ function Wizard() {
     agree: false,
   });
   const [referralCode, setReferralCode] = useState("");
+  const [website, setWebsite] = useState("");
+  const submission = useRef<{ payload: string; key: string } | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [processing, setProcessing] = useState(false);
   const [paymentStep, setPaymentStep] = useState<"idle" | "processing" | "verifying" | "done" | "failed">("idle");
   const [applicationId, setApplicationId] = useState("");
   const [orderId, setOrderId] = useState("");
-  const [enrollmentResult, setEnrollmentResult] = useState<{
+  const [enrollmentResult] = useState<{
     enrollmentId: string;
     studentId: string;
     invoiceNumber: string;
@@ -99,27 +71,20 @@ function Wizard() {
 
   const program = PROGRAMS.find((p) => p.slug === form.program);
   const category = CATEGORIES.find((c) => c.slug === form.category);
-  const meta = DURATION_META[form.duration];
 
   useEffect(() => {
-    if (form.program && !params.get("program")) return;
-    if (params.get("duration")) {
-      const d = Number(params.get("duration"));
-      if ([4, 6, 8].includes(d)) set("duration", d);
-    }
     // Read referral code from cookie
     const cookies = document.cookie.split(";").map((c) => c.trim());
     const refCookie = cookies.find((c) => c.startsWith("ak_ref="));
     if (refCookie) {
       setReferralCode(refCookie.split("=")[1] ?? "");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const validateStep0 = () => {
     const errs: Record<string, string> = {};
-    if (!form.category) errs.category = "Select an internship category";
-    if (!form.program) errs.program = "Select a duration plan";
+    if (!category) errs.category = "Select an internship category";
+    if (!program) errs.program = "Select a duration plan";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -172,12 +137,9 @@ function Wizard() {
     setErrors({});
 
     try {
-      const res = await fetch("/api/internships/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          categorySlug: form.category,
-          programSlug: form.program,
+      const payload = JSON.stringify({
+          category: form.category,
+          program: form.program,
           duration: form.duration,
           fullName: form.fullName,
           email: form.email,
@@ -193,13 +155,25 @@ function Wizard() {
           state: form.state,
           linkedin: form.linkedin,
           github: form.github,
+          agree: form.agree,
+          website,
           referralCode: referralCode || undefined,
-        }),
+        });
+      if (!submission.current || submission.current.payload !== payload) {
+        submission.current = { payload, key: crypto.randomUUID() };
+      }
+      const res = await fetch("/api/internships/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": submission.current.key },
+        body: payload,
       });
 
       const data = await res.json();
       if (!data.ok) {
-        setErrors(data.errors ?? { general: "Failed to submit application. Please try again." });
+        const fieldErrors = data.errors ?? {};
+        setErrors({ ...fieldErrors, general: fieldErrors.general ?? data.error ?? "Failed to submit application. Please check your details or contact support." });
+        if (fieldErrors.category || fieldErrors.program) setStep(0);
+        else if (Object.keys(fieldErrors).some((key) => key !== "general")) setStep(1);
         setProcessing(false);
         return;
       }
@@ -232,33 +206,9 @@ function Wizard() {
         return;
       }
 
-      setPaymentStep("verifying");
-
-      const verifyRes = await fetch("/api/internships/payment/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          applicationId,
-          orderId: createData.orderId,
-          paymentMethod: "upi",
-        }),
-      });
-      const verifyData = await verifyRes.json();
-
-      if (!verifyData.ok) {
-        setPaymentStep("failed");
-        toast("error", "Payment verification failed", verifyData.error ?? "Please contact support.");
-        return;
-      }
-
-      setEnrollmentResult({
-        enrollmentId: verifyData.enrollmentId,
-        studentId: verifyData.studentId,
-        invoiceNumber: verifyData.invoiceNumber,
-      });
-      setPaymentStep("done");
-      setStep(4);
-      toast("success", "Enrollment Successful", "Your internship enrollment has been confirmed.");
+      // Never confirm an order without an authenticated provider payment response.
+      setPaymentStep("failed");
+      toast("error", "Checkout unavailable", "Payment confirmation is not configured. Please contact support.");
     } catch {
       setPaymentStep("failed");
       toast("error", "Something went wrong", "Please try again or contact support.");
@@ -285,7 +235,7 @@ function Wizard() {
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors",
                   i < step && "bg-success text-white",
-                  i === step && "bg-gradient-to-r from-violet-600 to-indigo-600 text-white",
+                  i === step && "bg-gradient-to-r from-brand-600 to-brand-600 text-white",
                   i > step && "bg-muted text-muted-foreground",
                 )}
               >
@@ -299,6 +249,10 @@ function Wizard() {
       </div>
 
       <Card className="mt-8 p-6 sm:p-8">
+        <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+          <label htmlFor="application-website">Leave this field empty</label>
+          <input id="application-website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+        </div>
         {step === 0 && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold">1 · Choose your internship</h2>
@@ -315,49 +269,20 @@ function Wizard() {
                 <CustomSelect
                   options={PROGRAMS.map((p) => ({ value: p.slug, label: `${p.title} — ${p.duration}` }))}
                   value={form.program}
-                  onChange={(v) => set("program", v)}
+                  onChange={(v) => {
+                    const selected = PROGRAMS.find((p) => p.slug === v);
+                    setForm((current) => ({ ...current, program: v, duration: selected ? Number.parseInt(selected.duration, 10) : 6 }));
+                  }}
                   placeholder="Select plan"
                 />
               </Field>
             </div>
 
             {program && (
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[4, 6, 8].map((d) => {
-                  const m = DURATION_META[d];
-                   const p = Math.round(program.price * (d / parseDurationWeeks(program.duration)) * (d === 8 ? 0.95 : 1));
-                  const selected = form.duration === d;
-                  return (
-                    <button
-                      key={d}
-                      onClick={() => set("duration", d)}
-                      className={cn(
-                        "rounded-2xl border p-4 text-left transition-all",
-                        selected ? "border-brand-500 bg-brand-600/5 ring-2 ring-brand-500/30" : "border-border hover:border-brand-500/40",
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold">{d} Weeks</span>
-                        {selected && <CheckCircle2 className="h-4 w-4 text-brand-500" />}
-                      </div>
-                      <p className="mt-1 text-lg font-extrabold">{formatCurrency(p)}</p>
-                      <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-                        <li className="flex items-center gap-1.5"><LayoutGrid className="h-3 w-3" /> {m.modules} course modules</li>
-                        <li className="flex items-center gap-1.5"><Package className="h-3 w-3" /> {m.projects} projects</li>
-                        <li className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> {m.completion}</li>
-                        <li className="flex items-center gap-1.5"><Award className="h-3 w-3" /> Verified certificate</li>
-                      </ul>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {program && meta && (
               <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm">
-                <p className="font-semibold">{form.duration}-week curriculum</p>
+                <p className="font-semibold">{program.title} · {program.duration} · {formatCurrency(program.price)}</p>
                 <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                  {meta.curriculum.map((c) => (
+                  {program.features.map((c) => (
                     <li key={c} className="flex items-start gap-2 text-muted-foreground">
                       <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" /> {c}
                     </li>
@@ -398,7 +323,7 @@ function Wizard() {
               <Field label="Date of birth" htmlFor="dob" error={errors.dob}>
                 <Input id="dob" type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} />
               </Field>
-              <Field label="Gender (optional)" htmlFor="gender">
+              <Field label="Gender (optional)" htmlFor="gender" error={errors.gender}>
                 <CustomSelect
                   id="gender"
                   options={[
@@ -451,7 +376,7 @@ function Wizard() {
                 type="checkbox"
                 checked={form.agree}
                 onChange={(e) => set("agree", e.target.checked)}
-                className="mt-0.5 h-4 w-4 accent-violet-600"
+                className="mt-0.5 h-4 w-4 accent-brand-600"
               />
               <span className="text-muted-foreground">
                 I agree to the <Link href="/terms" className="text-brand-500 underline">Terms &amp; Conditions</Link> and{" "}
@@ -470,6 +395,7 @@ function Wizard() {
         {step === 2 && program && category && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold">3 · Review your application</h2>
+            {errors.general && <p role="alert" className="rounded-xl border border-destructive/40 p-3 text-sm text-destructive">{errors.general}</p>}
 
             <div className="rounded-2xl border border-border bg-muted/20 p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Selected Internship</p>
@@ -509,9 +435,9 @@ function Wizard() {
             <div className="rounded-2xl border border-brand-500/30 bg-brand-600/5 p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Payment Summary</p>
               <div className="mt-3 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Program fee</span><span>{formatCurrency(program.price)}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Taxes</span><span className="text-success">Included</span></div>
-                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</span></div>
+                <div className="flex justify-between border-t border-border pt-2 text-base font-bold"><span>Total</span><span>{formatCurrency(program.price)}</span></div>
               </div>
             </div>
 
@@ -545,7 +471,7 @@ function Wizard() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Amount</p>
-                  <p className="text-2xl font-extrabold">{formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))}</p>
+                  <p className="text-2xl font-extrabold">{formatCurrency(program.price)}</p>
                 </div>
               </div>
             </div>
@@ -554,12 +480,12 @@ function Wizard() {
               <>
                 <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
                   <Lock className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                  Secured by 256-bit TLS. In production, payments are processed by Razorpay with webhook-driven confirmation — this demo simulates the same flow end-to-end.
+                  Online checkout is currently unavailable. Your application does not activate an enrollment or collect a payment.
                 </p>
                 <div className="flex justify-between pt-2">
                   <Button variant="ghost" onClick={() => setStep(2)}><ArrowLeft className="h-4 w-4" /> Back</Button>
                   <Button variant="gradient" onClick={handlePayment}>
-                    Pay {formatCurrency(Math.round(program.price * (form.duration / parseDurationWeeks(program.duration)) * (form.duration === 8 ? 0.95 : 1)))} securely
+                    Pay {formatCurrency(program.price)} securely
                   </Button>
                 </div>
               </>

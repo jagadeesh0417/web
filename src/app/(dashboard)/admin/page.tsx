@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 
-const PIE_COLORS = ["#8b5cf6", "#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ec4899", "#64748b"];
+const PIE_COLORS = ["#D6A24A", "#F58216", "#FFA51F", "#10b981", "#f59e0b", "#ec4899", "#64748b"];
 
 interface AdminStats {
   totalStudents: number;
@@ -110,20 +110,20 @@ export default function AdminDashboard() {
   const rolesData = Object.entries(stats.usersByRole).map(([role, count]) => ({ name: role, count }));
 
   const statCards = [
-    { title: "Total Students", value: stats.totalStudents.toLocaleString("en-IN"), icon: Users, gradient: "from-violet-600 to-indigo-600" },
+    { title: "Total Students", value: stats.totalStudents.toLocaleString("en-IN"), icon: Users, gradient: "from-brand-600 to-brand-600" },
     { title: "Active Interns", value: stats.activeInterns.toLocaleString("en-IN"), icon: GraduationCap, gradient: "from-emerald-600 to-teal-500" },
     { title: "Total Enrollments", value: stats.totalEnrollments.toLocaleString("en-IN"), icon: BookOpen, gradient: "from-blue-600 to-cyan-500" },
     { title: "Pending Payments", value: stats.pendingPayments.toLocaleString("en-IN"), icon: CreditCard, gradient: "from-amber-500 to-orange-600" },
     { title: "Successful Payments", value: stats.successfulPayments.toLocaleString("en-IN"), icon: CheckCircle, gradient: "from-green-500 to-emerald-600" },
-    { title: "Pending Submissions", value: stats.pendingSubmissions.toLocaleString("en-IN"), icon: FileText, gradient: "from-fuchsia-600 to-pink-600" },
-    { title: "Completed Internships", value: stats.completedInternships.toLocaleString("en-IN"), icon: Award, gradient: "from-purple-600 to-violet-500" },
+    { title: "Pending Submissions", value: stats.pendingSubmissions.toLocaleString("en-IN"), icon: FileText, gradient: "from-brand-600 to-pink-600" },
+    { title: "Completed Internships", value: stats.completedInternships.toLocaleString("en-IN"), icon: Award, gradient: "from-brand-600 to-brand-600" },
     { title: "Certificates Issued", value: stats.certificatesIssued.toLocaleString("en-IN"), icon: Award, gradient: "from-sky-500 to-blue-600" },
     { title: "Successful Referrals", value: stats.referralStats.successful.toLocaleString("en-IN"), icon: Gift, gradient: "from-pink-500 to-rose-500" },
     { title: "Rewards Paid", value: formatCurrency(stats.referralStats.totalRewards), icon: Wallet, gradient: "from-teal-500 to-cyan-500" },
     { title: "Withdrawals Pending", value: stats.withdrawalStats.pending.toLocaleString("en-IN"), icon: Clock, gradient: "from-orange-500 to-amber-500" },
     { title: "Withdrawals Paid", value: formatCurrency(stats.withdrawalStats.totalPaid), icon: IndianRupee, gradient: "from-emerald-600 to-green-500" },
-    { title: "Revenue This Month", value: formatCurrency(stats.revenueThisMonth), icon: TrendingUp, gradient: "from-indigo-600 to-blue-500" },
-    { title: "Revenue Today", value: formatCurrency(stats.revenueToday), icon: DollarSign, gradient: "from-violet-500 to-purple-500" },
+    { title: "Revenue This Month", value: formatCurrency(stats.revenueThisMonth), icon: TrendingUp, gradient: "from-brand-600 to-blue-500" },
+    { title: "Revenue Today", value: formatCurrency(stats.revenueToday), icon: DollarSign, gradient: "from-brand-600 to-brand-600" },
     { title: "New Users This Month", value: stats.newUsersThisMonth.toLocaleString("en-IN"), icon: Users, gradient: "from-cyan-500 to-sky-500" },
   ];
 
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} />
                 <YAxis tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} tickFormatter={(v: number) => `${v / 100000}L`} />
                 <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} formatter={(v) => formatCurrency(Number(v))} />
-                <Bar dataKey="revenue" name="Revenue" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="revenue" name="Revenue" fill="#D6A24A" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
               <div className="space-y-3">
                 {stats.recentEnrollments.map((e) => (
                   <div key={e.id} className="flex items-center gap-3 rounded-xl border border-border p-3.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-violet-600/10 text-violet-600">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-brand-600">
                       <GraduationCap className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -292,7 +292,7 @@ export default function AdminDashboard() {
         <a href="/admin/audit-log" className="group">
           <Card className="transition-colors hover:border-brand-600">
             <CardContent className="flex items-center gap-4 p-5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-600/10 text-violet-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-brand-600">
                 <FileText className="h-6 w-6" />
               </div>
               <div>

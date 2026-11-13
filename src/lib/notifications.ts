@@ -12,7 +12,8 @@ interface MailPayload {
 export async function sendEmail(payload: MailPayload): Promise<{ ok: boolean; error?: string }> {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {
-    console.info(`[akradhii:email] (demo) To: ${payload.to} — ${payload.subject}`);
+    if (process.env.NODE_ENV === "production") return { ok: false, error: "Email provider is not configured" };
+    console.info("[akradhii:email] demo delivery skipped");
     return { ok: true };
   }
   try {
@@ -39,10 +40,10 @@ export async function sendEmail(payload: MailPayload): Promise<{ ok: boolean; er
 export function emailTemplates() {
   const layout = (title: string, body: string, cta?: { label: string; url: string }) => `
     <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:24px;background:#0b1020;border-radius:16px;color:#e2e8f0">
-      <div style="font-size:22px;font-weight:800;background:linear-gradient(90deg,#8b5cf6,#6366f1);-webkit-background-clip:text;background-clip:text;color:transparent">Akradhii</div>
+      <div style="font-size:22px;font-weight:800;background:linear-gradient(90deg,#D6A24A,#F58216);-webkit-background-clip:text;background-clip:text;color:transparent">Akradhii</div>
       <h1 style="font-size:20px;margin:20px 0 8px;color:#fff">${title}</h1>
       <p style="font-size:14px;line-height:1.7;color:#cbd5e1">${body}</p>
-      ${cta ? `<a href="${cta.url}" style="display:inline-block;margin-top:16px;padding:12px 22px;border-radius:10px;background:linear-gradient(90deg,#8b5cf6,#6366f1);color:#fff;text-decoration:none;font-weight:700;font-size:14px">${cta.label}</a>` : ""}
+      ${cta ? `<a href="${cta.url}" style="display:inline-block;margin-top:16px;padding:12px 22px;border-radius:10px;background:linear-gradient(90deg,#D6A24A,#F58216);color:#fff;text-decoration:none;font-weight:700;font-size:14px">${cta.label}</a>` : ""}
       <p style="margin-top:28px;font-size:12px;color:#64748b">You received this email because of activity on your Akradhii account.</p>
     </div>`;
   return {
@@ -87,7 +88,7 @@ export function emailTemplates() {
     assignmentFeedback: (name: string, data: { title: string; status: string; feedback: string }) =>
       layout("Assignment update", `Hi ${name},<br/><br/>Your assignment <strong>${data.title}</strong> was reviewed.<br/><br/>Status: <strong>${data.status}</strong><br/><br/>Mentor feedback:<br/><em>"${data.feedback}"</em>`),
     certificateIssued: (name: string, id: string, verifyUrl: string) =>
-      layout("Your certificate is ready", `Congratulations ${name}! Your certificate (${id}) has been issued and is available in your dashboard.<br/><br/>Anyone can verify it at ${verifyUrl}.`, { label: "Verify certificate", url: verifyUrl }),
+      layout("Your certificate is ready", `Congratulations ${name}! Your certificate (${id}) has been issued and is available in your dashboard.<br/><br/>Manual verification information: ${verifyUrl}.`, { label: "Verification information", url: verifyUrl }),
     sessionReminder: (title: string, date: string, link: string) =>
       layout("Live session reminder", `Reminder: <strong>${title}</strong> on ${date}.<br/><br/>Join here: ${link}`),
     deadline: (title: string, date: string) =>

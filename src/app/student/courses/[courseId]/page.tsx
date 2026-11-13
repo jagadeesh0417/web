@@ -172,8 +172,8 @@ export default function CourseDetailPage() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                  <BookOpen className="h-16 w-16 text-violet-400" />
+                <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                  <BookOpen className="h-16 w-16 text-brand-600" />
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -222,7 +222,7 @@ export default function CourseDetailPage() {
                         onClick={() => toggleModule(mod._id)}
                         className="flex w-full items-center gap-3 p-4 text-left"
                       >
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600/10 text-sm font-bold text-violet-500">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-brand-600">
                           {idx + 1}
                         </span>
                         <div className="min-w-0 flex-1">
@@ -253,7 +253,7 @@ export default function CourseDetailPage() {
                                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm"
                                 >
                                   {lesson.type === "video" ? (
-                                    <PlayCircle className="h-4 w-4 shrink-0 text-violet-500" />
+                                    <PlayCircle className="h-4 w-4 shrink-0 text-brand-600" />
                                   ) : (
                                     <FileText className="h-4 w-4 shrink-0 text-sky-500" />
                                   )}

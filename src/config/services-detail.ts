@@ -35,7 +35,7 @@ export const serviceDetails: ServiceDetail[] = [
       "High-converting, lightning-fast websites and web apps engineered for growth — from landing pages to full-scale platforms.",
     keyBenefit: "Ship a site that converts visitors into leads and customers",
     icon: "Code2",
-    gradient: "from-violet-600 to-indigo-600",
+    gradient: "from-brand-600 to-brand-600",
     heroHeadline: "Websites and web apps built for speed, clarity and conversion",
     heroDescription:
       "From marketing sites to custom platforms — we design, develop and launch experiences that load fast, work on every device and support your growth goals.",
@@ -361,7 +361,7 @@ export const serviceDetails: ServiceDetail[] = [
       "Custom AI assistants, chatbots and intelligent workflows that handle support, sales and operations at scale.",
     keyBenefit: "Put AI to work on real tasks — with guardrails your business can trust",
     icon: "BrainCircuit",
-    gradient: "from-fuchsia-600 to-purple-700",
+    gradient: "from-brand-600 to-brand-600",
     heroHeadline: "AI that does useful work — not just demos",
     heroDescription:
       "We build AI assistants, document workflows and intelligent automations grounded in your data, policies and tools — with human oversight where it matters.",

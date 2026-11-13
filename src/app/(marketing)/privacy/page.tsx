@@ -21,7 +21,7 @@ const sections = [
   },
   {
     title: "Certificates & QR codes",
-    body: "Issued certificates are registered with a public verification record containing your name, program, and completion date. The QR code on your certificate links to our verification page so employers can confirm authenticity.",
+    body: "Online certificate verification is not yet available. Contact support to request manual verification of a certificate.",
   },
   {
     title: "Data retention",

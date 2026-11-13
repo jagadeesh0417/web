@@ -11,6 +11,7 @@ import { Input, Field } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
 import { Reveal } from "@/components/marketing/reveal";
 import { getSession } from "@/lib/auth";
+import { INTERNSHIP_PRICES_BY_DURATION } from "@/lib/internship-pricing";
 
 interface PricingConfig {
   fourWeekPrice: number;
@@ -21,9 +22,7 @@ interface PricingConfig {
 }
 
 const defaults: PricingConfig = {
-  fourWeekPrice: 149,
-  sixWeekPrice: 199,
-  eightWeekPrice: 249,
+  ...INTERNSHIP_PRICES_BY_DURATION,
   referralReward: 20,
   minimumWithdrawal: 200,
 };
@@ -91,7 +90,7 @@ export default function PricingPage() {
           minimumWithdrawal: data.config.minimumWithdrawal ?? form.minimumWithdrawal,
         });
       }
-      toast("success", "Pricing saved", "Program prices and referral settings updated successfully.");
+      toast("success", "Settings saved", "Referral settings updated successfully.");
     } catch {
       toast("error", "Save failed", "Could not save pricing configuration.");
     } finally {
@@ -105,12 +104,12 @@ export default function PricingPage() {
     <DashboardShell requiredRoles={["admin", "super_admin"]}>
       <PageHeader
         title="Pricing Management"
-        description="Configure program prices and referral reward settings."
+        description="View the current program prices and configure referral reward settings."
         actions={
           <div className="flex items-center gap-2">
             <Badge variant="outline">Pricing Management</Badge>
             <Button variant="gradient" size="sm" onClick={handleSave} loading={saving}>
-              <Save className="h-4 w-4" /> Save prices
+              <Save className="h-4 w-4" /> Save settings
             </Button>
           </div>
         }
@@ -172,7 +171,7 @@ export default function PricingPage() {
               <CardTitle className="flex items-center gap-2">
                 <Tag className="h-4 w-4 text-brand-500" /> Program Prices
               </CardTitle>
-              <CardDescription>Set the enrollment price for each internship program duration.</CardDescription>
+              <CardDescription>Program prices are managed in the internship pricing file.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Field label="4 Weeks Program Price (₹)" hint="Applied to all 4-week programs">
@@ -180,7 +179,7 @@ export default function PricingPage() {
                   type="number"
                   min={0}
                   value={form.fourWeekPrice}
-                  onChange={(e) => update({ fourWeekPrice: Number(e.target.value) })}
+                  readOnly
                 />
               </Field>
               <Field label="6 Weeks Program Price (₹)" hint="Applied to all 6-week programs">
@@ -188,7 +187,7 @@ export default function PricingPage() {
                   type="number"
                   min={0}
                   value={form.sixWeekPrice}
-                  onChange={(e) => update({ sixWeekPrice: Number(e.target.value) })}
+                  readOnly
                 />
               </Field>
               <Field label="8 Weeks Program Price (₹)" hint="Applied to all 8-week programs">
@@ -196,7 +195,7 @@ export default function PricingPage() {
                   type="number"
                   min={0}
                   value={form.eightWeekPrice}
-                  onChange={(e) => update({ eightWeekPrice: Number(e.target.value) })}
+                  readOnly
                 />
               </Field>
             </CardContent>

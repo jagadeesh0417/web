@@ -276,7 +276,7 @@ export default function CourseLearnPage() {
                   return (
                     <div key={mod._id}>
                       <div className="mb-1.5 flex items-center gap-2">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-violet-600/10 text-[10px] font-bold text-violet-500">
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand-600 text-[10px] font-bold text-brand-600">
                           {modIdx + 1}
                         </span>
                         <span className="text-xs font-semibold truncate">{mod.title}</span>
@@ -297,7 +297,7 @@ export default function CourseLearnPage() {
                               className={cn(
                                 "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-xs transition-colors",
                                 isActive
-                                  ? "bg-violet-600/10 text-violet-500 font-medium"
+                                  ? "bg-brand-600 text-brand-600 font-medium"
                                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
                               )}
                             >
@@ -421,8 +421,8 @@ export default function CourseLearnPage() {
                         className={cn(
                           "flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-left text-xs transition-colors",
                           i === activeLessonIdx
-                            ? "border-violet-500/50 bg-violet-600/5"
-                            : "border-border hover:border-violet-500/30",
+                            ? "border-brand-600 bg-brand-600"
+                            : "border-border hover:border-brand-600",
                         )}
                       >
                         {done ? (

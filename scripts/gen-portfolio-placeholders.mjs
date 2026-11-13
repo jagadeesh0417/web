@@ -1,12 +1,12 @@
 import { writeFileSync } from "fs";
 
 const projects = [
-  { slug: "novapay-fintech", title: "NovaPay Fintech", category: "Web Development", colors: ["#7c3aed", "#4f46e5"] },
-  { slug: "zenith-skincare-meta", title: "Zenith Skincare", category: "Meta Ads", colors: ["#2563eb", "#06b6d4"] },
+  { slug: "novapay-fintech", title: "NovaPay Fintech", category: "Web Development", colors: ["#C75A19", "#F58216"] },
+  { slug: "zenith-skincare-meta", title: "Zenith Skincare", category: "Meta Ads", colors: ["#D6A24A", "#06b6d4"] },
   { slug: "cloudpeak-crm", title: "CloudPeak CRM", category: "Business Automation", colors: ["#059669", "#14b8a6"] },
-  { slug: "sprintly-brand", title: "Sprintly Brand", category: "Branding", colors: ["#c026d3", "#ec4899"] },
-  { slug: "novapay-crm-pipeline", title: "NovaPay CRM", category: "CRM", colors: ["#2563eb", "#4f46e5"] },
-  { slug: "zenith-ecommerce", title: "Zenith E-commerce", category: "Web Development", colors: ["#7c3aed", "#2563eb"] },
+  { slug: "sprintly-brand", title: "Sprintly Brand", category: "Branding", colors: ["#FF9518", "#ec4899"] },
+  { slug: "novapay-crm-pipeline", title: "NovaPay CRM", category: "CRM", colors: ["#D6A24A", "#F58216"] },
+  { slug: "zenith-ecommerce", title: "Zenith E-commerce", category: "Web Development", colors: ["#C75A19", "#D6A24A"] },
 ];
 
 for (const p of projects) {

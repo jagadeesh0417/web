@@ -123,14 +123,14 @@ export default function SubmissionsPage() {
                         "flex h-10 w-10 items-center justify-center rounded-lg shrink-0",
                         sub.status === "approved" ? "bg-success/10" :
                         sub.status === "revision" ? "bg-warning/10" :
-                        sub.status === "reviewed" ? "bg-violet-600/10" :
+                        sub.status === "reviewed" ? "bg-brand-600" :
                         "bg-info/10",
                       )}>
                         <StatusIcon className={cn(
                           "h-5 w-5",
                           sub.status === "approved" ? "text-success" :
                           sub.status === "revision" ? "text-warning" :
-                          sub.status === "reviewed" ? "text-violet-500" :
+                          sub.status === "reviewed" ? "text-brand-600" :
                           "text-info",
                         )} />
                       </div>
@@ -169,7 +169,7 @@ export default function SubmissionsPage() {
                           href={link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/20 px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-violet-500/40 transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/20 px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-brand-600 transition-colors"
                         >
                           <ExternalLink className="h-3 w-3" />
                           Link {i + 1}

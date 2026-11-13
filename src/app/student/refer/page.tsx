@@ -200,9 +200,9 @@ export default function StudentReferPage() {
       />
 
       {/* Hero Section */}
-      <div className="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600/20 via-brand-500/10 to-purple-600/20 border border-brand-500/20 p-8">
+      <div className="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600/20 via-brand-500/10 to-brand-600 border border-brand-500/20 p-8">
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-500/10 blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl" />
+        <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-brand-600 blur-3xl" />
         <div className="relative">
           <Badge variant="primary" className="mb-3">
             <Gift className="h-3 w-3" /> Refer &amp; Earn

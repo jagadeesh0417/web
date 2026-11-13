@@ -115,24 +115,6 @@ export default function MarketingCourseDetailPage() {
     0,
   );
 
-  const testimonials = [
-    {
-      name: "Priya Sharma",
-      role: "Frontend Developer",
-      text: "The structured curriculum and mentor feedback made a huge difference. I landed my first dev job within a month of completing the course.",
-    },
-    {
-      name: "Rahul Verma",
-      role: "UI/UX Designer",
-      text: "Hands-on projects and real-world assignments — this is how learning should work. The certificate added real credibility to my portfolio.",
-    },
-    {
-      name: "Ananya Patel",
-      role: "Full Stack Developer",
-      text: "Progressive unlocking kept me motivated. The mentor reviews were detailed and helped me improve every week.",
-    },
-  ];
-
   const relatedCourses = course.modules.length > 0 ? [] : [];
 
   return (
@@ -188,8 +170,8 @@ export default function MarketingCourseDetailPage() {
                     className="w-full object-cover"
                   />
                 ) : (
-                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                    <BookOpen className="h-16 w-16 text-violet-400" />
+                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                    <BookOpen className="h-16 w-16 text-brand-600" />
                   </div>
                 )}
               </div>
@@ -222,7 +204,7 @@ export default function MarketingCourseDetailPage() {
                           onClick={() => toggleModule(mod._id)}
                           className="flex w-full items-center gap-3 p-4 text-left"
                         >
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600/10 text-sm font-bold text-violet-500">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-brand-600">
                             {idx + 1}
                           </span>
                           <div className="min-w-0 flex-1">
@@ -249,7 +231,7 @@ export default function MarketingCourseDetailPage() {
                                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm"
                                   >
                                     {lesson.type === "video" ? (
-                                      <PlayCircle className="h-4 w-4 shrink-0 text-violet-500" />
+                                      <PlayCircle className="h-4 w-4 shrink-0 text-brand-600" />
                                     ) : (
                                       <FileText className="h-4 w-4 shrink-0 text-sky-500" />
                                     )}
@@ -318,43 +300,6 @@ export default function MarketingCourseDetailPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
-              What our students say
-            </h2>
-            <p className="mt-3 text-muted-foreground">
-              Real feedback from students who completed our courses.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.06}>
-                <Card className="h-full p-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-xs font-bold text-white">
-                      {t.name
-                        .split(" ")
-                        .map((p) => p[0])
-                        .join("")}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">{t.name}</p>
-                      <p className="text-xs text-muted-foreground">{t.role}</p>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                    &ldquo;{t.text}&rdquo;
-                  </p>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Related Courses (placeholder) */}
       {relatedCourses.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -371,7 +316,7 @@ export default function MarketingCourseDetailPage() {
       <section className="border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
-            <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white">
+            <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white">
               <h2 className="text-2xl font-bold sm:text-3xl">
                 Ready to start learning?
               </h2>
@@ -382,7 +327,7 @@ export default function MarketingCourseDetailPage() {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Button
                   size="lg"
-                  className="bg-white text-violet-800 hover:bg-white/90"
+                  className="bg-white text-brand-600 hover:bg-white/90"
                 >
                   <Link href="/internships/apply" className="flex items-center gap-2">
                     Enroll now <ArrowRight className="h-4 w-4" />

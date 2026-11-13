@@ -33,7 +33,7 @@ const sections = [
   },
   {
     title: "7. Certificates",
-    body: "Certificates include a QR code that verifies authenticity against our public registry. We reserve the right to revoke certificates issued based on fraudulent submissions.",
+    body: "Online certificate verification is not yet available. Contact support to request manual verification. We reserve the right to revoke certificates issued based on fraudulent submissions.",
   },
   {
     title: "8. Limitation of liability",

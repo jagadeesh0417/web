@@ -111,8 +111,8 @@ function ProgressRing({ percent }: { percent: number }) {
         />
         <defs>
           <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#6366f1" />
+            <stop offset="0%" stopColor="#C75A19" />
+            <stop offset="100%" stopColor="#F58216" />
           </linearGradient>
         </defs>
       </svg>
@@ -223,11 +223,11 @@ export default function StudentDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-white">
+      <div className="rounded-xl bg-gradient-to-r from-brand-600 to-brand-600 p-6 text-white">
         <h1 className="text-2xl font-bold">
           Welcome back, {data.user.name.split(" ")[0]} 👋
         </h1>
-        <p className="mt-1 text-violet-100">
+        <p className="mt-1 text-brand-600">
           {enrollment.programTitle} · {enrollment.durationWeeks}-week program
         </p>
       </div>
@@ -250,7 +250,7 @@ export default function StudentDashboard() {
             value={`Week ${overall.currentWeek ?? 1}`}
             hint={currentModule?.title ?? "Loading..."}
             icon={BookOpen}
-            gradient="bg-gradient-to-br from-violet-600 to-indigo-600"
+            gradient="bg-gradient-to-br from-brand-600 to-brand-600"
           />
           <StatCard
             title="Pending Tasks"
@@ -274,7 +274,7 @@ export default function StudentDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Play className="h-4 w-4 text-violet-500" /> Continue Learning
+              <Play className="h-4 w-4 text-brand-600" /> Continue Learning
             </CardTitle>
             <CardDescription>Pick up where you left off</CardDescription>
           </CardHeader>
@@ -310,7 +310,7 @@ export default function StudentDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-violet-500" /> Certificate Status
+              <Award className="h-4 w-4 text-brand-600" /> Certificate Status
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -369,7 +369,7 @@ export default function StudentDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-violet-500" /> Internship Details
+              <GraduationCap className="h-4 w-4 text-brand-600" /> Internship Details
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -403,7 +403,7 @@ export default function StudentDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-violet-500" /> Upcoming Deadlines
+              <Clock className="h-4 w-4 text-brand-600" /> Upcoming Deadlines
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -437,7 +437,7 @@ export default function StudentDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ClipboardCheck className="h-4 w-4 text-violet-500" /> Recent Activity
+              <ClipboardCheck className="h-4 w-4 text-brand-600" /> Recent Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -493,9 +493,9 @@ export default function StudentDashboard() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-3 rounded-lg border border-border bg-muted/20 px-3.5 py-2.5 text-sm font-medium transition-colors hover:border-violet-500/40"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-muted/20 px-3.5 py-2.5 text-sm font-medium transition-colors hover:border-brand-600"
                 >
-                  <link.icon className="h-4 w-4 text-violet-500" />
+                  <link.icon className="h-4 w-4 text-brand-600" />
                   {link.label}
                   <ArrowRight className="ml-auto h-3.5 w-3.5 text-muted-foreground" />
                 </Link>
@@ -510,7 +510,7 @@ export default function StudentDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-violet-500" /> Recent Announcements
+              <BookOpen className="h-4 w-4 text-brand-600" /> Recent Announcements
             </CardTitle>
           </CardHeader>
           <CardContent>

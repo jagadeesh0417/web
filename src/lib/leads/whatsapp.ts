@@ -98,7 +98,7 @@ export async function sendWhatsAppText(body: string): Promise<WhatsAppSendResult
 
     if (!res.ok) {
       const errMsg = data?.error?.message || `WhatsApp API HTTP ${res.status}`;
-      console.error("[whatsapp] send failed:", errMsg);
+      console.error("[whatsapp] send failed", res.status);
       return { ok: false, status: "failed", error: errMsg };
     }
 
@@ -106,7 +106,7 @@ export async function sendWhatsAppText(body: string): Promise<WhatsAppSendResult
     return { ok: true, status: "sent", messageId };
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : "Network error";
-    console.error("[whatsapp] network error:", errMsg);
+    console.error("[whatsapp] network error");
     return { ok: false, status: "failed", error: errMsg };
   }
 }

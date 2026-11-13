@@ -21,7 +21,7 @@ export default function AdminCmsPage() {
     headline: "We build growth engines for ambitious brands",
     subheadline: "Akradhii designs, develops and automates — websites, Meta Ads, CRMs, AI workflows, SEO and branding.",
   });
-  const [stats, setStats] = useState([{ label: "Projects delivered", value: "120+" }, { label: "Interns trained", value: "300+" }, { label: "Client satisfaction", value: "98%" }, { label: "Certificates issued", value: "500+" }]);
+  const [stats, setStats] = useState([{ label: "Projects delivered", value: "120+ (source: owner to verify)" }, { label: "Interns trained", value: "300+ (source: owner to verify)" }, { label: "Client satisfaction", value: "98% (survey source: owner to verify)" }, { label: "Certificates issued", value: "500+ (includes reissued/updated certificates)" }]);
 
   useEffect(() => {
     getSession().then(({ user }) => {

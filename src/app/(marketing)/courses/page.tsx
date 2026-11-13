@@ -90,7 +90,7 @@ export default function MarketingCoursesPage() {
                   placeholder="Search courses..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="h-12 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
+                  className="h-12 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-brand-600 focus:ring-2 focus:ring-brand-600"
                 />
               </div>
             </div>
@@ -107,8 +107,8 @@ export default function MarketingCoursesPage() {
                 onClick={() => setActiveCategory(null)}
                 className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
                   !activeCategory
-                    ? "bg-violet-600 text-white"
-                    : "border border-border bg-card text-muted-foreground hover:border-violet-500/40 hover:text-foreground"
+                    ? "bg-brand-600 text-white"
+                    : "border border-border bg-card text-muted-foreground hover:border-brand-600 hover:text-foreground"
                 }`}
               >
                 All Courses
@@ -119,8 +119,8 @@ export default function MarketingCoursesPage() {
                   onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
                   className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
                     activeCategory === cat
-                      ? "bg-violet-600 text-white"
-                      : "border border-border bg-card text-muted-foreground hover:border-violet-500/40 hover:text-foreground"
+                      ? "bg-brand-600 text-white"
+                      : "border border-border bg-card text-muted-foreground hover:border-brand-600 hover:text-foreground"
                   }`}
                 >
                   {cat}
@@ -165,7 +165,7 @@ export default function MarketingCoursesPage() {
 
               return (
                 <Reveal key={course._id} delay={i * 0.04}>
-                  <Card className="group flex h-full flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-600/10">
+                  <Card className="group flex h-full flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-600">
                     <div className="relative h-48 overflow-hidden bg-muted">
                       {course.thumbnail ? (
                         <img
@@ -174,8 +174,8 @@ export default function MarketingCoursesPage() {
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-600/20 to-indigo-600/20">
-                          <BookOpen className="h-12 w-12 text-violet-400" />
+                        <div className="flex h-full items-center justify-center bg-gradient-to-br from-brand-600 to-brand-600">
+                          <BookOpen className="h-12 w-12 text-brand-600" />
                         </div>
                       )}
                       <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm">
@@ -223,7 +223,7 @@ export default function MarketingCoursesPage() {
       <section className="border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <Reveal>
-            <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white">
+            <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white">
               <h2 className="text-2xl font-bold sm:text-3xl">
                 Ready to start learning?
               </h2>
@@ -234,7 +234,7 @@ export default function MarketingCoursesPage() {
               <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Button
                   size="lg"
-                  className="bg-white text-violet-800 hover:bg-white/90"
+                  className="bg-white text-brand-600 hover:bg-white/90"
                 >
                   <Link href="/internships/apply" className="flex items-center gap-2">
                     Enroll now <ArrowRight className="h-4 w-4" />

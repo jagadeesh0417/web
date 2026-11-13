@@ -56,6 +56,7 @@ export async function requireStudent(
     }
   }
 
+  if (process.env.NODE_ENV === "production") return { error: NextResponse.json({ error: "Authentication required" }, { status: 401 }) };
   const raw = request.cookies.get("ak_demo_session")?.value ?? null;
   const session = parseDemoSession(raw);
   if (!session) {

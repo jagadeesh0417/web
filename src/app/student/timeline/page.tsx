@@ -46,10 +46,10 @@ const statusConfig = {
     badgeVariant: "success" as const,
   },
   current: {
-    color: "bg-violet-500",
-    lineColor: "bg-violet-300",
+    color: "bg-brand-600",
+    lineColor: "bg-brand-600",
     icon: Clock,
-    iconColor: "text-violet-500",
+    iconColor: "text-brand-600",
     label: "Current Week",
     badgeVariant: "primary" as const,
   },
@@ -203,7 +203,7 @@ export default function TimelinePage() {
                 {/* Card */}
                 <Card className={cn(
                   "transition-all",
-                  week.status === "current" && "border-violet-500/30 shadow-md shadow-violet-500/10",
+                  week.status === "current" && "border-brand-600 shadow-md shadow-brand-600",
                   week.locked && "opacity-60",
                 )}>
                   <button

@@ -15,7 +15,6 @@ import {
   getServiceBySlug,
 } from "@/config/services-detail";
 import { siteConfig } from "@/config/site";
-import { portfolioItems } from "@/lib/data/sample-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -33,7 +32,7 @@ export function generateStaticParams() {
 
 const serviceKeywords: Record<string, string[]> = {
   "web-development": [
-    "website development hyderabad",
+    "website development bengaluru",
     "next.js agency india",
     "web app development",
     "landing page design",
@@ -42,17 +41,17 @@ const serviceKeywords: Record<string, string[]> = {
   "meta-ads": [
     "meta ads agency",
     "facebook ads management india",
-    "instagram ads agency hyderabad",
+    "instagram ads agency bengaluru",
     "paid advertising services",
   ],
   automation: [
     "business automation services",
     "workflow automation india",
     "process automation agency",
-    "CRM automation hyderabad",
+    "CRM automation bengaluru",
   ],
   crm: [
-    "CRM solutions hyderabad",
+    "CRM solutions bengaluru",
     "CRM setup agency india",
     "sales pipeline management",
     "CRM consulting services",
@@ -65,12 +64,12 @@ const serviceKeywords: Record<string, string[]> = {
   ],
   seo: [
     "SEO agency india",
-    "SEO services hyderabad",
+    "SEO services bengaluru",
     "technical SEO audit",
     "local SEO services",
   ],
   branding: [
-    "branding agency hyderabad",
+    "branding agency bengaluru",
     "logo design india",
     "brand identity services",
     "visual identity design",
@@ -116,7 +115,6 @@ export default async function ServiceDetailPage({ params }: Props) {
   if (!service) notFound();
 
   const related = getRelatedServices(service.slug);
-  const projects = portfolioItems.filter((p) => p.service === service.portfolioService).slice(0, 3);
 
   return (
     <div>
@@ -165,7 +163,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
             <Reveal delay={0.1}>
               <div
-                className={`relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br ${service.gradient} p-1 shadow-2xl shadow-violet-900/20`}
+                className={`relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br ${service.gradient} p-1 shadow-2xl shadow-brand-600`}
               >
                 <div className="rounded-[1.35rem] bg-card/95 p-8 sm:p-10">
                   <div
@@ -320,50 +318,6 @@ export default async function ServiceDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Portfolio */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Relevant work</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Selected projects related to {service.title.toLowerCase()}.
-            </p>
-          </div>
-          <Link href="/services" className="text-sm font-medium text-brand-400 hover:underline">
-            View all work →
-          </Link>
-        </Reveal>
-
-        {projects.length > 0 ? (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p, i) => (
-              <Reveal key={p.id} delay={i * 0.05}>
-                <Link href={`/portfolio/${p.slug}`}>
-                  <Card className="group h-full overflow-hidden transition-all hover:-translate-y-0.5 hover:border-brand-500/40">
-                    <div className={`h-28 bg-gradient-to-br ${p.gradient}`} />
-                    <div className="p-5">
-                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{p.service}</p>
-                      <h3 className="mt-1 font-semibold group-hover:text-brand-300">{p.title}</h3>
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.summary}</p>
-                    </div>
-                  </Card>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        ) : (
-          <Reveal className="mt-8">
-            <Card className="border-dashed p-8 text-center text-sm text-muted-foreground">
-              Case studies for this service are being prepared.{" "}
-              <Link href="/contact" className="font-medium text-brand-400 hover:underline">
-                Ask us for relevant examples
-              </Link>
-              .
-            </Card>
-          </Reveal>
-        )}
-      </section>
-
       {/* FAQ */}
       <section className="border-y border-border bg-card/30">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
@@ -445,7 +399,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 Book a free consultation or jump straight into a quote request for {service.title}.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button size="lg" className="w-full bg-white text-violet-800 hover:bg-white/90 sm:w-auto">
+                <Button size="lg" className="w-full bg-white text-brand-600 hover:bg-white/90 sm:w-auto">
                   <a href="#enquiry" className="flex items-center gap-2">
                     Get a free consultation <ArrowRight className="h-4 w-4" />
                   </a>

@@ -6,8 +6,6 @@ import {
   BarChart2,
   BookOpen,
   Bot,
-  Brush,
-  Check,
   CheckCircle2,
   ClipboardCheck,
   Code2,
@@ -22,7 +20,6 @@ import {
   TrendingUp,
   Unlock,
   Video,
-  X,
   Zap,
 } from "lucide-react";
 import { PROGRAMS, CATEGORIES } from "@/lib/constants";
@@ -32,11 +29,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/marketing/reveal";
 import { formatCurrency } from "@/lib/utils";
+import { internshipFaq } from "@/lib/data/internship-faq";
 
 export const metadata: Metadata = {
   title: "Internships",
   description:
-    "Build skills, ship projects and earn a verifiable certificate. 4, 6 and 8-week Akradhii internship programs across 10 tracks.",
+    "Build skills, ship projects and earn a completion certificate. 4, 6 and 8-week Akradhii internship programs across 10 tracks.",
   keywords: [
     "internship program india",
     "web development internship",
@@ -46,7 +44,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Internships",
-    description: "Structured internship programs with modules, projects, assessment and QR-verifiable certificates.",
+    description: "Structured internship programs with modules, projects, assessment and completion certificates.",
     url: `${siteConfig.url}/internships`,
     images: [
       {
@@ -78,16 +76,15 @@ const trackIcons: Record<string, React.ElementType> = {
 };
 
 const comparisonFeatures = [
-  { label: "Duration", foundation: "4 Weeks", professional: "6 Weeks", industry: "8 Weeks" },
-  { label: "Live sessions", foundation: "4", professional: "6", industry: "Full" },
-  { label: "Assignments", foundation: "4", professional: "8", industry: "—" },
+  { label: "Duration", foundation: PROGRAMS[0].duration, professional: PROGRAMS[1].duration, industry: PROGRAMS[2].duration },
+  { label: "Live sessions", foundation: "4", professional: "6", industry: "Contact support" },
+  { label: "Assignments", foundation: "4", professional: "8", industry: "Contact support" },
   { label: "Projects", foundation: "1 mini", professional: "2", industry: "Client-based" },
-  { label: "Weekly assessments", foundation: false, professional: true, industry: true },
-  { label: "Performance report", foundation: false, professional: true, industry: true },
-  { label: "Letter of recommendation", foundation: false, professional: false, industry: "✓ (performance)" },
-  { label: "Placement assistance", foundation: false, professional: false, industry: "✓ (if offered)" },
-  { label: "Certificate", foundation: true, professional: true, industry: true },
-  { label: "Price", foundation: "₹1,999", professional: "₹3,499", industry: "₹5,499" },
+  { label: "Weekly assessments", foundation: "Contact support", professional: "Included", industry: "Contact support" },
+  { label: "Performance report", foundation: "Contact support", professional: "Included", industry: "Contact support" },
+  { label: "Mentor support", foundation: "Included", professional: "Included", industry: "Full mentorship" },
+  { label: "Certificate", foundation: "Included", professional: "Included", industry: "Included" },
+  { label: "Price", foundation: formatCurrency(PROGRAMS[0].price), professional: formatCurrency(PROGRAMS[1].price), industry: formatCurrency(PROGRAMS[2].price) },
 ];
 
 const learningFlow = [
@@ -99,13 +96,25 @@ const learningFlow = [
   { step: "06", title: "Complete weekly tasks", text: "Build assignments and mini-projects each week.", icon: ClipboardCheck },
   { step: "07", title: "Submit work", text: "Share Drive, GitHub, Figma or Canva links for mentor review.", icon: Send },
   { step: "08", title: "Unlock next module", text: "Finish lessons and get assignments approved to progress.", icon: Lock },
-  { step: "09", title: "Final assessment", text: "Pass the assessment (70%+, limited attempts) when eligible.", icon: ClipboardCheck },
-  { step: "10", title: "Certificate", text: "Receive a QR-verifiable certificate of completion.", icon: Award },
+  { step: "09", title: "Final assessment", text: "Complete the final assessment according to your plan's criteria.", icon: ClipboardCheck },
+  { step: "10", title: "Certificate", text: "Receive a certificate of completion when eligible.", icon: Award },
 ];
 
-export default function InternshipsPage() {
+export default async function InternshipsPage({ searchParams }: { searchParams: Promise<{ q?: string; track?: string }> }) {
+  const params = await searchParams;
+  const query = typeof params.q === "string" ? params.q.trim().slice(0, 100) : "";
+  const selectedTrack = typeof params.track === "string" ? params.track : "";
+  const tracks = CATEGORIES.filter((c) => (!selectedTrack || c.slug === selectedTrack) && [c.name, c.description, ...c.skills].join(" ").toLowerCase().includes(query.toLowerCase()));
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "ItemList", itemListElement: PROGRAMS.map((p, i) => ({ "@type": "ListItem", position: i + 1, item: { "@type": "Course", name: p.title, description: p.description, provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, offers: { "@type": "Offer", price: p.price, priceCurrency: "INR", url: `${siteConfig.url}/internships/apply?program=${p.slug}` } } })) },
+      { "@type": "FAQPage", mainEntity: internshipFaq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+    ],
+  };
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="absolute inset-0 bg-glow" />
@@ -115,21 +124,14 @@ export default function InternshipsPage() {
               <GraduationCap className="h-3 w-3" /> Internships at Akradhii
             </Badge>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              Build skills. Work on projects.{" "}
-              <span className="text-gradient">Launch your career.</span>
+              Build a portfolio with mentor feedback.{" "}
+              <span className="text-gradient">Earn a completion certificate.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Structured programs with curriculum, weekly submissions, progressive unlocking, final assessment and a certificate employers can verify.
+              For students and freshers: develop practical skills through projects, assignments and feedback. Choose from {CATEGORIES.length} tracks and {PROGRAMS.length} plans.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button variant="gradient" size="lg">
-                <a href="#programs" className="flex items-center gap-2">
-                  Explore internships <ArrowRight className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button variant="outline" size="lg">
-                <Link href="/internships/apply" className="flex items-center gap-2">Apply now</Link>
-              </Button>
+              <Link href="/internships/apply?program=professional" className="inline-flex h-12 items-center rounded-lg bg-brand-600 px-6 font-medium text-white hover:bg-brand-600 focus-visible:ring-2 focus-visible:ring-white">Apply now</Link>
             </div>
           </Reveal>
         </div>
@@ -148,7 +150,7 @@ export default function InternshipsPage() {
             <Reveal key={p.id} delay={i * 0.08}>
               <Card className={`relative flex h-full flex-col p-6 ${p.featured ? "border-brand-500/60 shadow-xl shadow-brand-600/10" : ""}`}>
                 {p.featured && (
-                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3 py-1 text-xs font-bold text-white">
+                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-brand-600 to-brand-600 px-3 py-1 text-xs font-bold text-white">
                     Most popular
                   </span>
                 )}
@@ -180,6 +182,12 @@ export default function InternshipsPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-3xl px-4 py-12 text-center sm:px-6">
+        <h2 className="text-2xl font-bold">Next batch</h2>
+        <p className="mt-3 text-muted-foreground">Batch dates and availability have not yet been published. Contact us to ask about the next intake.</p>
+        <a className="mt-5 inline-block rounded-lg border border-border px-5 py-3 focus-visible:ring-2 focus-visible:ring-brand-500" href={`https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent("Hello, I would like to enquire about the next internship batch.")}`}>Enquire on WhatsApp</a>
+      </section>
+
       {/* Feature comparison table */}
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -189,36 +197,29 @@ export default function InternshipsPage() {
           </p>
         </Reveal>
         <Reveal delay={0.08}>
-          <div className="mt-10 overflow-x-auto rounded-xl border border-border">
+          <div className="mt-10 hidden overflow-x-auto rounded-xl border border-border md:block">
             <table className="w-full min-w-[600px] text-sm">
+              <caption className="sr-only">Internship plan comparison</caption>
               <thead>
-                <tr className="border-b border-border bg-gradient-to-r from-violet-700 to-indigo-700 text-white">
-                  <th className="px-5 py-4 text-left font-semibold">Feature</th>
-                  <th className="px-5 py-4 text-center font-semibold">Foundation</th>
-                  <th className="relative px-5 py-4 text-center font-semibold">
+                <tr className="border-b border-border bg-gradient-to-r from-brand-600 to-brand-600 text-white">
+                  <th scope="col" className="px-5 py-4 text-left font-semibold">Feature</th>
+                  <th scope="col" className="px-5 py-4 text-center font-semibold">Foundation</th>
+                  <th scope="col" className="relative px-5 py-4 text-center font-semibold">
                     Professional
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-violet-700 shadow">Most popular</span>
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-brand-600 shadow">Most popular</span>
                   </th>
-                  <th className="px-5 py-4 text-center font-semibold">Industry</th>
+                  <th scope="col" className="px-5 py-4 text-center font-semibold">Industry</th>
                 </tr>
               </thead>
               <tbody>
                 {comparisonFeatures.map((f, i) => (
                   <tr key={f.label} className={`border-b border-border ${i % 2 === 0 ? "bg-card/50" : "bg-card/30"}`}>
-                    <td className="px-5 py-3.5 font-medium">{f.label}</td>
+                    <th scope="row" className="px-5 py-3.5 text-left font-medium">{f.label}</th>
                     {(["foundation", "professional", "industry"] as const).map((plan) => {
                       const val = f[plan];
                       return (
                         <td key={plan} className="px-5 py-3.5 text-center">
-                          {typeof val === "boolean" ? (
-                            val ? (
-                              <Check className="mx-auto h-4 w-4 text-success" />
-                            ) : (
-                              <X className="mx-auto h-4 w-4 text-muted-foreground/40" />
-                            )
-                          ) : (
-                            <span className={plan === "professional" ? "font-semibold text-brand-400" : ""}>{val}</span>
-                          )}
+                          <span className={plan === "professional" ? "font-semibold" : ""}>{val}</span>
                         </td>
                       );
                     })}
@@ -226,6 +227,14 @@ export default function InternshipsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="mt-8 grid gap-4 md:hidden">
+            {(["foundation", "professional", "industry"] as const).map((plan) => (
+              <section key={plan} className={`rounded-xl border p-5 ${plan === "professional" ? "border-brand-500" : "border-border"}`}>
+                <h3 className="font-bold capitalize">{plan}{plan === "professional" ? " · Most popular" : ""}</h3>
+                <dl className="mt-3 space-y-2 text-sm">{comparisonFeatures.map((f) => <div key={f.label} className="flex justify-between gap-3"><dt>{f.label}</dt><dd className="text-right">{f[plan]}</dd></div>)}</dl>
+              </section>
+            ))}
           </div>
         </Reveal>
       </section>
@@ -239,17 +248,29 @@ export default function InternshipsPage() {
               Each track has its own curriculum, mentor focus and project style. Open a page for skills, FAQs and apply links.
             </p>
           </Reveal>
+          <form action="/internships#tracks" method="get" className="mx-auto mt-8 flex max-w-xl flex-wrap gap-2">
+            <label htmlFor="track-search" className="sr-only">Search internship tracks</label>
+            <input id="track-search" name="q" type="search" defaultValue={query} placeholder="Search tracks or skills" className="min-w-0 flex-1 rounded-lg border border-border bg-card px-3 py-2" />
+            <button type="submit" className="rounded-lg bg-brand-600 px-4 py-2 text-white">Search</button>
+            <Link href="/internships#tracks" className="rounded-lg border border-border px-4 py-2">Clear</Link>
+          </form>
+          <div id="tracks" className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Filter by track">
+            <Link href="/internships#tracks" aria-current={!selectedTrack ? "true" : undefined} className="rounded-full border border-border px-3 py-1 text-sm">All tracks</Link>
+            {CATEGORIES.map((c) => <Link key={c.slug} href={`/internships?track=${encodeURIComponent(c.slug)}#tracks`} aria-current={selectedTrack === c.slug ? "true" : undefined} className={`rounded-full border px-3 py-1 text-sm ${selectedTrack === c.slug ? "border-brand-500 bg-brand-600/20" : "border-border"}`}>{c.name}</Link>)}
+          </div>
+          <p className="mt-4 text-center text-sm" aria-live="polite">{tracks.length} tracks found</p>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {CATEGORIES.map((c, i) => {
+            {tracks.map((c) => {
               const Icon = trackIcons[c.slug] || GraduationCap;
               return (
-                <Reveal key={c.id} delay={i * 0.03}>
+                <div key={c.id}>
                   <Link href={`/internships/${c.slug}`}>
                     <Card className="group h-full p-6 transition-all hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${c.gradient} text-white`}>
                         <Icon className="h-5 w-5" />
                       </div>
                       <h3 className="mt-4 font-semibold">{c.name}</h3>
+                    <p className="mt-2 text-sm">4–8 weeks</p>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
                     <div className="mt-3 flex flex-wrap gap-1">
                       {c.skills.slice(0, 3).map((s) => (
@@ -261,7 +282,7 @@ export default function InternshipsPage() {
                     </span>
                   </Card>
                 </Link>
-              </Reveal>
+                </div>
             );
             })}
           </div>
@@ -273,7 +294,7 @@ export default function InternshipsPage() {
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight">Learning journey</h2>
           <p className="mt-3 text-muted-foreground">
-            From program selection to a verified certificate — aligned with the live student dashboard.
+            From program selection to a completion certificate — aligned with the student dashboard.
           </p>
         </Reveal>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -310,7 +331,7 @@ export default function InternshipsPage() {
                   "Weekly project assignments with mentor review",
                   "Progressive unlocking when work is approved",
                   "Final assessment with clear pass criteria",
-                  "QR-verifiable certificate of completion",
+                  "Certificate of completion",
                   "Offer letter and payment invoice in the portal",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
@@ -346,13 +367,7 @@ export default function InternshipsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Frequently asked questions</h2>
         </Reveal>
         <div className="mt-8 space-y-3">
-          {[
-            { q: "Is the internship paid?", a: "It is a project-based learning internship. You invest in the program and receive mentorship, projects, a portfolio trail and a verifiable certificate." },
-            { q: "How do modules unlock?", a: "Complete the week’s lessons and get that week’s assignment approved. The next module unlocks automatically in your dashboard." },
-            { q: "How do I get the certificate?", a: "Finish required lessons, get assignments approved, pass the final assessment (70%+), then issue or download from the Certificate page. Anyone can verify it via QR or /verify." },
-            { q: "Can I switch tracks?", a: "Talk to support early in the program. Switches depend on seat availability and progress." },
-            { q: "Where do I apply?", a: "Use Apply now — the wizard captures profile details, program, duration and payment, then activates your student account." },
-          ].map((f) => (
+            {internshipFaq.map((f) => (
             <details key={f.q} className="group rounded-xl border border-border bg-card p-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-medium">
                 {f.q}
@@ -362,6 +377,7 @@ export default function InternshipsPage() {
             </details>
           ))}
         </div>
+        <p className="mt-5 text-sm text-muted-foreground">Read our <Link className="underline" href="/terms">terms</Link> or <Link className="underline" href="/contact">contact support</Link> for policy details.</p>
       </section>
 
       {/* Verify certificate */}
@@ -374,21 +390,8 @@ export default function InternshipsPage() {
                 <h2 className="text-3xl font-bold tracking-tight">Verify your certificate</h2>
               </div>
               <p className="mt-4 text-muted-foreground leading-relaxed">
-                Every Akradhii certificate includes a unique ID and QR code. Anyone — employers, recruiters, universities — can instantly confirm it is authentic and has not been revoked.
+                Online verification is not yet available. Contact support to request manual verification.
               </p>
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Enter the certificate ID to check validity",
-                  "Scan the QR code printed on the PDF",
-                  "See issuing date, category, duration and current status",
-                  "Confirm the certificate has not been revoked",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
               <div className="mt-6">
                 <Button variant="gradient">
                   <Link href="/verify">Verify a certificate</Link>
@@ -399,17 +402,7 @@ export default function InternshipsPage() {
               <Card className="p-6 sm:p-8">
                 <h3 className="font-semibold">How verification works</h3>
                 <div className="mt-4 space-y-3">
-                  {[
-                    { step: "01", text: "Click the link on the certificate PDF or scan the QR code" },
-                    { step: "02", text: "The unique ID is sent to our verification API" },
-                    { step: "03", text: "We return the certificate status and details" },
-                    { step: "04", text: "Employers see: valid, revoked, or not found" },
-                  ].map((s) => (
-                    <div key={s.step} className="flex items-start gap-3">
-                      <span className="text-xs font-bold text-brand-400 mt-1">{s.step}</span>
-                      <p className="text-sm text-muted-foreground">{s.text}</p>
-                    </div>
-                  ))}
+                  <p className="text-sm text-muted-foreground">Email {siteConfig.supportEmail} with the certificate ID and a copy of the certificate.</p>
                 </div>
               </Card>
             </Reveal>
@@ -419,12 +412,12 @@ export default function InternshipsPage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
-          <Card className="bg-gradient-to-br from-violet-700 to-indigo-700 p-10 text-center text-white">
+          <Card className="bg-gradient-to-br from-brand-600 to-brand-600 p-10 text-center text-white">
             <h2 className="text-2xl font-bold sm:text-3xl">Ready to start your internship?</h2>
             <p className="mx-auto mt-3 max-w-lg text-white/85">
               Pick a track and duration — applications open year-round.
             </p>
-            <Button size="lg" className="mt-6 bg-white text-violet-800 hover:bg-white/90">
+            <Button size="lg" className="mt-6 bg-white text-brand-600 hover:bg-white/90">
               <Link href="/internships/apply" className="flex items-center gap-2">
                 Apply now <ArrowRight className="h-4 w-4" />
               </Link>

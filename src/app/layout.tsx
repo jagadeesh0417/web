@@ -1,37 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { DialogProvider } from "@/components/ui/dialog";
 import { siteConfig } from "@/config/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    default: "Akradhii | Digital Agency in Bengaluru",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  keywords: [
-    "digital agency",
-    "website development",
-    "meta ads",
-    "AI automation",
-    "CRM",
-    "SEO",
-    "branding",
-    "internship",
-  ],
   openGraph: {
     type: "website",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
@@ -56,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b1020",
+  themeColor: "#090A0D",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -73,19 +64,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     logo: "https://akradhii.vercel.app/logo.svg",
     image: "https://akradhii.vercel.app/og-default.svg",
     telephone: "+919848579053",
-    email: "hello@akradhii.com",
+    email: siteConfig.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "HITEC City",
-      addressLocality: "Hyderabad",
-      addressRegion: "Telangana",
-      postalCode: "500081",
+      streetAddress: "Yelahanka",
+      addressLocality: siteConfig.city,
+      addressRegion: siteConfig.region,
+      postalCode: "560064",
       addressCountry: "IN",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "17.4435",
-      longitude: "78.3772",
     },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
@@ -109,7 +95,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${sora.variable} ${inter.variable} antialiased`}>
         <ToastProvider>
           <DialogProvider>{children}</DialogProvider>
         </ToastProvider>

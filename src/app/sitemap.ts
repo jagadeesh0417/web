@@ -1,19 +1,9 @@
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site";
+import { resources } from "@/lib/data/resources";
+import { CATEGORIES } from "@/lib/constants";
 
-const BASE = "https://akradhii.vercel.app";
-
-const internships = [
-  "web-development",
-  "ui-ux-design",
-  "meta-ads",
-  "digital-marketing",
-  "automation",
-  "ai-automation",
-  "graphic-design",
-  "content-writing",
-  "seo",
-  "video-editing",
-];
+const BASE = siteConfig.url;
 
 const services = [
   "web-development",
@@ -35,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/internships`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/internships/apply`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/portfolio`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/resources`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/verify`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
@@ -49,12 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const internshipPages: MetadataRoute.Sitemap = internships.map((slug) => ({
-    url: `${BASE}/internships/${slug}`,
+  const internshipPages: MetadataRoute.Sitemap = CATEGORIES.map((category) => ({
+    url: `${BASE}/internships/${category.slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...servicePages, ...internshipPages];
+  const resourcePages: MetadataRoute.Sitemap = resources.map((resource) => ({ url: `${BASE}/resources/${resource.slug}`, lastModified: resource.publishedAt, changeFrequency: "monthly", priority: 0.7 }));
+  return [...staticPages, ...servicePages, ...internshipPages, ...resourcePages];
 }
