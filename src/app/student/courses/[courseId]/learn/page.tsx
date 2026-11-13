@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, FileText,
-  Loader2, Lock, Play, PlayCircle, XCircle, RefreshCw,
+  Loader2, Lock, PlayCircle, XCircle, RefreshCw,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -271,7 +271,6 @@ export default function CourseLearnPage() {
               <div className="space-y-3">
                 {groupedModules.map((mod, modIdx) => {
                   const modCompleted = mod.lessons.every((l) => progress[l._id]);
-                  const modLessonsDone = mod.lessons.filter((l) => progress[l._id]).length;
 
                   return (
                     <div key={mod._id}>
@@ -285,7 +284,7 @@ export default function CourseLearnPage() {
                         )}
                       </div>
                       <div className="ml-2.5 space-y-0.5 border-l border-border pl-3">
-                        {mod.lessons.map((l, lIdx) => {
+                        {mod.lessons.map((l) => {
                           const globalIdx = allLessons.findIndex((al) => al._id === l._id);
                           const isActive = globalIdx === activeLessonIdx;
                           const done = progress[l._id] ?? false;

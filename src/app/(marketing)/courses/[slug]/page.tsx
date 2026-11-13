@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight, BookOpen, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText,
-  Lock, Play, PlayCircle, Star, XCircle, RefreshCw, Users,
+  Lock, PlayCircle, Star, XCircle, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/marketing/reveal";
 import { Spinner } from "@/components/ui/progress";
-import { formatCurrency, cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
 interface Lesson {

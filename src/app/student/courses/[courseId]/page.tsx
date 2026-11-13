@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowLeft, BookOpen, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText,
+  ArrowLeft, BookOpen, ChevronDown, ChevronRight, Clock, FileText,
   Lock, Play, PlayCircle, Star, Unlock, XCircle, RefreshCw,
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/shell";
@@ -13,7 +13,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 
 interface Lesson {
   _id: string;
