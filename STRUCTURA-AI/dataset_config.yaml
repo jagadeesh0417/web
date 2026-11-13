@@ -1,0 +1,7 @@
+datasets:
+  nccd_pf:
+    source: https://zenodo.org/records/8215100
+    url: https://zenodo.org/records/8215100/files/NCCD-PF_Dataset.zip?download=1
+    filename: NCCD-PF_Dataset.zip
+    md5: ca7bf252351bfb191b20d0a13ee9cedf
+    license: CC-BY-4.0

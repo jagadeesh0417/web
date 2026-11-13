@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+data/raw/
+data/extracted/
+data/processed/
+data/metadata/
+models/*.pt
+models/history.json
+models/test_metrics.json
+*.pyc
